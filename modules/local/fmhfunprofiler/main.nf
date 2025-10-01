@@ -22,8 +22,8 @@ process FMHFUNPROFILER {
     // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
 //    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/vdblab/fmhfunprofiler:20250926' :
-        'ghcr.io/vdblab/fmhfunprofiler:20250926' }"
+        'ghcr.io/vdblab/fmhfunprofiler:20250930' :
+        'ghcr.io/vdblab/fmhfunprofiler:20250930' }"
 
     input:// TODO nf-core: Where applicable all sample-specific information e.g. "id", "single_end", "read_group"
     //               MUST be provided as an input via a Groovy Map called "meta".
@@ -46,8 +46,6 @@ process FMHFUNPROFILER {
 
     script:
     def args = task.ext.args ?: ''
-    println(args)
-    args = args.split(' ')
     def prefix = task.ext.prefix ?: "${meta.id}"
     // TODO nf-core: Where possible, a command MUST be provided to obtain the version number of the software e.g. 1.10
     //               If the software is unable to output a version number on the command-line then it can be manually specified
@@ -58,8 +56,9 @@ process FMHFUNPROFILER {
     //               using the Nextflow "task" variable e.g. "--threads $task.cpus"
     // TODO nf-core: Please replace the example samtools command below with your module's command
     // TODO nf-core: Please indent the command appropriately (4 spaces!!) to help with readability ;)
-    if (args.size() != 2) {
-	println("fmh-funcprofiler must be configured with an input , but got ${args.size()}")
+    if (args.split(' ').size() != 2) {
+	println(args)
+	println("fmh-funcprofiler must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}")
 	throw new IllegalArgumentException("fmh-funcprofiler must be configured with an , but got ${args.size()}")
     }
     """
@@ -71,10 +70,11 @@ process FMHFUNPROFILER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fmhfunprofiler: $task.process.container
         fmhfunprofiler-database: $fmhfunprofiler_db
     END_VERSIONS
     """
+    // TODO add  container somehow
+    //fmhfunprofiler: $task.process.container
 
     stub:
     def args = task.ext.args ?: ''

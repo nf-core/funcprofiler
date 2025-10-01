@@ -4,6 +4,7 @@
 
 //include { HUMANN_HUMANN          } from '../modules/local/humann/humann/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
+include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
 //include { METAPHLAN_METAPHLAN                           } from '../../modules/nf-core/metaphlan/metaphlan/main'
 
 
@@ -89,20 +90,47 @@ workflow PROFILING {
     // for each tool and make liberal use of multiMap to keep reads/databases
     // channel element order in sync with each other
     if ( params.run_fmhfunprofiler ) {
-
+	// stolen logic from taxprofiler.
         ch_input_for_fmhfunprofiler =  ch_input_for_profiling.fmhfunprofiler
-                                .multiMap {
-                                    it ->
-                                        reads: [ it[0] + it[2], it[1] ]
-                                        db: it[3]
-                                }
-        FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db )
-        ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions.first() )
-//        ch_raw_classifications = ch_raw_classifications.mix( FMHFUNPROFILER.out.results )
+	            .map {
+                meta, reads, db_meta, db ->
+//                meta, reads ->
+                def meta_new = meta - meta.subMap('run_accession')
+		meta_new["db_meta"] = db_meta
+		meta_new["db"]  = db
+		meta_new["single_end"] = true // call them "single end" so CAT_FASTQ actually flattens R1 and R2 into single file
+                [ meta_new, reads ]
+            }
+            .groupTuple()
+            .map {
+                meta, reads  ->
+                [ meta, reads.flatten() ]
+            }
+            .branch {
+                meta, reads  ->
+                // we can't concatenate files if there is not a second run, we branch
+                // here to separate them out, and mix back in after for efficiency
+                cat: ( meta.single_end && reads.size() > 1 ) || ( !meta.single_end && reads.size() > 2 )
+                skip: true
+            }
+
+        ch_input_for_fmhfunprofiler_reads_merged = CAT_FASTQ ( ch_input_for_fmhfunprofiler.cat ).reads
+
+	    .mix( ch_input_for_fmhfunprofiler.skip )
+            .multiMap {
+                meta, reads ->
+		def new_meta = meta - meta.subMap("db") + meta.subMap("db_meta")
+		new_meta.db_params = meta["db_meta"]["db_params"]
+
+                reads: [ new_meta,  [reads].flatten() ]
+                db: meta["db"]
+	    }
+	println(ch_input_for_fmhfunprofiler_reads_merged.reads.view())
+        FMHFUNPROFILER ( ch_input_for_fmhfunprofiler_reads_merged.reads, ch_input_for_fmhfunprofiler_reads_merged.db )
 
         // Generate profile
-        ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions.first() )
-        ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
+        //ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions.first() )
+        //ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
 //        ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
     }

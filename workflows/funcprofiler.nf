@@ -216,7 +216,6 @@ workflow FUNCPROFILER {
             .mix( ch_longreads_preprocessed, ch_input.fasta_short, ch_input.fasta_long )
     }
 
-
     PROFILING (
         ch_reads_runmerged,
 	ch_final_dbs,
