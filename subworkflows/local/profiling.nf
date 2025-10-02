@@ -119,7 +119,6 @@ workflow PROFILING_CONCAT {
     // E.g. if there is no 'long' reads the above generated 'long' database channel element
     //  will have nothing to join to and will be discarded
     // Final output [DUMP: reads_plus_db] [['id':'2612', 'run_accession':'combined', 'instrument_platform':'ILLUMINA', 'single_end':false, 'is_fasta':false, 'type':'short'], <reads_path>/2612.merged.fastq.gz, ['tool':'malt', 'db_name':'malt95', 'db_params':'"-id 90"', 'type':'short'], <db_path>/malt95]
-
     ch_input_for_profiling = reads
         .map{
             meta, reads ->
@@ -154,7 +153,7 @@ workflow PROFILING_CONCAT {
                 reads: [ new_meta,  [reads].flatten() ]
                 db: db
 	    }
-	println(ch_input_for_fmhfunprofiler.reads.view())
+//	println(ch_input_for_fmhfunprofiler.reads.view())
         FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db )
 
         // Generate profile
@@ -164,6 +163,44 @@ workflow PROFILING_CONCAT {
 
     }
     if ( params.run_humann ) {
+	def humann_dbs_raw = ch_dbs
+	    .map{
+		type, db_meta, db ->
+		def newmeta = db_meta - db_meta.subMap('type')
+		[newmeta, db]
+	    }
+	    .unique()
+	    .filter { db_meta, db -> db_meta.tool == "humann" | db_meta.tool == "metaphlan" }
+	humann_dbs_raw = humann_dbs_raw
+	    .branch {
+                db_meta, db ->
+                pangenome: db_meta.tool == "metaphlan"
+                // trying to avoid having to do this in bash, cause then its trickier to log the version
+		     def indexname = file("${db}").listFiles().find { it.name.contains("rev.1.bt2") }.name.replaceAll(/\.rev\.1\.bt2.*/, "")
+                     return [db_meta, db, indexname].unique()
+		nucleotide: db_meta.tool == "humann" && db_meta.db_name == "nucleotide"
+                    return [db_meta, db].unique()
+		protein: db_meta.tool == "humann" && db_meta.db_name == "protein"
+                    return [db_meta, db].unique()
+
+            }
+
+        ch_input_for_humann =  ch_input_for_profiling.humann
+            .map {
+                meta, reads, db_meta, db ->
+
+                [ meta,  [reads].flatten() ]
+	    }
+	    .unique()
+	println(humann_dbs_raw.pangenome.class)
+        HUMANN_HUMANN ( ch_input_for_humann, humann_dbs_raw.pangenome, humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
+
+        // Generate profile
+        ch_versions            = ch_versions.mix( HUMANN_HUMANN.out.versions.first() )
+        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN_HUMANN.out.pathabundance )
+	    .mix( HUMANN_HUMANN.out.genefamilies )
+	    .mix( HUMANN_HUMANN.out.pathcoverage )
+	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
     }
 
