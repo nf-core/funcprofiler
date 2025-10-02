@@ -58,8 +58,9 @@ include { UNTAR                       } from '../modules/nf-core/untar/main'
 //include { FALCO                       } from '../modules/nf-core/falco/main'
 //include { CAT_FASTQ as MERGE_RUNS     } from '../modules/nf-core/cat/fastq/main'
 
-
+include { CONCAT_ALL                    } from '../subworkflows/local/concatall'
 include { PROFILING                     } from '../subworkflows/local/profiling'
+include { PROFILING_CONCAT              } from '../subworkflows/local/profiling'
 include { SHORTREAD_PREPROCESSING       } from '../subworkflows/local/shortread_preprocessing'
 include { LONGREAD_PREPROCESSING        } from '../subworkflows/local/longread_preprocessing'
 
@@ -215,9 +216,10 @@ workflow FUNCPROFILER {
         ch_reads_runmerged = ch_shortreads_preprocessed
             .mix( ch_longreads_preprocessed, ch_input.fasta_short, ch_input.fasta_long )
     }
+    CONCAT_ALL(ch_reads_runmerged)
 
-    PROFILING (
-        ch_reads_runmerged,
+    PROFILING_CONCAT (
+        CONCAT_ALL.out.ch_input_reads_merged,
 	ch_final_dbs,
 
     )
