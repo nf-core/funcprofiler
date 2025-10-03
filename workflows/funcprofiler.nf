@@ -5,6 +5,7 @@
 */
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
+include { METAPHLAN_METAPHLAN    } from '../modules/nf-core/metaphlan/metaphlan/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -60,7 +61,6 @@ include { UNTAR                       } from '../modules/nf-core/untar/main'
 
 include { CONCAT_ALL                    } from '../subworkflows/local/concatall'
 include { PROFILING                     } from '../subworkflows/local/profiling'
-include { PROFILING_CONCAT              } from '../subworkflows/local/profiling'
 include { SHORTREAD_PREPROCESSING       } from '../subworkflows/local/shortread_preprocessing'
 include { LONGREAD_PREPROCESSING        } from '../subworkflows/local/longread_preprocessing'
 
@@ -142,7 +142,6 @@ workflow FUNCPROFILER {
     // Untar the databases
     UNTAR ( ch_inputdb_untar )
     ch_versions = ch_versions.mix( UNTAR.out.versions.first() )
-
     // Spread out the untarred and shared databases
     ch_outputdb_from_untar = UNTAR.out.untar
         .map {
@@ -216,12 +215,12 @@ workflow FUNCPROFILER {
         ch_reads_runmerged = ch_shortreads_preprocessed
             .mix( ch_longreads_preprocessed, ch_input.fasta_short, ch_input.fasta_long )
     }
-    CONCAT_ALL(ch_reads_runmerged)
 
-    PROFILING_CONCAT (
-        CONCAT_ALL.out.ch_input_reads_merged,
+
+
+    PROFILING (
+	ch_reads_runmerged,
 	ch_final_dbs,
-
     )
 
     // //
