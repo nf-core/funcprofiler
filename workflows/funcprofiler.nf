@@ -57,7 +57,7 @@ if (params.databases) { ch_databases = file(params.databases, checkIfExists: tru
 //
 include { UNTAR                       } from '../modules/nf-core/untar/main'
 //include { FALCO                       } from '../modules/nf-core/falco/main'
-//include { CAT_FASTQ as MERGE_RUNS     } from '../modules/nf-core/cat/fastq/main'
+include { CAT_FASTQ as MERGE_RUNS     } from '../modules/nf-core/cat/fastq/main'
 
 include { CONCAT_ALL                    } from '../subworkflows/local/concatall'
 include { PROFILING                     } from '../subworkflows/local/profiling'
@@ -150,12 +150,26 @@ workflow FUNCPROFILER {
         }
         .transpose(by: 0)
 
-    ch_final_dbs = ch_dbs_for_untar.skip
+    ch_semifinal_dbs = ch_dbs_for_untar.skip
                     .mix( ch_outputdb_from_untar  )
                     .map { db_meta, db ->
                         def corrected_db_params = db_meta.db_params ? [ db_params: db_meta.db_params ] : [ db_params: '' ]
                         [ db_meta + corrected_db_params, db ]
-                    }
+        }
+//    println(ch_semifinal_dbs.view())
+    ch_grouped_dbs = ch_semifinal_dbs
+	.map { meta, path ->
+	    [ [meta.tool, meta.db_name], [meta.db_entity, meta.db_params, meta.db_type, path]]
+	}
+	.groupTuple()
+//	.view()
+	.map { groupKey, groupTuples ->
+            def grouped_dbs = groupTuples.collect { t ->
+		def (tool, db_name, db_entity, db_params, db_type, path) = t
+		[ [db_entity: db_entity, db_params: db_params, db_type: db_type], path ]
+            }
+            [groupKey] + grouped_dbs
+	}
 
 
 
@@ -179,7 +193,7 @@ workflow FUNCPROFILER {
         ch_longreads_preprocessed = ch_input.nanopore
     }
 
-    if ( params.perform_runmerging ) {
+    if ( params.perform_runmerging || true ) {
 
         ch_reads_for_cat_branch = ch_shortreads_preprocessed
             .mix( ch_longreads_preprocessed )
@@ -220,7 +234,7 @@ workflow FUNCPROFILER {
 
     PROFILING (
 	ch_reads_runmerged,
-	ch_final_dbs,
+	ch_grouped_dbs,
     )
 
     // //

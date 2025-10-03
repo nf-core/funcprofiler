@@ -11,8 +11,8 @@
                 "type": "string",
                 "enum": [
 		    "humann",
-                    "metaphlan",
-                    "fmhfunprofiler"
+                    "fmhfunprofiler",
+		    "rgi"
                 ],
                 "errorMessage": "Invalid tool name. Please see documentation for all supported profilers. Currently these classifers are included: humann, metaphlan, fmhfunprofiler.",
                 "meta": ["tool"]
@@ -22,6 +22,16 @@
                 "pattern": "^\\S+$",
                 "errorMessage": "The unique name of the database should be provided.",
                 "meta": ["db_name"]
+            },
+            "db_entity": {
+                "type": "string",
+                "enum": [
+		    "humann_metaphlan",
+                    "humann_nucleotide",
+                    "humann_protein"
+                ],
+                "errorMessage": "The unique name of the database entity should be provided. (eg, for HUMAnN, specify whether db_path is the humann_nucleotide, humann_protein, or humann_metaphlan database)",
+                "meta": ["db_entity"]
             },
             "db_params": {
                 "type": "string",
@@ -44,5 +54,5 @@
         },
         "required": ["tool", "db_name", "db_path"]
     },
-    "uniqueEntries": ["tool", "db_name"]
+    "uniqueEntries": ["tool", "db_name", "db_entity"]
 }
