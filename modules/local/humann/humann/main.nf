@@ -52,7 +52,9 @@ process HUMANN_HUMANN {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-  //  def pangenome_string = "--metaphlan-options \"-t rel_ab --bowtie2db ./${pangenome_db} --index ${pangenome_db_index_name} \""
+    // TODO: I never got this to successfully run
+    //  def pangenome_string = "--metaphlan-options \"-t rel_ab --bowtie2db ./${pangenome_db} --index ${pangenome_db_index_name} \""
+    def pangenome_string = "--taxonomic-profile ${profile}"
     """
 
     humann \\

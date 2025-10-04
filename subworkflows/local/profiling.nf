@@ -23,59 +23,26 @@ include { CONCAT_ALL                                    } from '../../subworkflo
 * @return A multiMap'ed output channel with two sub channels, one with the profile and the other with the db
 */
 
-def preparePairedInputs(pairedreads, databases){
+def prepareInputs(pairedreads, databases, singleFqTool=False){
     /*
         COMBINE READS WITH POSSIBLE DATABASES
     */
 
     // Separate default 'short;long' (when necessary) databases when short/long specified in database sheet
+    // TODO: check combined dbs have same type
     ch_dbs = databases
         .map{
             tool_and_name, meta_db ->
-            [ [meta_db[0].db_type.split(";")].flatten(), tool_and_name, meta_db]
-        }
-	.view()
-        .transpose(by: 0)
-        .map{
-            type, meta_db, db ->
-            [[type: type], meta_db.subMap(meta_db.keySet() - 'db_type') + [type: type], db]
-        }
-    println(ch_dbs.view())
-
-    // return pairedreads
-    //     .map{
-    //         meta, reads ->
-    //         [[type: meta.type], meta, reads]
-    //     }
-    //     .combine(ch_dbs, by: 0)
-    //     .map{
-    //         db_type, meta, reads, db_meta, db ->
-    //         [ meta, reads, db_meta, db ]
-    //     }
-    //     .branch { meta, reads, db_meta, db ->
-    //         rgi:         db_meta.tool == 'rgi'
-    //         metaphlan:         true
-    //         unknown:    true
-    //     }
-}
-def prepareMergedInputs(mergedreads, databases){
-    ch_dbs = databases
-        .map{
-            meta_db, db ->
-            [ [meta_db.db_type.split(";")].flatten(), meta_db, db]
+	    def first_type = meta_db[0].db_type
+            [ [first_type.split(";")].flatten(), tool_and_name, meta_db]
         }
         .transpose(by: 0)
         .map{
-            type, meta_db, db ->
-            [[type: type], meta_db.subMap(meta_db.keySet() - 'db_type') + [type: type], db]
+            type, meta_db, dblist ->
+            [[type: type], meta_db.subMap(meta_db.keySet() - 'db_type') + [type: type], dblist]
         }
 
-    // Join short and long reads with their corresponding short/long database
-    // Note that for not-specified `short;long`, it will match with the database.
-    // E.g. if there is no 'long' reads the above generated 'long' database channel element
-    //  will have nothing to join to and will be discarded
-    // Final output [DUMP: reads_plus_db] [['id':'2612', 'run_accession':'combined', 'instrument_platform':'ILLUMINA', 'single_end':false, 'is_fasta':false, 'type':'short'], <reads_path>/2612.merged.fastq.gz, ['tool':'malt', 'db_name':'malt95', 'db_params':'"-id 90"', 'type':'short'], <db_path>/malt95]
-    return mergedreads
+    reads_with_dbs = pairedreads
         .map{
             meta, reads ->
             [[type: meta.type], meta, reads]
@@ -85,12 +52,51 @@ def prepareMergedInputs(mergedreads, databases){
             db_type, meta, reads, db_meta, db ->
             [ meta, reads, db_meta, db ]
         }
+    if (singleFqTool){
+        return reads_with_dbs
         .branch { meta, reads, db_meta, db ->
             humann:         db_meta.tool == 'humann'
             fmhfunprofiler: db_meta.tool == 'fmhfunprofiler'
             unknown:    true
         }
+    } else {
+        return reads_with_dbs
+	    .branch { meta, reads, db_meta, db ->
+		rgi:         db_meta.tool == 'rgi'
+		unknown:    true
+            }
+    }
 }
+// def prepareMergedInputs(mergedreads, databases){
+//         ch_dbs = databases
+//         .map{
+//             tool_and_name, meta_db ->
+// 	    def first_type = meta_db[0].db_type
+//             [ [first_type.split(";")].flatten(), tool_and_name, meta_db]
+//         }
+//         .transpose(by: 0).view()
+//         .map{
+//             type, meta_db, dblist ->
+//             [[type: type], meta_db.subMap(meta_db.keySet() - 'db_type') + [type: type], dblist]
+//         }
+
+
+//     return mergedreads
+//         .map{
+//             meta, reads ->
+//             [[type: meta.type], meta, reads]
+//         }
+//         .combine(ch_dbs, by: 0)
+//         .map{
+//             db_type, meta, reads, db_meta, db ->
+//             [ meta, reads, db_meta, db ]
+//         }
+//         .branch { meta, reads, db_meta, db ->
+//             humann:         db_meta.tool == 'humann'
+//             fmhfunprofiler: db_meta.tool == 'fmhfunprofiler'
+//             unknown:    true
+//         }
+// }
 
 
 
@@ -130,37 +136,48 @@ workflow PROFILING {
         PREPARE PROFILER INPUT CHANNELS & RUN PROFILING
     */
     CONCAT_ALL(reads)
-
-    ch_paired_input_for_profiling = preparePairedInputs(reads, databases)
-    ch_merged_input_for_profiling = ch_paired_input_for_profiling
-//    ch_merged_input_for_profiling = prepareMergedInputs(CONCAT_ALL.out.ch_input_reads_merged, databases)
+    ch_paired_input_for_profiling = prepareInputs(reads, databases, singleFqTool=false)
+//    ch_merged_input_for_profiling = ch_paired_input_for_profiling
+    ch_merged_input_for_profiling = prepareInputs(CONCAT_ALL.out.ch_input_reads_merged, databases, singleFqTool=true)
     // Each tool as a slightly different input structure and generally separate
     // input channels for reads vs databases. We restructure the channel tuple
     // for each tool and make liberal use of multiMap to keep reads/databases
     // channel element order in sync with each other
-//     if ( params.run_fmhfunprofiler ) {
-// 	// stolen logic from taxprofiler.
-//         ch_input_for_fmhfunprofiler =  ch_merged_input_for_profiling.fmhfunprofiler
-//             .multiMap {
-//                 meta, reads, db_meta, db ->
-// 		def new_meta = meta +  db_meta
-// 		new_meta.db_params = db_meta["db_params"]
+    if ( params.run_fmhfunprofiler ) {
+	// stolen logic from taxprofiler.  except for undoing the mutliple-database maddness imposed earlier
+        ch_input_for_fmhfunprofiler =  ch_merged_input_for_profiling.fmhfunprofiler
+            .multiMap {
+                meta, reads, db_meta, db ->
+		def new_meta = meta +  db_meta
+		new_meta.db_params = db[0]["db_params"]
 
-//                 reads: [ new_meta,  [reads].flatten() ]
-//                 db: db
-// 	    }
-// //	println(ch_input_for_fmhfunprofiler.reads.view())
-//         FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db )
+                reads: [ new_meta,  [reads].flatten() ]
+                db: db[0].db_path
 
-//         // Generate profile
-//         ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions.first() )
-//         ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
-// 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
+	    }
+        FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db )
 
-//     }
-//     if ( params.run_humann ) {
+        // Generate profile
+        ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions.first() )
+        ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
+	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
+
+    }
+    if ( params.run_humann ) {
 
 
+        ch_input_for_humann =  ch_merged_input_for_profiling.humann
+            .multiMap {
+                meta, reads, db_meta, db ->
+		def new_meta = meta +  db_meta
+		//TODO add the params in
+//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
+                reads: [ new_meta,  [reads].flatten() ]
+		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
+		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
+		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
+
+	    }
 // 	def humann_dbs_raw = ch_dbs
 // 	    .map{
 // 		type, db_meta, db ->
@@ -192,33 +209,24 @@ workflow PROFILING {
 // 	    .unique()
 
 
-// 	//if (params.run_humann && !input.mpa_profile){
-// 	if (true){
-// 	    ch_input_for_metaphlan = ch_paired_input_for_profiling.metaphlan
-//                 .multiMap {
-//                     it ->
-//                     reads: [it[0] + it[2], it[1]]
-//                     db: it[3]
-//                 }
-// 	    print(ch_input_for_metaphlan.reads.view())
-//             METAPHLAN_METAPHLAN ( ch_input_for_metaphlan.reads, ch_input_for_metaphlan.db, false )
-//             ch_versions        = ch_versions.mix( METAPHLAN_METAPHLAN.out.versions.first() )
-//             ch_raw_profiles    = ch_raw_profiles.mix( METAPHLAN_METAPHLAN.out.profile )
-//             HUMANN_HUMANN ( ch_input_for_humann, METAPHLAN_METAPHLAN.out.profile, humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
-// 	} else {
-// 	    println("not enabled")
-// 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
+	//if (params.run_humann && !input.mpa_profile){
+	if (true){
+            METAPHLAN_METAPHLAN ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
+            HUMANN_HUMANN ( ch_input_for_humann.reads, METAPHLAN_METAPHLAN.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db)
+	} else {
+	    println("not enabled")
+	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
 
-// 	}
+	}
 
-// 	//println(humann_dbs_raw.pangenome.first().view())
 
-//         // Generate profile
-//         ch_versions            = ch_versions.mix( HUMANN_HUMANN.out.versions.first() )
-//         ch_raw_profiles        = ch_raw_profiles.mix( HUMANN_HUMANN.out.pathabundance )
-// 	    .mix( HUMANN_HUMANN.out.genefamilies )
-// 	    .mix( HUMANN_HUMANN.out.pathcoverage )
-//     }
+        ch_versions        = ch_versions.mix( METAPHLAN_METAPHLAN.out.versions.first() )
+        ch_raw_profiles    = ch_raw_profiles.mix( METAPHLAN_METAPHLAN.out.profile )
+        ch_versions            = ch_versions.mix( HUMANN_HUMANN.out.versions.first() )
+        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN_HUMANN.out.pathabundance )
+	    .mix( HUMANN_HUMANN.out.genefamilies )
+	    .mix( HUMANN_HUMANN.out.pathcoverage )
+    }
 // 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
 //     /////////////   PAIRED Inputs

@@ -159,16 +159,15 @@ workflow FUNCPROFILER {
 //    println(ch_semifinal_dbs.view())
     ch_grouped_dbs = ch_semifinal_dbs
 	.map { meta, path ->
-	    [ [meta.tool, meta.db_name], [meta.db_entity, meta.db_params, meta.db_type, path]]
+	    [ [tool: meta.tool, db_name: meta.db_name], [meta.db_entity, meta.db_params, meta.db_type, path]]
 	}
 	.groupTuple()
-//	.view()
 	.map { groupKey, groupTuples ->
             def grouped_dbs = groupTuples.collect { t ->
-		def (tool, db_name, db_entity, db_params, db_type, path) = t
-		[ [db_entity: db_entity, db_params: db_params, db_type: db_type], path ]
+		def (db_entity, db_params, db_type, path) = t
+		[db_entity: db_entity, db_params: db_params, db_type: db_type, db_path:path]
             }
-            [groupKey] + grouped_dbs
+            [groupKey,  grouped_dbs]
 	}
 
 
