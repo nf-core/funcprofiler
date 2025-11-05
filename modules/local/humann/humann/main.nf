@@ -23,24 +23,23 @@ def getProcessName(task_process) {
 process HUMANN_HUMANN {
     tag "$meta.id"
     label 'process_high'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
+    publishDir "${params.outdir}"
+    //, mode: params.publish_dir_mode,
+//        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::humann=3.0.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/humann:3.0.0--pyh5e36f6f_1"
+        container "docker://ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1"
     } else {
-        container "quay.io/biocontainers/humann:3.0.0--pyh5e36f6f_1"
+        container "ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1"
     }
 
     input:
-//    tuple val(meta), path(input)
     tuple val(meta), path(input)
-    tuple path(profile)
+    tuple val(meta), path(profile)
 //    tuple val(pangenome_meta), path(pangenome_db), val(pangenome_db_index_name)
-    tuple val(nucleotide_meta), path(nucleotide_db)
-    tuple val(protein_meta), path(protein_db)
+    path nucleotide_db
+    path protein_db
 
     output:
     tuple val(meta), path("*_genefamilies.tsv.gz") , emit: genefamilies
@@ -56,13 +55,17 @@ process HUMANN_HUMANN {
     //  def pangenome_string = "--metaphlan-options \"-t rel_ab --bowtie2db ./${pangenome_db} --index ${pangenome_db_index_name} \""
     def pangenome_string = "--taxonomic-profile ${profile}"
     """
-
+    PROTS_DB=`find -L "${protein_db}" -name "*.dmnd" -exec dirname {} \\;`
+    nuclist=`find -L "${nucleotide_db}" -name "*.ffn.gz" -print -quit `
+    NUCS_DB=\$(dirname \$nuclist)
+    
+    find \${NUCS_DB}
     humann \\
         $args \\
         --threads ${task.cpus} \\
         --input $input \\
-        --protein-database $protein_db \\
-        --nucleotide-database $nucleotide_db \\
+        --protein-database \${PROTS_DB} \\
+        --nucleotide-database \${NUCS_DB} \\
         --output-basename $prefix \\
         $pangenome_string \\
 	${args} \\
@@ -73,11 +76,13 @@ process HUMANN_HUMANN {
     gzip -n *.tsv
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$( humann --version 2>&1 | sed 's/humann v//' )
+    HUMANN:
+        Humann version: \$( humann --version 2>&1 | sed 's/humann v//' )
         Protein database: $protein_db
         Nucleotide database: $nucleotide_db
         Metaphlan profile or database: $pangenome_string
     END_VERSIONS
     """
 }
+//    ${getProcessName(task.process)}:
+//        ${getSoftwareName(task.process)}: \$( humann --version 2>&1 | sed 's/humann v//' )

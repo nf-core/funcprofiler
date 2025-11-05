@@ -165,7 +165,6 @@ workflow PROFILING {
     }
     if ( params.run_humann ) {
 
-
         ch_input_for_humann =  ch_merged_input_for_profiling.humann
             .multiMap {
                 meta, reads, db_meta, db ->
@@ -212,7 +211,7 @@ workflow PROFILING {
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
             METAPHLAN_METAPHLAN ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
-            HUMANN_HUMANN ( ch_input_for_humann.reads, METAPHLAN_METAPHLAN.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db)
+            HUMANN_HUMANN ( ch_input_for_humann.reads, METAPHLAN_METAPHLAN.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db )
 	} else {
 	    println("not enabled")
 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
