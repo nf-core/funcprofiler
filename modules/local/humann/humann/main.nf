@@ -23,11 +23,9 @@ def getProcessName(task_process) {
 process HUMANN_HUMANN {
     tag "$meta.id"
     label 'process_high'
-    publishDir "${params.outdir}"
-    //, mode: params.publish_dir_mode,
-//        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::humann=3.0.0" : null)
+
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "docker://ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1"
     } else {
@@ -58,7 +56,7 @@ process HUMANN_HUMANN {
     PROTS_DB=`find -L "${protein_db}" -name "*.dmnd" -exec dirname {} \\;`
     nuclist=`find -L "${nucleotide_db}" -name "*.ffn.gz" -print -quit `
     NUCS_DB=\$(dirname \$nuclist)
-    
+
     find \${NUCS_DB}
     humann \\
         $args \\

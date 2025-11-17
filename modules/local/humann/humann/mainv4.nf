@@ -23,11 +23,8 @@ def getProcessName(task_process) {
 process HUMANN_HUMANN_V4 {
     tag "$meta.id"
     label 'process_high'
-    publishDir "${params.outdir}"
-    //, mode: params.publish_dir_mode,
-//        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::humann=3.0.0" : null)
+    conda (params.enable_conda ? "biobakery::humann=4.0.0a1" : null)
 
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
         ? 'docker://ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final'
