@@ -2,8 +2,7 @@
 // Run profiling
 //
 
-include { HUMANN_HUMANN                                 } from '../../modules/local/humann/humann/main'
-include { HUMANN_HUMANN_V4                              } from '../../modules/local/humann/humann/mainv4'
+include { HUMANN_HUMANN as HUMANN3; HUMANN_HUMANN as HUMANN4 } from '../../modules/local/humann/humann/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPA; METAPHLAN_METAPHLAN as MPA_B } from '../../modules/nf-core/metaphlan/metaphlan/main'
 include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
@@ -174,11 +173,12 @@ workflow PROFILING {
 		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
 		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
 		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
+		util_db: db.findAll { it.db_entity == "humann_utility" }.first().db_path
 	    }
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
             MPA ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
-            HUMANN_HUMANN ( ch_input_for_humann.reads, MPA.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db,
+            HUMANN3 ( ch_input_for_humann.reads, MPA.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db, ch_input_for_humann.util_db
 	                     )
 	} else {
 	    println("not enabled")
@@ -186,10 +186,10 @@ workflow PROFILING {
 	}
         ch_versions        = ch_versions.mix( MPA.out.versions.first() )
         ch_raw_profiles    = ch_raw_profiles.mix( MPA.out.profile )
-        ch_versions            = ch_versions.mix( HUMANN_HUMANN.out.versions.first() )
-        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN_HUMANN.out.pathabundance )
-	    .mix( HUMANN_HUMANN.out.genefamilies )
-	    .mix( HUMANN_HUMANN.out.pathcoverage )
+        ch_versions            = ch_versions.mix( HUMANN3.out.versions.first() )
+        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN3.out.pathabundance )
+	    .mix( HUMANN3.out.genefamilies )
+	    .mix( HUMANN3.out.pathcoverage )
     }
     if ( params.run_humann_v4 ) {
 	ch_input_for_humann4 =  ch_merged_input_for_profiling.humann_v4
@@ -206,8 +206,8 @@ workflow PROFILING {
 	    }
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
-//            MPA_B ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, false )
-            HUMANN_HUMANN_V4 ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db,
+            MPA_B ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, false )
+            HUMANN4 ( ch_input_for_humann4.reads, MPA_B.out.profile, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db,
 	                     )
 	} else {
 	    println("not enabled")
@@ -215,10 +215,10 @@ workflow PROFILING {
 	}
 //        ch_versions        = ch_versions.mix( MPA_B.out.versions.first() )
  //       ch_raw_profiles    = ch_raw_profiles.mix( MPA_B.out.profile )
-        ch_versions            = ch_versions.mix( HUMANN_HUMANN_V4.out.versions.first() )
-        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN_HUMANN_V4.out.pathabundance )
-	    .mix( HUMANN_HUMANN_V4.out.genefamilies )
-	    .mix( HUMANN_HUMANN_V4.out.reactions )
+        ch_versions            = ch_versions.mix( HUMANN4.out.versions.first() )
+        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN4.out.pathabundance )
+	    .mix( HUMANN4.out.genefamilies )
+	    .mix( HUMANN4.out.reactions )
     }
 
 
