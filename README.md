@@ -20,7 +20,7 @@
 
 ## Introduction
 
-**nf-core/funcprofiler** is a bioinformatics pipeline that ...
+**nf-core/funcprofiler** is a bioinformatics pipeline that performs end-to-end functional profiling of metagenomes. It is designed to be a standalone tool or used along other metagenomics pipelines such as [nf-core/taxprofiler](https://nf-co.re/taxprofiler/latest/) and [nf-core/mag](https://nf-co.re/mag/latest/). It allows for parallel functional identification of reads against multiple databases, and using a suite of different tools.
 
 <!-- TODO nf-core:
    Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
@@ -28,9 +28,22 @@
    to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
 -->
 
+## Pipeline summary
+
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/guidelines/graphic_design/workflow_diagrams#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
+
+1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) or [`falco`](https://github.com/smithlabcode/falco) as an alternative option)
+2. Optional read pre-processing
+   - Adapter clipping and merging (short-read: [fastp](https://github.com/OpenGene/fastp); long-read: [porechop](https://github.com/rrwick/Porechop))
+   - Host-read removal (short-read: [BowTie2](http://bowtie-bio.sourceforge.net/bowtie2/); long-read: [Minimap2](https://github.com/lh3/minimap2))
+   - Run merging
+3. Performs functional classification and/or profiling using one or more of:
+   - [humann3](http://huttenhower.sph.harvard.edu/humann)
+   - [DIAMOND](https://github.com/bbuchfink/diamond)
+   - [Resistance Gene Identifier](https://card.mcmaster.ca/analyze/rgi)
+4. Concatenate QC and profile reports ([`MultiQC`](http://multiqc.info/))
 
 ## Usage
 
