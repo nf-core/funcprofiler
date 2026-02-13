@@ -1,0 +1,65 @@
+{
+    "-profile test": {
+        "content": [
+            12,
+            null,
+            [
+                "fastp",
+                "fastp/2612.fastp.fastq.gz",
+                "fastp/2612.fastp.html",
+                "fastp/2612.fastp.json",
+                "fastp/2612.fastp.log",
+                "fastp/2612.merged.fastq.gz",
+                "fastp/2612_1.fastp.fastq.gz",
+                "fastp/2612_2.fastp.fastq.gz",
+                "fastp/2613.fastp.html",
+                "fastp/2613.fastp.json",
+                "fastp/2613.fastp.log",
+                "fastp/2613.merged.fastq.gz",
+                "fastp/2613_1.fastp.fastq.gz",
+                "fastp/2613_2.fastp.fastq.gz",
+                "fastqc",
+                "fastqc/2612_fastqc.html",
+                "fastqc/2612_fastqc.zip",
+                "fastqc/2613_fastqc.html",
+                "fastqc/2613_fastqc.zip",
+                "fastqc/ERR3201952_fastqc.html",
+                "fastqc/ERR3201952_fastqc.zip",
+                "merge",
+                "merge/2612.merged.fastq.gz",
+                "nanoq",
+                "nanoq/ERR3201952_filtered.fastq.gz",
+                "nanoq/ERR3201952_filtered.stats",
+                "pipeline_info",
+                "porechop",
+                "porechop/ERR3201952.porechop_abi.fastq.gz",
+                "porechop/ERR3201952.porechop_abi.log"
+            ],
+            [
+                "2612.fastp.fastq.gz:md5,b4f19489c85871f4e4888dd092538a41",
+                "2612.fastp.html:md5,bb508efda757c43300bb9393994d8ec7",
+                "2612.fastp.json:md5,dac3532e723b8b5ed5ca1625ad2102d3",
+                "2612.fastp.log:md5,610eabb31067b24c525b234fe8552254",
+                "2612.merged.fastq.gz:md5,7f774191ba98093c716f35caadeee96c",
+                "2612_1.fastp.fastq.gz:md5,8ec57f802a411560eb202cfdd58a4477",
+                "2612_2.fastp.fastq.gz:md5,3665edf43991c3172d6cf1412ca93cb5",
+                "2613.fastp.html:md5,229152775ab5c452d27d5b48ec6eeff4",
+                "2613.fastp.json:md5,5aab1cc94c8ee3dfa8b1321cb561f343",
+                "2613.fastp.log:md5,183b286ad901129fb5d2d3e4240ad0b9",
+                "2613.merged.fastq.gz:md5,67c4448f55d7feab0eb4ebb888dc6c02",
+                "2613_1.fastp.fastq.gz:md5,6e76738f37ff535f3e43dfdc5307bb06",
+                "2613_2.fastp.fastq.gz:md5,f6c9f7eff7d9cb72a05401833f565bac",
+                "2612.merged.fastq.gz:md5,8d1a3760617a21698535f19a036e7544",
+                "ERR3201952_filtered.fastq.gz:md5,ef878d091d7e9b60684f11b0f04fd250",
+                "ERR3201952_filtered.stats:md5,07a6e27538e023cc468b93b26147b78c",
+                "ERR3201952.porechop_abi.fastq.gz:md5,ef878d091d7e9b60684f11b0f04fd250",
+                "ERR3201952.porechop_abi.log:md5,256aa2fb5bf99100154b77caf2a7dee1"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-13T14:26:38.814026"
+    }
+}
