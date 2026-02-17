@@ -2,9 +2,9 @@
 // Run profiling
 //
 
-include { HUMANN_HUMANN                                 } from '../../modules/local/humann/humann/main'
+include { HUMANN_HUMANN as HUMANN3; HUMANN_HUMANN as HUMANN4 } from '../../modules/local/humann/humann/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
-include { METAPHLAN_METAPHLAN                           } from '../../modules/nf-core/metaphlan/metaphlan/main'
+include { METAPHLAN_METAPHLAN as MPA; METAPHLAN_METAPHLAN as MPA_B } from '../../modules/nf-core/metaphlan/metaphlan/main'
 include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
 include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
 
@@ -54,7 +54,8 @@ def prepareInputs(pairedreads, databases, singleFqTool=False){
     if (singleFqTool){
         return reads_with_dbs
         .branch { meta, reads, db_meta, db ->
-            humann:         db_meta.tool == 'humann'
+            humann_v3:         db_meta.tool == 'humann_v3'
+            humann_v4:        db_meta.tool == 'humann_v4'
             fmhfunprofiler: db_meta.tool == 'fmhfunprofiler'
             unknown:    true
         }
@@ -136,7 +137,6 @@ workflow PROFILING {
     */
     CONCAT_ALL(reads)
     ch_paired_input_for_profiling = prepareInputs(reads, databases, false)
-//    ch_merged_input_for_profiling = ch_paired_input_for_profiling
     ch_merged_input_for_profiling = prepareInputs(CONCAT_ALL.out.ch_input_reads_merged, databases, true)
     // Each tool as a slightly different input structure and generally separate
     // input channels for reads vs databases. We restructure the channel tuple
@@ -149,10 +149,8 @@ workflow PROFILING {
                 meta, reads, db_meta, db ->
 		def new_meta = meta +  db_meta
 		new_meta.db_params = db[0]["db_params"]
-
                 reads: [ new_meta,  [reads].flatten() ]
                 db: db[0].db_path
-
 	    }
         FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db )
 
@@ -162,70 +160,70 @@ workflow PROFILING {
 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
     }
-    if ( params.run_humann ) {
 
-
-        ch_input_for_humann =  ch_merged_input_for_profiling.humann
-            .multiMap {
-                meta, reads, db_meta, db ->
+    if ( params.run_humann_v3 ) {
+	ch_input_for_humann =  ch_merged_input_for_profiling.humann_v3
+    	    .multiMap {
+		meta, reads, db_meta, db ->
 		def new_meta = meta +  db_meta
 		//TODO add the params in
-//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
-                reads: [ new_meta,  [reads].flatten() ]
+		//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
+		reads: [ new_meta,  [reads].flatten() ]
 		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
 		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
 		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
-
+		util_db: db.findAll { it.db_entity == "humann_utility" }.first().db_path
 	    }
-// 	def humann_dbs_raw = ch_dbs
-// 	    .map{
-// 		type, db_meta, db ->
-// 		def newmeta = db_meta - db_meta.subMap('type')
-// 		[newmeta, db]
-// 	    }
-// 	    .unique()
-// 	    .filter { db_meta, db -> db_meta.tool == "humann" | db_meta.tool == "metaphlan" }
-// 	humann_dbs_raw = humann_dbs_raw
-// 	    .branch {
-//                 db_meta, db ->
-// //                pangenome: db_meta.tool == "humann" && db_meta.db_name == "metaphlan"
-//                 // trying to avoid having to do this in bash, cause then its trickier to log the version
-// //		     def indexname = file("${db}").listFiles().find { it.name.contains("rev.1.bt2") }.name.replaceAll(/\.rev\.1\.bt2.*/, "")
-//  //                    return [db_meta, db, indexname].unique()
-// 		nucleotide: db_meta.tool == "humann" && db_meta.db_name == "nucleotide"
-//                     return [db_meta, db].unique()
-// 		protein: db_meta.tool == "humann" && db_meta.db_name == "protein"
-//                     return [db_meta, db].unique()
-
-//             }
-
-//             ch_input_for_humann =  ch_merged_input_for_profiling.humann
-//             .map {
-//                 meta, reads, db_meta, db ->
-
-//                 [ meta,  [reads].flatten() ]
-// 	    }
-// 	    .unique()
-
-
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
-            METAPHLAN_METAPHLAN ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
-            HUMANN_HUMANN ( ch_input_for_humann.reads, METAPHLAN_METAPHLAN.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db)
+            MPA ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
+            HUMANN3 ( ch_input_for_humann.reads, MPA.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db, ch_input_for_humann.util_db
+	                     )
 	} else {
 	    println("not enabled")
 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
-
 	}
-
-
-        ch_versions        = ch_versions.mix( METAPHLAN_METAPHLAN.out.versions.first() )
-        ch_raw_profiles    = ch_raw_profiles.mix( METAPHLAN_METAPHLAN.out.profile )
-        ch_versions            = ch_versions.mix( HUMANN_HUMANN.out.versions.first() )
-        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN_HUMANN.out.pathabundance )
-	    .mix( HUMANN_HUMANN.out.genefamilies )
-	    .mix( HUMANN_HUMANN.out.pathcoverage )
+        ch_versions        = ch_versions.mix( MPA.out.versions.first() )
+        ch_raw_profiles    = ch_raw_profiles.mix( MPA.out.profile )
+        ch_versions            = ch_versions.mix( HUMANN3.out.versions.first() )
+        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN3.out.pathabundance )
+	    .mix( HUMANN3.out.genefamilies )
+	    .mix( HUMANN3.out.pathcoverage )
     }
+    if ( params.run_humann_v4 ) {
+	ch_input_for_humann4 =  ch_merged_input_for_profiling.humann_v4
+    	    .multiMap {
+		meta, reads, db_meta, db ->
+		def new_meta = meta +  db_meta
+		//TODO add the params in
+		//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
+		reads: [ new_meta,  [reads].flatten() ]
+		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
+		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
+		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
+		util_db: db.findAll { it.db_entity == "humann_utility" }.first().db_path
+	    }
+	//if (params.run_humann && !input.mpa_profile){
+	if (true){
+            MPA_B ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, false )
+            HUMANN4 ( ch_input_for_humann4.reads, MPA_B.out.profile, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db,
+	                     )
+	} else {
+	    println("not enabled")
+	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
+	}
+//        ch_versions        = ch_versions.mix( MPA_B.out.versions.first() )
+ //       ch_raw_profiles    = ch_raw_profiles.mix( MPA_B.out.profile )
+        ch_versions            = ch_versions.mix( HUMANN4.out.versions.first() )
+        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN4.out.pathabundance )
+	    .mix( HUMANN4.out.genefamilies )
+	    .mix( HUMANN4.out.reactions )
+    }
+
+
+
+
+
 // 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
 //     /////////////   PAIRED Inputs
