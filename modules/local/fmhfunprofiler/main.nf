@@ -57,9 +57,7 @@ process FMHFUNPROFILER {
     // TODO nf-core: Please replace the example samtools command below with your module's command
     // TODO nf-core: Please indent the command appropriately (4 spaces!!) to help with readability ;)
     if (args.split(' ').size() != 2) {
-	println(args)
-	println("fmh-funcprofiler must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}")
-	throw new IllegalArgumentException("fmh-funcprofiler must be configured with an , but got ${args.size()}")
+	throw new IllegalArgumentException("fmh-funcprofiler must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}:  ${args}")
     }
     """
     funcprofiler.py  \\
@@ -93,7 +91,7 @@ process FMHFUNPROFILER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fmhfunprofiler: $task.process.container
+        fmhfunprofiler: $task.container
         fmhfunprofiler-database: $fmhfunprofiler_db
     END_VERSIONS    """
 }

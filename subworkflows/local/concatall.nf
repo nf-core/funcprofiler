@@ -3,11 +3,11 @@ include { CAT_FASTQ                                     } from '../../modules/nf
 
 workflow CONCAT_ALL {
     take:
-    reads // [ [ meta ], [ reads ] ]
+    ch_reads // [ [ meta ], [ reads ] ]
 
     main:
 
-    ch_input_singlefq = reads
+    ch_input_singlefq = ch_reads
 	.map {
             meta, reads ->
             def meta_new = meta - meta.subMap('run_accession')
@@ -20,7 +20,7 @@ workflow CONCAT_ALL {
             [ meta, reads.flatten() ]
         }
         .branch {
-            meta, reads  ->
+            _meta, reads  ->
                 // we can't concatenate files if there is not a second run, we branch
                 // here to separate them out, and mix back in after for efficiency
                 cat: reads.size() > 1

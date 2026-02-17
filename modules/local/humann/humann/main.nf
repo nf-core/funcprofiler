@@ -1,31 +1,10 @@
-// Import generic module functions
-//include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-// params.options = [:]
-// options        = initOptions(params.options)
-
-
-
 // Taken 98% from https://github.com/nf-core/modules/pull/1089/files
-def getSoftwareName(task_process) {
-    return task_process.tokenize(':')[-1].tokenize('_')[0].toLowerCase()
-}
-
-//
-// Extract name of module from process name using $task.process
-//
-def getProcessName(task_process) {
-    return task_process.tokenize(':')[-1]
-}
 
 
 
 process HUMANN_HUMANN {
     tag "$meta.id"
     label 'process_high'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::humann=3.0.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {

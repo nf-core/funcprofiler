@@ -7,7 +7,6 @@ include { FMHFUNPROFILER                                } from '../../modules/lo
 include { METAPHLAN_METAPHLAN                           } from '../../modules/nf-core/metaphlan/metaphlan/main'
 include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
 include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
-//include { METAPHLAN_METAPHLAN                           } from '../../modules/nf-core/metaphlan/metaphlan/main'
 
 
 // Custom Functions
@@ -136,9 +135,9 @@ workflow PROFILING {
         PREPARE PROFILER INPUT CHANNELS & RUN PROFILING
     */
     CONCAT_ALL(reads)
-    ch_paired_input_for_profiling = prepareInputs(reads, databases, singleFqTool=false)
+    ch_paired_input_for_profiling = prepareInputs(reads, databases, false)
 //    ch_merged_input_for_profiling = ch_paired_input_for_profiling
-    ch_merged_input_for_profiling = prepareInputs(CONCAT_ALL.out.ch_input_reads_merged, databases, singleFqTool=true)
+    ch_merged_input_for_profiling = prepareInputs(CONCAT_ALL.out.ch_input_reads_merged, databases, true)
     // Each tool as a slightly different input structure and generally separate
     // input channels for reads vs databases. We restructure the channel tuple
     // for each tool and make liberal use of multiMap to keep reads/databases

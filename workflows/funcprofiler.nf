@@ -13,14 +13,16 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_func
 
 // Check input path parameters to see if they exist
 def checkPathParamList = [ params.input, params.databases,
-                            params.longread_hostremoval_index,
-                            params.hostremoval_reference, params.shortread_hostremoval_index,
-                            params.multiqc_config, params.shortread_qc_adapterlist,
-                            params.krona_taxonomy_directory,
-                            params.taxpasta_taxonomy_dir,
-                            params.multiqc_logo, params.multiqc_methods_description
+//                            params.longread_hostremoval_index,
+//                            params.hostremoval_reference, params.shortread_hostremoval_index,
+//                            params.multiqc_config, params.shortread_qc_adapterlist,
+//                            params.krona_taxonomy_directory,
+//                            params.taxpasta_taxonomy_dir,
+//                            params.multiqc_logo, params.multiqc_methods_description
                         ]
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
+checkPathParamList.each{param ->
+    if (param) { file(param, checkIfExists: true) }
+}
 
 // Check mandatory parameters (stolen from taxprofiler
 if ( params.input ) {
