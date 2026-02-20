@@ -1,0 +1,97 @@
+{
+    "humann_v4 sarscov2 - fastq": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_2_genefamilies.tsv.gz:md5,34f174a6d642d21bb14af35a6fe9dd69"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_4_pathabundance.tsv.gz:md5,825a3b76f509e1de6d27d10af6ef885a"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_3_reactions.tsv.gz:md5,c026112aa2b41eb63e3752db315b2515"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.log:md5,34f72bdd867e39fd92147d4321a744ab"
+                    ]
+                ],
+                "5": [
+                    "versions.yml:md5,f6ff5a2377f072fa141b4b7a02e9e47c"
+                ],
+                "genefamilies": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_2_genefamilies.tsv.gz:md5,34f174a6d642d21bb14af35a6fe9dd69"
+                    ]
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.log:md5,34f72bdd867e39fd92147d4321a744ab"
+                    ]
+                ],
+                "pathabundance": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_4_pathabundance.tsv.gz:md5,825a3b76f509e1de6d27d10af6ef885a"
+                    ]
+                ],
+                "pathcoverage": [
+                    
+                ],
+                "reactions": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_3_reactions.tsv.gz:md5,c026112aa2b41eb63e3752db315b2515"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,f6ff5a2377f072fa141b4b7a02e9e47c"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2026-02-20T16:27:35.853855"
+    }
+}
