@@ -6,7 +6,7 @@ nextflow_process {
     tag "modules"
     tag "modules_"
     tag "humann"
-//    config "./nextflow.config"
+    config "./nextflow.config"
     setup{
         run("UNTAR") {
             script "modules/nf-core/untar/main.nf"
@@ -76,7 +76,10 @@ nextflow_process {
     }
     test("humann_v4 sarscov2 - fastq") {
         when {
-            process {
+            params {
+                outdir = "$outputDir"
+		}
+             process {
                 """
                 input[0]= Channel.of([
                     [ id:'test', single_end:false, run_accession:"abc" ], // meta map
@@ -91,11 +94,25 @@ nextflow_process {
         }
 
         then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', '*.log', 'humann3/*'])
+	    println(stable_name)
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+	    println(stable_path)
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_{{ short_name }}_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+		    ).match()
+	        }
             )
         }
-
     }
 }

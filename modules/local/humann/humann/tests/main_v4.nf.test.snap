@@ -1,97 +1,100 @@
 {
     "humann_v4 sarscov2 - fastq": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test_2_genefamilies.tsv.gz:md5,34f174a6d642d21bb14af35a6fe9dd69"
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test_4_pathabundance.tsv.gz:md5,825a3b76f509e1de6d27d10af6ef885a"
-                    ]
-                ],
-                "2": [
-                    
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test_3_reactions.tsv.gz:md5,c026112aa2b41eb63e3752db315b2515"
-                    ]
-                ],
-                "4": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.log:md5,34f72bdd867e39fd92147d4321a744ab"
-                    ]
-                ],
-                "5": [
-                    "versions.yml:md5,f6ff5a2377f072fa141b4b7a02e9e47c"
-                ],
-                "genefamilies": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test_2_genefamilies.tsv.gz:md5,34f174a6d642d21bb14af35a6fe9dd69"
-                    ]
-                ],
-                "log": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.log:md5,34f72bdd867e39fd92147d4321a744ab"
-                    ]
-                ],
-                "pathabundance": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test_4_pathabundance.tsv.gz:md5,825a3b76f509e1de6d27d10af6ef885a"
-                    ]
-                ],
-                "pathcoverage": [
-                    
-                ],
-                "reactions": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test_3_reactions.tsv.gz:md5,c026112aa2b41eb63e3752db315b2515"
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,f6ff5a2377f072fa141b4b7a02e9e47c"
-                ]
-            }
+            7,
+            null,
+            [
+                "humann4",
+                "humann4/test.log",
+                "humann4/test_2_genefamilies.tsv.gz",
+                "humann4/test_3_reactions.tsv.gz",
+                "humann4/test_4_pathabundance.tsv.gz",
+                "mpa",
+                "mpa/test.biom",
+                "mpa/test.bowtie2out.txt",
+                "mpa/test_profile.txt",
+                "pipeline_info",
+                "spoof",
+                "spoof/test_mock_profile.txt",
+                "untar",
+                "untar/chocophlan_nfDEMO",
+                "untar/chocophlan_nfDEMO/SGB1871_pangenome90.fna.gz",
+                "untar/chocophlan_nfDEMO/SGB2091_pangenome90.fna.gz",
+                "untar/chocophlan_nfDEMO/SGB2301_pangenome90.fna.gz",
+                "untar/metaphlan4_database",
+                "untar/metaphlan4_database/mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l",
+                "untar/metaphlan4_database/mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l",
+                "untar/metaphlan4_database/mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.3.bt2l",
+                "untar/metaphlan4_database/mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.4.bt2l",
+                "untar/metaphlan4_database/mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.fna.bz2",
+                "untar/metaphlan4_database/mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.pkl",
+                "untar/metaphlan4_database/mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.1.bt2l",
+                "untar/metaphlan4_database/mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.2.bt2l",
+                "untar/uniref_nfDEMO",
+                "untar/uniref_nfDEMO/demo_proteins_uniref90_uniref50_like_v2019_06.dmnd",
+                "untar/utility_nfDEMO",
+                "untar/utility_nfDEMO/README.txt",
+                "untar/utility_nfDEMO/map_eggnog_name.txt.gz",
+                "untar/utility_nfDEMO/map_eggnog_uniref90.txt.gz",
+                "untar/utility_nfDEMO/map_go_name.txt.gz",
+                "untar/utility_nfDEMO/map_ko_name.txt.gz",
+                "untar/utility_nfDEMO/map_ko_uniref90.txt.gz",
+                "untar/utility_nfDEMO/map_ko_uniref90.txt.gz_full",
+                "untar/utility_nfDEMO/map_level4ec_name.txt.gz",
+                "untar/utility_nfDEMO/map_metacyc-pwy_name.txt.gz",
+                "untar/utility_nfDEMO/map_metacyc-rxn_name.txt.gz",
+                "untar/utility_nfDEMO/map_pfam_name.txt.gz",
+                "untar/utility_nfDEMO/metacyc_pathways_structured_filtered_v24_subreactions",
+                "untar/utility_nfDEMO/metacyc_reactions_level4ec_only.uniref.bz2",
+                "untar/utility_nfDEMO/mpa_vJan21_CHOCOPhlAnSGB_202103.tsv",
+                "untar/utility_nfDEMO/unipathway_pathways",
+                "untar/utility_nfDEMO/unipathway_uniprots.uniref.bz2",
+                "untar/utility_nfDEMO/vOct22_SGB_mapping.tsv"
+            ],
+            [
+                "test.log:md5,ca548ae470fc0d49df520a0f9104b5cc",
+                "test_2_genefamilies.tsv.gz:md5,34f174a6d642d21bb14af35a6fe9dd69",
+                "test_3_reactions.tsv.gz:md5,c026112aa2b41eb63e3752db315b2515",
+                "test_4_pathabundance.tsv.gz:md5,825a3b76f509e1de6d27d10af6ef885a",
+                "test.biom:md5,c503f30fa402ffe2992eace9f101b1ca",
+                "test.bowtie2out.txt:md5,ef46a9c6a8ce9cae26fbfd5527116fd5",
+                "test_profile.txt:md5,0dac5843d397e7042bf088cf65217f92",
+                "test_mock_profile.txt:md5,c155a9c471a135a1dbd6e9e075f3315c",
+                "SGB1871_pangenome90.fna.gz:md5,fe9d234100c44fccd7d2225ad0c8fcf9",
+                "SGB2091_pangenome90.fna.gz:md5,2b927adbaa8b307a32aab2ba34d153ab",
+                "SGB2301_pangenome90.fna.gz:md5,c181272aef2201abeb2c224a793d9b32",
+                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
+                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
+                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
+                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
+                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
+                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.pkl:md5,005453b7c66c85f3e01218653d09e266",
+                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
+                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87",
+                "demo_proteins_uniref90_uniref50_like_v2019_06.dmnd:md5,35274142a56a3f9156713793603da303",
+                "README.txt:md5,9d3db20d44df2404c41064a815d14e35",
+                "map_eggnog_name.txt.gz:md5,d0e115f144968238ed76cc1b9c34e693",
+                "map_eggnog_uniref90.txt.gz:md5,4823208ed6c9fb59b9bbe1b783cd2029",
+                "map_go_name.txt.gz:md5,6cc1243ea04eaad1cee39b812ef6a1d2",
+                "map_ko_name.txt.gz:md5,7f6f77931958ae168ae55a735f2382cd",
+                "map_ko_uniref90.txt.gz:md5,8bb2ff7943bb9c1356eee5b15fdb8d41",
+                "map_ko_uniref90.txt.gz_full:md5,8e953986f6358d9d74a340d6deeeda20",
+                "map_level4ec_name.txt.gz:md5,3575245aafdb78e0dc7084e08a88bc7c",
+                "map_metacyc-pwy_name.txt.gz:md5,8acf0fba2db56a574edf94394c8da84a",
+                "map_metacyc-rxn_name.txt.gz:md5,fc76a8c5c6ead9da353433fee8e0c3ea",
+                "map_pfam_name.txt.gz:md5,6aab247909423417990f9157e5c9232c",
+                "metacyc_pathways_structured_filtered_v24_subreactions:md5,c6ad3784f8dee2dfba3dfada21404357",
+                "metacyc_reactions_level4ec_only.uniref.bz2:md5,b0c7d83da9c644cbd8c86a3f176b2b91",
+                "mpa_vJan21_CHOCOPhlAnSGB_202103.tsv:md5,b36ef2a1a095a5c2a342b3a12b2cad48",
+                "unipathway_pathways:md5,244805cb8ce1582ac32dfaba07a283ba",
+                "unipathway_uniprots.uniref.bz2:md5,035d3793e1ece967dd1357824bd74640",
+                "vOct22_SGB_mapping.tsv:md5,a68aa8c70eb85300735848fe396dec09"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2026-02-20T16:27:35.853855"
+        "timestamp": "2026-02-23T15:11:57.211862"
     }
 }

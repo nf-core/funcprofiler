@@ -38,11 +38,11 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.log:md5,122b714fe08103d11a5e7f07cc26583a"
+                        "test.log:md5,bec1de946440d6556045a33e04259a83"
                     ]
                 ],
                 "5": [
-                    "versions.yml:md5,cc91af929f1bf51e566fb7b5d4f8ce93"
+                    "versions.yml:md5,103f216970b211a5eac91936ef8a93ac"
                 ],
                 "genefamilies": [
                     [
@@ -59,7 +59,7 @@
                             "id": "test",
                             "single_end": true
                         },
-                        "test.log:md5,122b714fe08103d11a5e7f07cc26583a"
+                        "test.log:md5,bec1de946440d6556045a33e04259a83"
                     ]
                 ],
                 "pathabundance": [
@@ -84,7 +84,7 @@
                     
                 ],
                 "versions": [
-                    "versions.yml:md5,cc91af929f1bf51e566fb7b5d4f8ce93"
+                    "versions.yml:md5,103f216970b211a5eac91936ef8a93ac"
                 ]
             }
         ],
@@ -92,6 +92,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2026-02-20T15:46:41.63681"
+        "timestamp": "2026-02-23T15:11:31.153359"
     }
 }

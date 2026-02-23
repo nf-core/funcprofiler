@@ -2,7 +2,7 @@
 // Run profiling
 //
 
-include { HUMANN_HUMANN as HUMANN3; HUMANN_HUMANN as HUMANN4 } from '../../modules/local/humann/humann/main'
+include { HUMANN3; HUMANN4                              } from '../../modules/local/humann/humann/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPA_HUMANN3;
 	 METAPHLAN_METAPHLAN as MPA_HUMANN4             } from '../../modules/nf-core/metaphlan/metaphlan/main'

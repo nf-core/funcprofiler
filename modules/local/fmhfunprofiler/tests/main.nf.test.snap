@@ -6,9 +6,10 @@
                     [
                         {
                             "id": "test",
-                            "single_end": true
+                            "single_end": true,
+                            "db_name": "demo"
                         },
-                        "test_null_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
@@ -18,9 +19,10 @@
                     [
                         {
                             "id": "test",
-                            "single_end": true
+                            "single_end": true,
+                            "db_name": "demo"
                         },
-                        "test_null_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "versions": [
@@ -32,7 +34,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2026-02-18T15:00:38.256847"
+        "timestamp": "2026-02-23T15:10:21.129015"
     },
     "sarscov2 - fastq": {
         "content": [
@@ -41,9 +43,10 @@
                     [
                         {
                             "id": "test",
-                            "single_end": true
+                            "single_end": true,
+                            "db_name": "demo"
                         },
-                        "test_null_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
+                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ]
                 ],
                 "1": [
@@ -53,9 +56,10 @@
                     [
                         {
                             "id": "test",
-                            "single_end": true
+                            "single_end": true,
+                            "db_name": "demo"
                         },
-                        "test_null_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
+                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ]
                 ],
                 "versions": [
@@ -67,6 +71,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2026-02-18T15:00:28.22676"
+        "timestamp": "2026-02-23T15:10:09.935973"
     }
 }
