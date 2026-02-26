@@ -1,8 +1,9 @@
 repository_type: pipeline
 
-nf_core_version: 3.3.2
+nf_core_version: 3.5.2
 
-lint: {}
+lint:
+  logo: False
 
 template:
   org: nf-core
