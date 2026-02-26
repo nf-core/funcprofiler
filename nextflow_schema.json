@@ -277,6 +277,9 @@
         },
         {
             "$ref": "#/$defs/generic_options"
+        },
+        {
+            "$ref": "#/$defs/preprocessing_run_merging_options"
         }
     ]
 }
