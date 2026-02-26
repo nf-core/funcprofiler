@@ -25,7 +25,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [],
-                    file( '/Users/nwaters/GitHub/test-datasets/data/database/humann/v4/chocophlan_nfDEMO.tar.gz', checkIfExists: true )
+                    file( 'https://raw.githubusercontent.com/nickp60/test-datasets/refs/heads/funcprofiler/data/database/humann/v4/chocophlan_nfDEMO.tar.gz', checkIfExists: true )
                 ])
                 """
             }
@@ -36,7 +36,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [],
-                    file( '/Users/nwaters/GitHub/test-datasets/data/database/humann/v4/uniref_nfDEMO.tar.gz', checkIfExists: true )
+                    file( 'https://raw.githubusercontent.com/nickp60/test-datasets/refs/heads/funcprofiler/data/database/humann/v4/uniref_nfDEMO.tar.gz', checkIfExists: true )
                 ])
                 """
             }
@@ -47,7 +47,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [],
-                    file( '/Users/nwaters/GitHub/test-datasets/data/database/humann/v4/utility_nfDEMO.tar.gz', checkIfExists: true )
+                    file( 'https://raw.githubusercontent.com/nickp60/test-datasets/refs/heads/funcprofiler/data/database/humann/v4/utility_nfDEMO.tar.gz', checkIfExists: true )
                 ])
                 """
             }
