@@ -93,10 +93,15 @@
                     "fa_icon": "fas fa-toggle-on",
                     "description": "Turn on profiling with Centrifuge. Requires database to be present CSV file passed to --databases"
                 },
-                "run_humann": {
+                "run_humann_v3": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toggle-on",
-                    "description": "Turn on profiling with HUMAaN. Requires database to be present CSV file passed to --databases"
+                    "description": "Turn on profiling with HUMAaN v3. Requires `humann_v3`-tagged database to be present CSV file passed to --databases"
+                },
+                "run_humann_v4": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on profiling with HUMAaN v4. Requires `humann_v4`-tagged database to be present CSV file passed to --databases"
                 },
                 "humann_renorm_to_cpm": {
                     "type": "boolean",
