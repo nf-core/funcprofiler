@@ -5,12 +5,10 @@
             null,
             [
                 "humann4",
-                "humann4/test.log",
                 "humann4/test_2_genefamilies.tsv.gz",
                 "humann4/test_3_reactions.tsv.gz",
                 "humann4/test_4_pathabundance.tsv.gz",
                 "mpa",
-                "mpa/test.biom",
                 "mpa/test.bowtie2out.txt",
                 "mpa/test_profile.txt",
                 "pipeline_info",
@@ -52,11 +50,9 @@
                 "untar/utility_nfDEMO/vOct22_SGB_mapping.tsv"
             ],
             [
-                "test.log:md5,ca548ae470fc0d49df520a0f9104b5cc",
                 "test_2_genefamilies.tsv.gz:md5,34f174a6d642d21bb14af35a6fe9dd69",
                 "test_3_reactions.tsv.gz:md5,c026112aa2b41eb63e3752db315b2515",
                 "test_4_pathabundance.tsv.gz:md5,825a3b76f509e1de6d27d10af6ef885a",
-                "test.biom:md5,c503f30fa402ffe2992eace9f101b1ca",
                 "test.bowtie2out.txt:md5,ef46a9c6a8ce9cae26fbfd5527116fd5",
                 "test_profile.txt:md5,0dac5843d397e7042bf088cf65217f92",
                 "test_mock_profile.txt:md5,c155a9c471a135a1dbd6e9e075f3315c",
@@ -91,10 +87,10 @@
                 "vOct22_SGB_mapping.tsv:md5,a68aa8c70eb85300735848fe396dec09"
             ]
         ],
+        "timestamp": "2026-02-26T16:45:07.078720553",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2026-02-23T15:11:57.211862"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
     }
 }
