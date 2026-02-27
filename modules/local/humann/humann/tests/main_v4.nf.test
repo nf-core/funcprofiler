@@ -6,7 +6,7 @@ nextflow_process {
     tag "modules"
     tag "modules_"
     tag "humann"
-    config "./nextflow.config"
+
     setup{
         run("UNTAR") {
             script "modules/nf-core/untar/main.nf"
@@ -25,7 +25,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [],
-                    file( '/Users/nwaters/GitHub/test-datasets/data/database/humann/v4/chocophlan_nfDEMO.tar.gz', checkIfExists: true )
+                    file( 'https://raw.githubusercontent.com/nickp60/test-datasets/refs/heads/funcprofiler/data/database/humann/v4/chocophlan_nfDEMO.tar.gz', checkIfExists: true )
                 ])
                 """
             }
@@ -36,7 +36,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [],
-                    file( '/Users/nwaters/GitHub/test-datasets/data/database/humann/v4/uniref_nfDEMO.tar.gz', checkIfExists: true )
+                    file( 'https://raw.githubusercontent.com/nickp60/test-datasets/refs/heads/funcprofiler/data/database/humann/v4/uniref_nfDEMO.tar.gz', checkIfExists: true )
                 ])
                 """
             }
@@ -47,7 +47,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [],
-                    file( '/Users/nwaters/GitHub/test-datasets/data/database/humann/v4/utility_nfDEMO.tar.gz', checkIfExists: true )
+                    file( 'https://raw.githubusercontent.com/nickp60/test-datasets/refs/heads/funcprofiler/data/database/humann/v4/utility_nfDEMO.tar.gz', checkIfExists: true )
                 ])
                 """
             }
@@ -94,10 +94,10 @@ nextflow_process {
         }
 
         then {
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', '*.log', 'humann3/*'])
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', '**/*.log', '**/*.biom', 'humann3/*'])
 	    println(stable_name)
             // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['**/*.log', '**/*.biom'])
 	    println(stable_path)
             assertAll(
                 { assert workflow.success},
