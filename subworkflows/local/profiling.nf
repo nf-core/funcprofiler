@@ -4,8 +4,8 @@
 
 include { HUMANN3; HUMANN4                              } from '../../modules/local/humann/humann/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
-include { METAPHLAN_METAPHLAN as MPA_HUMANN3;
-	 METAPHLAN_METAPHLAN as MPA_HUMANN4             } from '../../modules/nf-core/metaphlan/metaphlan/main'
+include { METAPHLAN_METAPHLAN as MPAHUMANN3;
+	 METAPHLAN_METAPHLAN as MPAHUMANN4             } from '../../modules/nf-core/metaphlan/metaphlan/main'
 include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
 include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
 
@@ -177,15 +177,15 @@ workflow PROFILING {
 	    }
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
-            MPA_HUMANN3 ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
-            HUMANN3 ( ch_input_for_humann.reads, MPA_HUMANN3.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db, ch_input_for_humann.util_db
+            MPAHUMANN3 ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
+            HUMANN3 ( ch_input_for_humann.reads, MPAHUMANN3.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db, ch_input_for_humann.util_db
 	                     )
 	} else {
 	    println("not enabled")
 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
 	}
-        ch_versions        = ch_versions.mix( MPA_HUMANN3.out.versions.first() )
-        ch_raw_profiles    = ch_raw_profiles.mix( MPA_HUMANN3.out.profile )
+        ch_versions        = ch_versions.mix( MPAHUMANN3.out.versions.first() )
+        ch_raw_profiles    = ch_raw_profiles.mix( MPAHUMANN3.out.profile )
         ch_versions            = ch_versions.mix( HUMANN3.out.versions.first() )
         ch_raw_profiles        = ch_raw_profiles.mix( HUMANN3.out.pathabundance )
 	    .mix( HUMANN3.out.genefamilies )
@@ -206,8 +206,8 @@ workflow PROFILING {
 	    }
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
-            MPA_HUMANN4 ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, false )
-            HUMANN4 ( ch_input_for_humann4.reads, MPA_HUMANN4.out.profile, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db,
+            MPAHUMANN4 ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, false )
+            HUMANN4 ( ch_input_for_humann4.reads, MPAHUMANN4.out.profile, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db,
 	                     )
 	} else {
 	    println("not enabled")
