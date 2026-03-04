@@ -1,0 +1,153 @@
+{
+    "sarscov2 - fastq - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_multi_ec.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_analysis.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_ec_count.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "analysis": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_analysis.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "ec_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_ec_count.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "multi_ec": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_multi_ec.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            },
+            [
+                
+            ]
+        ],
+        "timestamp": "2026-03-04T15:58:56.794032",
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - fastq": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_multi_ec.tsv:md5,08ad0cac1771a190e63cd76a3b3ab686"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_analysis.tsv:md5,722399e3bfd7af4273b36779a111db8a"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_ec_count.tsv:md5,195e3e0db1dd8b603a7e8d91e85e480d"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,3fc3fa52a9686cc90ee421bfc94febc8"
+                ],
+                "analysis": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_analysis.tsv:md5,722399e3bfd7af4273b36779a111db8a"
+                    ]
+                ],
+                "ec_counts": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_ec_count.tsv:md5,195e3e0db1dd8b603a7e8d91e85e480d"
+                    ]
+                ],
+                "multi_ec": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test_multi_ec.tsv:md5,08ad0cac1771a190e63cd76a3b3ab686"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,3fc3fa52a9686cc90ee421bfc94febc8"
+                ]
+            },
+            {
+                "MIFASER": {
+                    "MIFASER version": null,
+                    "database": "GS-24-all"
+                }
+            }
+        ],
+        "timestamp": "2026-03-04T15:58:44.674597",
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
+    }
+}
