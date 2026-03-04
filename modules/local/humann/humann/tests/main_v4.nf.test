@@ -52,7 +52,7 @@ nextflow_process {
                 """
             }
         }
-	run("METAPHLAN_METAPHLAN", alias: "MPA_HUMANN4") {
+	run("METAPHLAN_METAPHLAN", alias: "MPAHUMANN4") {
             script "../../../../nf-core/metaphlan/metaphlan/main.nf"
             process {
                 """
@@ -69,7 +69,7 @@ nextflow_process {
             script "./spoof.nf"
             process {
                 """
-                input[0] = MPA_HUMANN4.out.profile
+                input[0] = MPAHUMANN4.out.profile
                     """
             }
         }
