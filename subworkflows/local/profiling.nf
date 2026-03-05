@@ -2,10 +2,11 @@
 // Run profiling
 //
 
+include { MIFASER                                       } from '../../modules/local/mifaser/main'
 include { HUMANN3; HUMANN4                              } from '../../modules/local/humann/humann/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPAHUMANN3;
-	 METAPHLAN_METAPHLAN as MPAHUMANN4             } from '../../modules/nf-core/metaphlan/metaphlan/main'
+	 METAPHLAN_METAPHLAN as MPAHUMANN4              } from '../../modules/nf-core/metaphlan/metaphlan/main'
 include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
 include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
 
@@ -63,7 +64,8 @@ def prepareInputs(pairedreads, databases, singleFqTool=False){
     } else {
         return reads_with_dbs
 	    .branch { meta, reads, db_meta, db ->
-		rgi:         db_meta.tool == 'rgi'
+ 		rgi:         db_meta.tool == 'rgi'
+		mifaser:         db_meta.tool == 'mifaser'
 		unknown:    true
             }
     }
@@ -158,6 +160,23 @@ workflow PROFILING {
         // Generate profile
         ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions.first() )
         ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
+	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
+
+    }
+    if ( params.run_mifaser ) {
+        ch_input_for_mifaser =  ch_paired_input_for_profiling.mifaser
+            .multiMap {
+                meta, reads, db_meta, db ->
+		def new_meta = meta +  db_meta
+		new_meta.db_params = db[0]["db_params"]
+                reads: [ new_meta,  [reads].flatten() ]
+                db: db[0].db_path
+	    }
+        MIFASER ( ch_input_for_mifaser.reads, ch_input_for_mifaser.db )
+
+        // Generate profile
+        ch_versions            = ch_versions.mix( MIFASER.out.versions.first() )
+        ch_raw_profiles        = ch_raw_profiles.mix( MIFASER.out.ec_counts )
 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
     }

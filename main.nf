@@ -15,7 +15,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { FUNCPROFILER  } from './workflows/funcprofiler'
+include { FUNCPROFILER            } from './workflows/funcprofiler'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_funcprofiler_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_funcprofiler_pipeline'
 
