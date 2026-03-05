@@ -1,0 +1,89 @@
+{
+    "-profile test": {
+        "content": [
+            20,
+            {
+                "MERGE_RUNS": {
+                    "cat": 9.5
+                },
+                "UNTAR": {
+                    "untar": 1.34
+                },
+                "Workflow": {
+                    "nf-core/funcprofiler": "v1.0.0dev"
+                }
+            },
+            [
+                "cat",
+                "cat/2612.merged.fastq.gz",
+                "cat/2613.merged.fastq.gz",
+                "fmhfunprofiler",
+                "fmhfunprofiler/fmhfunprofiler1000",
+                "fmhfunprofiler/fmhfunprofiler1000/2612_fmhfunprofiler1000.fmhfunprofiler.fmhfuncprofiler.ko",
+                "fmhfunprofiler/fmhfunprofiler1000/2613_fmhfunprofiler1000.fmhfunprofiler.fmhfuncprofiler.ko",
+                "humann3",
+                "humann3/2612_genefamilies.tsv.gz",
+                "humann3/2612_pathabundance.tsv.gz",
+                "humann3/2612_pathcoverage.tsv.gz",
+                "humann3/2613_genefamilies.tsv.gz",
+                "humann3/2613_pathabundance.tsv.gz",
+                "humann3/2613_pathcoverage.tsv.gz",
+                "humann4",
+                "humann4/2612_2_genefamilies.tsv.gz",
+                "humann4/2612_3_reactions.tsv.gz",
+                "humann4/2612_4_pathabundance.tsv.gz",
+                "humann4/2613_2_genefamilies.tsv.gz",
+                "humann4/2613_3_reactions.tsv.gz",
+                "humann4/2613_4_pathabundance.tsv.gz",
+                "merge",
+                "merge/2612_1.merged.fastq.gz",
+                "merge/2612_2.merged.fastq.gz",
+                "mpahumann3",
+                "mpahumann3/2612.bowtie2out.txt",
+                "mpahumann3/2612_profile.txt",
+                "mpahumann3/2613.bowtie2out.txt",
+                "mpahumann3/2613_profile.txt",
+                "mpahumann4",
+                "mpahumann4/2612.bowtie2out.txt",
+                "mpahumann4/2612_profile.txt",
+                "mpahumann4/2613.bowtie2out.txt",
+                "mpahumann4/2613_profile.txt",
+                "pipeline_info",
+                "pipeline_info/nf_core_funcprofiler_software_mqc_versions.yml"
+            ],
+            [
+                "2612.merged.fastq.gz:md5,df3b681294db8931c5df47f9b85e3069",
+                "2613.merged.fastq.gz:md5,6e42a74ec7f9e86d77f2aababeb401fb",
+                "2612_fmhfunprofiler1000.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08",
+                "2613_fmhfunprofiler1000.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08",
+                "2612_genefamilies.tsv.gz:md5,d7bf74be106b6c9e0b25f1353e0e7910",
+                "2612_pathabundance.tsv.gz:md5,9233c5e17653cc8faf8a9fb2df0d1ac0",
+                "2612_pathcoverage.tsv.gz:md5,e3deba7f0539455b127591716f437fd6",
+                "2613_genefamilies.tsv.gz:md5,fe26db785b93c5a9f61b1b8fef53b9ca",
+                "2613_pathabundance.tsv.gz:md5,4595dd9a6314336cb6a5595a65d80dad",
+                "2613_pathcoverage.tsv.gz:md5,2cc677c0d51adaee891c2611f1f86fd9",
+                "2612_2_genefamilies.tsv.gz:md5,d14505aabb3662211f69d84e2102cc58",
+                "2612_3_reactions.tsv.gz:md5,75a22b87c1af97324f25a3edbbefe8a8",
+                "2612_4_pathabundance.tsv.gz:md5,8ada836233491fedb95a5f19f9ef2034",
+                "2613_2_genefamilies.tsv.gz:md5,b1d89e405ea9defea515a92d95a7b69d",
+                "2613_3_reactions.tsv.gz:md5,4480d58b9e959b991cc97964719a5525",
+                "2613_4_pathabundance.tsv.gz:md5,2c3984c5e2d33ab7e1f24f5ffd25abd1",
+                "2612_1.merged.fastq.gz:md5,e38f6e7ad98fc7b848b4967bde945d13",
+                "2612_2.merged.fastq.gz:md5,5f40e29533a8f88521954301b836dbd8",
+                "2612.bowtie2out.txt:md5,5797e471f1ddbbff9bc5efe0160faa13",
+                "2612_profile.txt:md5,3dc4e474c9bcc7a96b9849e336f0ac2f",
+                "2613.bowtie2out.txt:md5,b96051063b14330db604500375503feb",
+                "2613_profile.txt:md5,8e942cbd5deb242827fa4aecd5000d75",
+                "2612.bowtie2out.txt:md5,e6e178a73d14bce6cd6a7e44198f5c64",
+                "2612_profile.txt:md5,998fba3471b312db4c28aa5e3df3c8f2",
+                "2613.bowtie2out.txt:md5,37b2129beeb533ea0afb8cbd18e040c3",
+                "2613_profile.txt:md5,81638be78db35ca42197f4e325a0fd6f"
+            ]
+        ],
+        "timestamp": "2026-02-27T18:16:15.812405",
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
+    }
+}

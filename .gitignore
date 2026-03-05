@@ -8,3 +8,7 @@ testing*
 *.pyc
 null/
 *~
+.nf-test/
+.nf-test.log
+dontcommit
+tmp/
