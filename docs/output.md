@@ -10,6 +10,27 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
+- [FastQC](#fastqc) - Raw read QC
+- [DIAMOND blastx](#diamond-blastx) - Translated alignment against a protein database _(optional)_
+- [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
+- [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+
+### DIAMOND blastx
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `diamond/`
+  - `*.tsv`: Tabular alignment results (BLAST tabular format 6) with one row per query-subject hit.
+  - `*.log`: DIAMOND run log containing alignment statistics (query count, alignment rate, etc.).
+
+</details>
+
+[DIAMOND](https://github.com/bbuchfink/diamond/wiki/) performs fast translated alignment of metagenomic reads against a protein reference database. Each read is aligned in all six reading frames against the database and only significant hits are reported. The output is a tab-separated file compatible with standard BLAST tabular output parsers.
+
+Enable with `--run_diamond`. Requires a pre-built `.dmnd` database (see [usage docs](usage.md#diamond-blastx)).
+
+### FastQC
 - [Short reads QC and preprocessing](https://nf-co.re/subworkflows/fastq_shortreads_preprocess_qc/), see [Output section](https://nf-co.re/subworkflows/fastq_shortreads_preprocess_qc/#output) for details.
 - Long reads QC and preprocessing (WIP)
 - [HUMANn v3 / v4](#humann-v3--v4) — functional profiling via MetaPhlAn + HUMANn (`--run_humann_v3`, `--run_humann_v4`)

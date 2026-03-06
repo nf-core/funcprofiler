@@ -9,6 +9,7 @@ include { METAPHLAN_METAPHLAN as MPAHUMANN3;
 	 METAPHLAN_METAPHLAN as MPAHUMANN4              } from '../../modules/nf-core/metaphlan/metaphlan/main'
 include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
 include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
+include { DIAMOND_BLASTX                                } from '../../modules/nf-core/diamond/blastx/main'
 
 
 // Custom Functions
@@ -56,10 +57,11 @@ def prepareInputs(pairedreads, databases, singleFqTool=False){
     if (singleFqTool){
         return reads_with_dbs
         .branch { meta, reads, db_meta, db ->
-            humann_v3:         db_meta.tool == 'humann_v3'
-            humann_v4:        db_meta.tool == 'humann_v4'
+            humann_v3:      db_meta.tool == 'humann_v3'
+            humann_v4:      db_meta.tool == 'humann_v4'
             fmhfunprofiler: db_meta.tool == 'fmhfunprofiler'
-            unknown:    true
+            diamond:        db_meta.tool == 'diamond'
+            unknown:        true
         }
     } else {
         // PE-aware tool path: reads preserves original meta.single_end.
@@ -263,9 +265,23 @@ workflow PROFILING {
 	    .mix( HUMANN4.out.reactions )
     }
 
+    if ( params.run_diamond ) {
+        ch_input_for_diamond = ch_merged_input_for_profiling.diamond
+            .multiMap {
+                meta, reads, db_meta, db ->
+                def new_meta = meta + db_meta
+                def flat_reads = [reads].flatten()
+                if ( flat_reads.size() != 1 ) {
+                    error("diamond blastx requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
+                }
+                reads: [ new_meta, flat_reads[0] ]
+                db:    [ db_meta, db[0].db_path ]
+            }
+        DIAMOND_BLASTX ( ch_input_for_diamond.reads, ch_input_for_diamond.db, 'tsv', '' )
 
-
-
+        ch_versions     = ch_versions.mix( DIAMOND_BLASTX.out.versions.first() )
+        ch_raw_profiles = ch_raw_profiles.mix( DIAMOND_BLASTX.out.tsv )
+    }
 
 // 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
