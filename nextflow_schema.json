@@ -40,7 +40,6 @@
                     "description": "Specify to save decompressed user-supplied TAR archives of databases",
                     "help_text": "If input databases are supplied as gzipped TAR archives, in some cases you may want to move and re-use these for future runs. Specifying this parameter will save these to `--outdir results/` under a directory called `untar`."
                 },
-
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
@@ -61,6 +60,19 @@
                 }
             }
         },
+        "preprocessing_qc_options": {
+            "title": "Preprocessing QC options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "skip_preprocessing_qc": {
+                    "type": "boolean",
+                    "description": "Skip quality control step when preprocessing",
+                    "help_text": "When True, this won't perform any of the quality control steps in preprocessing, such as discarding low-quality reads."
+                }
+            }
+        },
         "preprocessing_run_merging_options": {
             "title": "Preprocessing run merging options",
             "type": "object",
@@ -71,7 +83,8 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-toggle-on",
                     "description": "Turn on run merging",
-                    "help_text": "Turns on the concatenation of sequencing runs or libraries with the same sample name.\n\nThis can be useful to ensure you get a single profile per sample, rather than one profile per run or library. Note that in some cases comparing profiles of independent _libraries_ may be useful, so this parameter may not always be suitable.  "
+                    "help_text": "Turns on the concatenation of sequencing runs or libraries with the same sample name.\n\nThis can be useful to ensure you get a single profile per sample, rather than one profile per run or library. Note that in some cases comparing profiles of independent _libraries_ may be useful, so this parameter may not always be suitable.  ",
+                    "default": true
                 },
                 "save_runmerged_reads": {
                     "type": "boolean",
@@ -91,12 +104,22 @@
                 "run_fmhfunprofiler": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toggle-on",
-                    "description": "Turn on profiling with Centrifuge. Requires database to be present CSV file passed to --databases"
+                    "description": "Turn on profiling with fmhfunprofiler; Requires database to be present CSV file passed to --databases"
                 },
-                "run_humann": {
+                "run_mifaser": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toggle-on",
-                    "description": "Turn on profiling with HUMAaN. Requires database to be present CSV file passed to --databases"
+                    "description": "Turn on profiling with mifaser; Requires database to be present CSV file passed to --databases"
+                },
+                "run_humann_v3": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on profiling with HUMAnN3. Requires `humann_v3`-tagged database to be present CSV file passed to --databases"
+                },
+                "run_humann_v4": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on profiling with HUMAnN4. Requires `humann_v4`-tagged database to be present CSV file passed to --databases"
                 },
                 "run_diamond": {
                     "type": "boolean",
@@ -108,9 +131,19 @@
                     "description": "save copies-per-million outputs from HUMAaN",
                     "fa_icon": "fas fa-percent",
                     "help_text": "This parameter specifies to use the calculated relative abundance (i.e., percentage of all hits). This is normally the default behaviour in mOTUs however we use counts by default in nf-core/taxprofiler for consistency with other classification/profiling tools.\n\n> Modifies tool parameter(s):\n> - mOTUs: `-c` (removed from the default nf-core/taxprofiler command)"
+                },
+                "run_rgi": {
+                    "type": "boolean",
+                    "description": "Turn on profiling with RGI. Requires database to be present CSV file passed to --databases",
+                    "default": false
+                },
+                "run_mifaser": {
+                    "type": "boolean",
+                    "description": "Turn on profiling with mi-faser. Requires database to be present CSV file passed to --databases",
+                    "default": false
                 }
-	    }
-	},
+            }
+        },
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -245,7 +278,7 @@
                     "type": "string",
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
-                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/funcprofiler/",
                     "hidden": true
                 },
                 "trace_report_suffix": {
@@ -262,7 +295,16 @@
             "$ref": "#/$defs/input_output_options"
         },
         {
+            "$ref": "#/$defs/preprocessing_qc_options"
+        },
+        {
+            "$ref": "#/$defs/preprocessing_run_merging_options"
+        },
+        {
             "$ref": "#/$defs/profiling_options"
+        },
+        {
+            "$ref": "#/$defs/preprocessing_run_merging_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"

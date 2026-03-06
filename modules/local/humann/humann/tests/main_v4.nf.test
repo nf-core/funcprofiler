@@ -6,7 +6,7 @@ nextflow_process {
     tag "modules"
     tag "modules_"
     tag "humann"
-    config "./nextflow.config"
+
     setup{
         run("UNTAR") {
             script "modules/nf-core/untar/main.nf"
@@ -25,7 +25,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [],
-                    file( '/Users/nwaters/GitHub/test-datasets/data/database/humann/v4/chocophlan_nfDEMO.tar.gz', checkIfExists: true )
+                    file( params.pipelines_testdata_base_path + 'data/database/humann/v4/chocophlan_nfDEMO.tar.gz', checkIfExists: true )
                 ])
                 """
             }
@@ -36,7 +36,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [],
-                    file( '/Users/nwaters/GitHub/test-datasets/data/database/humann/v4/uniref_nfDEMO.tar.gz', checkIfExists: true )
+                    file( params.pipelines_testdata_base_path + 'data/database/humann/v4/uniref_nfDEMO.tar.gz', checkIfExists: true )
                 ])
                 """
             }
@@ -47,12 +47,12 @@ nextflow_process {
                 """
                 input[0] = Channel.of([
                     [],
-                    file( '/Users/nwaters/GitHub/test-datasets/data/database/humann/v4/utility_nfDEMO.tar.gz', checkIfExists: true )
+                    file( params.pipelines_testdata_base_path + 'data/database/humann/v4/utility_nfDEMO.tar.gz', checkIfExists: true )
                 ])
                 """
             }
         }
-	run("METAPHLAN_METAPHLAN", alias: "MPA_HUMANN4") {
+	run("METAPHLAN_METAPHLAN", alias: "MPAHUMANN4") {
             script "../../../../nf-core/metaphlan/metaphlan/main.nf"
             process {
                 """
@@ -69,7 +69,7 @@ nextflow_process {
             script "./spoof.nf"
             process {
                 """
-                input[0] = MPA_HUMANN4.out.profile
+                input[0] = MPAHUMANN4.out.profile
                     """
             }
         }
@@ -94,10 +94,10 @@ nextflow_process {
         }
 
         then {
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', '*.log', 'humann3/*'])
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}', '**/*.log', '**/*.biom', 'humann3/*', 'untar/*'])
 	    println(stable_name)
             // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore', ignore: ['**/*.log', '**/*.biom'])
 	    println(stable_path)
             assertAll(
                 { assert workflow.success},
@@ -105,7 +105,7 @@ nextflow_process {
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_{{ short_name }}_software_mqc_versions.yml"),
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_funcprofiler_software_mqc_versions.yml"),
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
@@ -114,5 +114,36 @@ nextflow_process {
 	        }
             )
         }
+    }
+
+    test("humann_v4 sarscov2 - fastq - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0]= Channel.of([
+                    [ id:'test', single_end:false, run_accession:"abc" ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+        ])
+              input[1] = SPOOF_METAPHLAN_VERSION.out.profile
+              input[2] = UNTAR_v4_nuc.out.untar.map{ it[1] }
+              input[3] = UNTAR_v4_prot.out.untar.map{ it[1] }
+              input[4] = UNTAR_v4_util.out.untar.map{ it[1] }
+                 """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.genefamilies, process.out.pathabundance, process.out.pathcoverage, process.out.reactions).match() }
+            )
+        }
+
     }
 }

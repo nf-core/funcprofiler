@@ -86,4 +86,16 @@ cat <<-END_VERSIONS > versions.yml
         Metaphlan profile or database: $pangenome_string
 END_VERSIONS
     """
+    stub:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    echo $args
+
+    for suf in _genefamilies.tsv.gz _pathabundance.tsv.gz _pathcoverage.tsv.gz _reactions.tsv.gz .log
+    do
+        touch ${prefix}_\$suf
+    done
+touch versions.yml
+    """
 }

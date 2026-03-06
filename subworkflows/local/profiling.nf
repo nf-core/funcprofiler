@@ -2,10 +2,11 @@
 // Run profiling
 //
 
+include { MIFASER                                       } from '../../modules/local/mifaser/main'
 include { HUMANN3; HUMANN4                              } from '../../modules/local/humann/humann/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
-include { METAPHLAN_METAPHLAN as MPA_HUMANN3;
-	 METAPHLAN_METAPHLAN as MPA_HUMANN4             } from '../../modules/nf-core/metaphlan/metaphlan/main'
+include { METAPHLAN_METAPHLAN as MPAHUMANN3;
+	 METAPHLAN_METAPHLAN as MPAHUMANN4              } from '../../modules/nf-core/metaphlan/metaphlan/main'
 include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
 include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
 include { DIAMOND_BLASTX                                } from '../../modules/nf-core/diamond/blastx/main'
@@ -63,9 +64,23 @@ def prepareInputs(pairedreads, databases, singleFqTool=False){
             unknown:        true
         }
     } else {
+        // PE-aware tool path: reads preserves original meta.single_end.
+        // For SE samples: meta.single_end == true,  reads == [R1]
+        // For PE samples: meta.single_end == false, reads == [R1, R2]
+        // Every tool in this branch MUST use meta.single_end to switch
+        // between single-file and paired-file CLI arguments.
         return reads_with_dbs
+            .map { meta, reads, db_meta, db ->
+                def flat_reads = [reads].flatten()
+                def expected = meta.single_end ? 1 : 2
+                if ( flat_reads.size() != expected ) {
+                    error("PE-aware tool '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${flat_reads.size()}")
+                }
+                [ meta, flat_reads, db_meta, db ]
+            }
 	    .branch { meta, reads, db_meta, db ->
-		rgi:         db_meta.tool == 'rgi'
+ 		rgi:         db_meta.tool == 'rgi'
+		mifaser:         db_meta.tool == 'mifaser'
 		unknown:    true
             }
     }
@@ -152,7 +167,11 @@ workflow PROFILING {
                 meta, reads, db_meta, db ->
 		def new_meta = meta +  db_meta
 		new_meta.db_params = db[0]["db_params"]
-                reads: [ new_meta,  [reads].flatten() ]
+		def flat_reads = [reads].flatten()
+		if ( flat_reads.size() != 1 ) {
+		    error("fmhfunprofiler requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
+		}
+                reads: [ new_meta, flat_reads ]
                 db: db[0].db_path
 	    }
         FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db )
@@ -160,6 +179,23 @@ workflow PROFILING {
         // Generate profile
         ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions.first() )
         ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
+	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
+
+    }
+    if ( params.run_mifaser ) {
+        ch_input_for_mifaser =  ch_paired_input_for_profiling.mifaser
+            .multiMap {
+                meta, reads, db_meta, db ->
+		def new_meta = meta +  db_meta
+		new_meta.db_params = db[0]["db_params"]
+                reads: [ new_meta,  [reads].flatten() ]
+                db: db[0].db_path
+	    }
+        MIFASER ( ch_input_for_mifaser.reads, ch_input_for_mifaser.db )
+
+        // Generate profile
+        ch_versions            = ch_versions.mix( MIFASER.out.versions.first() )
+        ch_raw_profiles        = ch_raw_profiles.mix( MIFASER.out.ec_counts )
 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
     }
@@ -171,7 +207,11 @@ workflow PROFILING {
 		def new_meta = meta +  db_meta
 		//TODO add the params in
 		//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
-		reads: [ new_meta,  [reads].flatten() ]
+		def flat_reads = [reads].flatten()
+		if ( flat_reads.size() != 1 ) {
+		    error("humann_v3 requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
+		}
+		reads: [ new_meta, flat_reads ]
 		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
 		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
 		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
@@ -179,15 +219,15 @@ workflow PROFILING {
 	    }
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
-            MPA_HUMANN3 ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
-            HUMANN3 ( ch_input_for_humann.reads, MPA_HUMANN3.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db, ch_input_for_humann.util_db
+            MPAHUMANN3 ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
+            HUMANN3 ( ch_input_for_humann.reads, MPAHUMANN3.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db, ch_input_for_humann.util_db
 	                     )
 	} else {
 	    println("not enabled")
 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
 	}
-        ch_versions        = ch_versions.mix( MPA_HUMANN3.out.versions.first() )
-        ch_raw_profiles    = ch_raw_profiles.mix( MPA_HUMANN3.out.profile )
+        ch_versions        = ch_versions.mix( MPAHUMANN3.out.versions.first() )
+        ch_raw_profiles    = ch_raw_profiles.mix( MPAHUMANN3.out.profile )
         ch_versions            = ch_versions.mix( HUMANN3.out.versions.first() )
         ch_raw_profiles        = ch_raw_profiles.mix( HUMANN3.out.pathabundance )
 	    .mix( HUMANN3.out.genefamilies )
@@ -200,7 +240,11 @@ workflow PROFILING {
 		def new_meta = meta +  db_meta
 		//TODO add the params in
 		//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
-		reads: [ new_meta,  [reads].flatten() ]
+		def flat_reads = [reads].flatten()
+		if ( flat_reads.size() != 1 ) {
+		    error("humann_v4 requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
+		}
+		reads: [ new_meta, flat_reads ]
 		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
 		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
 		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
@@ -208,8 +252,8 @@ workflow PROFILING {
 	    }
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
-            MPA_HUMANN4 ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, false )
-            HUMANN4 ( ch_input_for_humann4.reads, MPA_HUMANN4.out.profile, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db,
+            MPAHUMANN4 ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, false )
+            HUMANN4 ( ch_input_for_humann4.reads, MPAHUMANN4.out.profile, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db,
 	                     )
 	} else {
 	    println("not enabled")
