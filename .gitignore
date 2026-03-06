@@ -12,3 +12,5 @@ null/
 .nf-test.log
 dontcommit
 tmp/
+.data/
+*.code-workspace

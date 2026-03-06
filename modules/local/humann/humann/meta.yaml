@@ -13,7 +13,7 @@ tools:
       documentation: https://github.com/biobakery/biobakery/wiki/humann3
       tool_dev_url: https://github.com/biobakery/humann
       doi: "10.7554/eLife.65088"
-      licence: ['MIT']
+      licence: ["MIT"]
 
 input:
   - meta:

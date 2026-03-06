@@ -1,0 +1,35 @@
+nextflow_process {
+
+    name "Test Process HUMANN_REGROUP"
+    script "../main.nf"
+    process "HUMANN_REGROUP"
+    tag "modules"
+    tag "modules_"
+    tag "humann"
+
+    test("humann_regroup sarscov2 - tsv - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                ])
+                input[1] = "uniref90_rxn"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

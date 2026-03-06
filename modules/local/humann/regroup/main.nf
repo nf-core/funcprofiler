@@ -41,4 +41,16 @@ process HUMANN_REGROUP {
         ${humann}: \$( humann --version 2>&1 | sed 's/humann v//' )
     END_VERSIONS
     """
+
+    stub:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}_regroup.tsv.gz
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        humann: \$( humann --version 2>&1 | sed 's/humann v//' )
+    END_VERSIONS
+    """
 }
