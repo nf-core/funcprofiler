@@ -6,7 +6,7 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+**nf-core/funcprofiler** performs read-based functional profiling of microbiome sequencing data. It requires two input CSV files: a samplesheet describing your samples and a databases sheet describing the profiling databases to use.
 
 ## Samplesheet input
 
@@ -16,48 +16,96 @@ You will need to create a samplesheet with information about the samples you wou
 --input '[path to samplesheet file]'
 ```
 
-### Multiple runs of the same sample
+The samplesheet is a comma-separated file with the following columns:
 
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
+| Column                | Required | Description                                                                                                                              |
+| --------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `sample`              | Yes      | Sample name. Rows with the same `sample` name (and different `run_accession`) are merged before profiling.                               |
+| `run_accession`       | Yes      | Unique run identifier (e.g. `RUN1`, `SRR12345`). Used to distinguish multiple sequencing runs of the same sample.                       |
+| `instrument_platform` | Yes      | Sequencing platform. Must be one of: `ILLUMINA`, `OXFORD_NANOPORE`, `PACBIO_SMRT`, `ION_TORRENT`, `BGISEQ`, `DNBSEQ`, or `LS454`.       |
+| `fastq_1`             | No*      | Full path to gzipped FASTQ file for read 1. Must end in `.fastq.gz` or `.fq.gz`.                                                        |
+| `fastq_2`             | No       | Full path to gzipped FASTQ file for read 2 (paired-end only). Leave empty for single-end or Nanopore reads.                             |
+| `fasta`               | No*      | Full path to gzipped FASTA file. Provide instead of FASTQ if your data is already assembled. Must end in `.fa.gz`, `.fna.gz`, or `.fasta.gz`. |
 
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
+> *Either `fastq_1` or `fasta` must be provided for each row.
+
+### Example samplesheet
+
+```csv
+sample,run_accession,instrument_platform,fastq_1,fastq_2,fasta
+SAMPLE1,RUN1,ILLUMINA,/data/sample1_R1.fastq.gz,/data/sample1_R2.fastq.gz,
+SAMPLE1,RUN2,ILLUMINA,/data/sample1_lane2_R1.fastq.gz,/data/sample1_lane2_R2.fastq.gz,
+SAMPLE2,RUN1,ILLUMINA,/data/sample2_R1.fastq.gz,,
+SAMPLE3,RUN1,OXFORD_NANOPORE,/data/sample3_nanopore.fastq.gz,,
 ```
 
-### Full samplesheet
+In this example, `SAMPLE1` has two runs which will be merged before profiling. `SAMPLE2` is single-end short reads. `SAMPLE3` is Oxford Nanopore long reads.
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
+## Databases input
 
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+```bash
+--databases '[path to databases file]'
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+The databases sheet is a comma-separated file that specifies which databases to use for each profiler. Only tools enabled via `--run_<tool>` flags will use the corresponding database entries.
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+| Column      | Required | Description                                                                                                                                                                  |
+| ----------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tool`      | Yes      | Profiler name. Must be one of: `humann_v3`, `humann_v4`, `fmhfunprofiler`, `rgi`.                                                                                           |
+| `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                                       |
+| `db_entity` | No       | For HUMANn only: specifies which database component this row provides. Must be one of: `humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`.           |
+| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                           |
+| `db_type`   | No       | Read type this database applies to: `short`, `long`, or `short;long` (default). Use to restrict a database to only short-read or long-read samples.                          |
+| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                            |
+
+### HUMANn databases
+
+HUMANn requires four database components per named database, each as a separate row with the same `db_name`:
+
+```csv
+tool,db_name,db_entity,db_params,db_type,db_path
+humann_v3,uniref90_v3,humann_metaphlan,,,/data/databases/metaphlan_db
+humann_v3,uniref90_v3,humann_nucleotide,,,/data/databases/chocophlan
+humann_v3,uniref90_v3,humann_protein,,,/data/databases/uniref90_diamond
+humann_v3,uniref90_v3,humann_utility,,,/data/databases/utility_mapping
+```
+
+### FMH FunProfiler databases
+
+FMH FunProfiler requires a single sketch database:
+
+```csv
+tool,db_name,db_entity,db_params,db_type,db_path
+fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
+```
+
+### Full example databases sheet
+
+```csv
+tool,db_name,db_entity,db_params,db_type,db_path
+humann_v3,uniref90_v3,humann_metaphlan,,,/data/databases/metaphlan_db
+humann_v3,uniref90_v3,humann_nucleotide,,,/data/databases/chocophlan
+humann_v3,uniref90_v3,humann_protein,,,/data/databases/uniref90_diamond
+humann_v3,uniref90_v3,humann_utility,,,/data/databases/utility_mapping
+humann_v4,uniref90_v4,humann_metaphlan,,,/data/databases/metaphlan4_db
+humann_v4,uniref90_v4,humann_nucleotide,,,/data/databases/chocophlan_v4
+humann_v4,uniref90_v4,humann_protein,,,/data/databases/uniref90_v4_diamond
+humann_v4,uniref90_v4,humann_utility,,,/data/databases/utility_mapping_v4
+fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
+```
 
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/funcprofiler --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run nf-core/funcprofiler \
+   --input samplesheet.csv        \
+   --databases databases.csv      \
+   --outdir results               \
+   --run_humann_v3                \
+   --run_fmhfunprofiler           \
+   -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -70,6 +118,20 @@ work                # Directory containing the nextflow working files
 .nextflow_log       # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
+
+### Enabling profilers
+
+At least one profiler must be enabled via command-line flags. The pipeline will only run the profilers you explicitly turn on:
+
+| Flag                   | Profiler          | Status              |
+| ---------------------- | ----------------- | ------------------- |
+| `--run_humann_v3`      | HUMANn v3         | Available           |
+| `--run_humann_v4`      | HUMANn v4         | Available           |
+| `--run_fmhfunprofiler` | FMH FunProfiler   | Available           |
+| `--run_rgi`            | RGI               | Work in progress    |
+| `--run_mifaser`        | mifaser           | Planned             |
+
+### Parameters
 
 If you wish to repeatedly use the same parameters for multiple runs, rather than specifying each flag in the command, you can specify these in a params file.
 
