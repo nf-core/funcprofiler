@@ -53,7 +53,7 @@ nextflow_workflow {
             assert out[0][1] instanceof List
             // R1 and R2 must have been concatenated into exactly one file
             assert out[0][1].size() == 1
-            assert out[0][1][0].name.endsWith('.merged.fastq.gz')
+            assert out[0][1][0].endsWith('.merged.fastq.gz')
         }
     }
 
@@ -79,7 +79,7 @@ nextflow_workflow {
             assert out.size() == 1
             assert out[0][1] instanceof List
             assert out[0][1].size() == 1
-            assert out[0][1][0].name.endsWith('.merged.fastq.gz')
+            assert out[0][1][0].endsWith('.merged.fastq.gz')
         }
     }
 
@@ -106,7 +106,7 @@ nextflow_workflow {
             assert out.size() == 1
             assert out[0][1] instanceof List
             assert out[0][1].size() == 1
-            assert out[0][1][0].name.endsWith('.merged.fastq.gz')
+            assert out[0][1][0].endsWith('.merged.fastq.gz')
         }
     }
 
