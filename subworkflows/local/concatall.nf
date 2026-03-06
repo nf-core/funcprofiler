@@ -28,6 +28,7 @@ workflow CONCAT_ALL {
             }
 
        ch_input_reads_merged = CAT_FASTQ ( ch_input_singlefq.cat ).reads
+	    .map { meta, reads -> [ meta, [reads].flatten() ] }
 	    .mix( ch_input_singlefq.skip )
     emit:
     ch_input_reads_merged
