@@ -150,7 +150,11 @@ workflow PROFILING {
                 meta, reads, db_meta, db ->
 		def new_meta = meta +  db_meta
 		new_meta.db_params = db[0]["db_params"]
-                reads: [ new_meta,  [reads].flatten() ]
+		def flat_reads = [reads].flatten()
+		if ( flat_reads.size() != 1 ) {
+		    error("fmhfunprofiler requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
+		}
+                reads: [ new_meta, flat_reads ]
                 db: db[0].db_path
 	    }
         FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db )
@@ -169,7 +173,11 @@ workflow PROFILING {
 		def new_meta = meta +  db_meta
 		//TODO add the params in
 		//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
-		reads: [ new_meta,  [reads].flatten() ]
+		def flat_reads = [reads].flatten()
+		if ( flat_reads.size() != 1 ) {
+		    error("humann_v3 requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
+		}
+		reads: [ new_meta, flat_reads ]
 		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
 		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
 		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
@@ -198,7 +206,11 @@ workflow PROFILING {
 		def new_meta = meta +  db_meta
 		//TODO add the params in
 		//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
-		reads: [ new_meta,  [reads].flatten() ]
+		def flat_reads = [reads].flatten()
+		if ( flat_reads.size() != 1 ) {
+		    error("humann_v4 requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
+		}
+		reads: [ new_meta, flat_reads ]
 		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
 		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
 		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
