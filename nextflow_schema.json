@@ -98,6 +98,11 @@
                     "fa_icon": "fas fa-toggle-on",
                     "description": "Turn on profiling with HUMAaN. Requires database to be present CSV file passed to --databases"
                 },
+                "run_diamond": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on translated alignment with DIAMOND blastx. Requires a .dmnd database to be present in the CSV file passed to --databases"
+                },
                 "humann_renorm_to_cpm": {
                     "type": "boolean",
                     "description": "save copies-per-million outputs from HUMAaN",

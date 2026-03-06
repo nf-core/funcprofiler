@@ -52,6 +52,27 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
+### DIAMOND blastx
+
+[DIAMOND](https://github.com/bbuchfink/diamond/wiki/) is a high-throughput sequence aligner for translated (nucleotide-vs-protein) alignment. Enable it with `--run_diamond`.
+
+#### Database preparation
+
+The database supplied in the `--databases` CSV must already be in DIAMOND binary format (`.dmnd`). Build it from a protein FASTA using `diamond makedb`:
+
+```bash
+diamond makedb --in proteins.faa --db proteins
+# produces proteins.dmnd
+```
+
+See the [DIAMOND makedb documentation](https://github.com/bbuchfink/diamond/wiki/3.-Command-line-options#makedb-options) for all available options (e.g. adding taxonomy, setting block size).
+
+```
+
+> [!IMPORTANT]
+> The path should point to the **directory** containing the `.dmnd` file, not the file itself. The pipeline will automatically locate the `.dmnd` file within that directory.
+
+
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:

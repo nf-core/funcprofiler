@@ -10,6 +10,10 @@
 
 ## Pipeline tools
 
+- [DIAMOND](https://github.com/bbuchfink/diamond/)
+
+> Buchfink B, Reuter K, Drost HG. Sensitive protein alignments at tree-of-life scale using DIAMOND. Nat Methods. 2021 Apr;18(4):366-368. doi: 10.1038/s41592-021-01101-x. PubMed PMID: 33828273.
+
 - [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
 > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
