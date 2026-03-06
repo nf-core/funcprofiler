@@ -1,0 +1,139 @@
+nextflow_workflow {
+
+    name "Test Subworkflow CONCAT_ALL"
+    script "../concatall.nf"
+    workflow "CONCAT_ALL"
+    tag "subworkflows"
+    tag "concatall"
+
+    // SE single-run: only 1 file → goes through the skip branch (no cat needed).
+    // Output must still be a list wrapping that single file, not a bare path.
+    test("single-end single-run produces [meta, [file]] (skip branch)") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test_se', single_end:true, run_accession:'run1' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            def out = workflow.out.ch_input_reads_merged
+            assert out.size() == 1
+            // reads element must be a List (not a bare Path)
+            assert out[0][1] instanceof List
+            // exactly one file
+            assert out[0][1].size() == 1
+            // single_end forced to true by CONCAT_ALL
+            assert out[0][0].single_end == true
+        }
+    }
+
+    // PE single-run: R1 + R2 → cat branch concatenates both into a single merged file.
+    // Output must be a list wrapping the single concatenated file.
+    test("paired-end single-run produces [meta, [merged]] (cat branch)") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test_pe', single_end:false, run_accession:'run1' ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                      file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            def out = workflow.out.ch_input_reads_merged
+            assert out.size() == 1
+            assert out[0][1] instanceof List
+            // R1 and R2 must have been concatenated into exactly one file
+            assert out[0][1].size() == 1
+            assert out[0][1][0].name.endsWith('.merged.fastq.gz')
+        }
+    }
+
+    // Multi-run SE: two runs of the same sample → cat branch merges both run files.
+    // run_accession is dropped when grouping, so both entries collapse into one sample.
+    test("single-end multi-run produces one merged file per sample (cat branch)") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [ [ id:'test_se', single_end:true, run_accession:'run1' ],
+                      [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ] ],
+                    [ [ id:'test_se', single_end:true, run_accession:'run2' ],
+                      [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ] ]
+                )
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            def out = workflow.out.ch_input_reads_merged
+            // Two runs collapse to one sample
+            assert out.size() == 1
+            assert out[0][1] instanceof List
+            assert out[0][1].size() == 1
+            assert out[0][1][0].name.endsWith('.merged.fastq.gz')
+        }
+    }
+
+    // Multi-run PE: two paired runs of the same sample → all four files (R1a, R2a, R1b, R2b)
+    // concatenated into a single merged file for tools that only take one input.
+    test("paired-end multi-run produces one merged file per sample (cat branch)") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [ [ id:'test_pe', single_end:false, run_accession:'run1' ],
+                      [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ] ],
+                    [ [ id:'test_pe', single_end:false, run_accession:'run2' ],
+                      [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_2.fastq.gz', checkIfExists: true) ] ]
+                )
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            def out = workflow.out.ch_input_reads_merged
+            assert out.size() == 1
+            assert out[0][1] instanceof List
+            assert out[0][1].size() == 1
+            assert out[0][1][0].name.endsWith('.merged.fastq.gz')
+        }
+    }
+
+    // Multiple samples must remain independent — each produces its own output element.
+    test("multiple samples each produce independent output elements") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [ [ id:'sample_a', single_end:true, run_accession:'run1' ],
+                      [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ] ],
+                    [ [ id:'sample_b', single_end:false, run_accession:'run1' ],
+                      [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test2_2.fastq.gz', checkIfExists: true) ] ]
+                )
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            def out = workflow.out.ch_input_reads_merged
+            assert out.size() == 2
+            // Both outputs must be lists with exactly one file
+            out.each { meta, reads ->
+                assert reads instanceof List
+                assert reads.size() == 1
+            }
+        }
+    }
+}
