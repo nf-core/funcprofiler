@@ -61,7 +61,20 @@ def prepareInputs(pairedreads, databases, singleFqTool=False){
             unknown:    true
         }
     } else {
+        // PE-aware tool path: reads preserves original meta.single_end.
+        // For SE samples: meta.single_end == true,  reads == [R1]
+        // For PE samples: meta.single_end == false, reads == [R1, R2]
+        // Every tool in this branch MUST use meta.single_end to switch
+        // between single-file and paired-file CLI arguments.
         return reads_with_dbs
+            .map { meta, reads, db_meta, db ->
+                def flat_reads = [reads].flatten()
+                def expected = meta.single_end ? 1 : 2
+                if ( flat_reads.size() != expected ) {
+                    error("PE-aware tool '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${flat_reads.size()}")
+                }
+                [ meta, flat_reads, db_meta, db ]
+            }
 	    .branch { meta, reads, db_meta, db ->
 		rgi:         db_meta.tool == 'rgi'
 		unknown:    true
