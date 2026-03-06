@@ -20,61 +20,47 @@
 
 ## Introduction
 
-**nf-core/funcprofiler** is a bioinformatics pipeline that performs end-to-end functional profiling of metagenomes. It is designed to be a standalone tool or used along other metagenomics pipelines such as [nf-core/taxprofiler](https://nf-co.re/taxprofiler/latest/) and [nf-core/mag](https://nf-co.re/mag/latest/). It allows for parallel functional identification of reads against multiple databases, and using a suite of different tools.
-
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
-
-## Pipeline summary
-
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/guidelines/graphic_design/workflow_diagrams#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) or [`falco`](https://github.com/smithlabcode/falco) as an alternative option)
-2. Optional read pre-processing
-   - Adapter clipping and merging (short-read: [fastp](https://github.com/OpenGene/fastp); long-read: [porechop](https://github.com/rrwick/Porechop))
-   - Host-read removal (short-read: [BowTie2](http://bowtie-bio.sourceforge.net/bowtie2/); long-read: [Minimap2](https://github.com/lh3/minimap2))
-   - Run merging
-3. Performs functional classification and/or profiling using one or more of:
-   - [humann3](http://huttenhower.sph.harvard.edu/humann)
-   - [DIAMOND](https://github.com/bbuchfink/diamond)
-   - [Resistance Gene Identifier](https://card.mcmaster.ca/analyze/rgi)
-4. Concatenate QC and profile reports ([`MultiQC`](http://multiqc.info/))
+**nf-core/funcprofiler** is a bioinformatics pipeline for read-based functional profiling of microbiome sequencing data. It accepts short-read (Illumina) and long-read (Oxford Nanopore) FASTQ files and runs one or more functional profilers against user-supplied databases, producing gene family abundances, pathway abundances, pathway coverages, and antimicrobial resistance profiles.
+
+Supported profilers:
+
+1. [**HUMANn v3**](https://huttenhower.sph.harvard.edu/humann/) — functional profiling via MetaPhlAn + HUMANn 3 (`--run_humann_v3`)
+2. [**HUMANn v4**](https://huttenhower.sph.harvard.edu/humann/) — functional profiling via MetaPhlAn + HUMANn 4 (`--run_humann_v4`)
+3. [**FMH FunProfiler**](https://github.com/dib-lab/fmh_funprofiler) — sketch-based functional profiling (`--run_fmhfunprofiler`)
+4. **RGI** — antimicrobial resistance gene identification (`--run_rgi`, work in progress)
+5. **mifaser** — functional profiling via mifaser (`--run_mifaser`, planned)
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
-
-First, prepare a samplesheet with your input data that looks as follows:
+First, prepare a samplesheet with your input data:
 
 `samplesheet.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+sample,run_accession,instrument_platform,fastq_1,fastq_2,fasta
+SAMPLE1,RUN1,ILLUMINA,/path/to/sample1_R1.fastq.gz,/path/to/sample1_R2.fastq.gz,
+SAMPLE2,RUN1,OXFORD_NANOPORE,/path/to/sample2.fastq.gz,,
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
+Each row represents a sequencing run. Multiple rows with the same `sample` and different `run_accession` values will be merged before profiling.
 
--->
+Then prepare a databases sheet — see [docs/usage.md](docs/usage.md) for the full format.
 
 Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run nf-core/funcprofiler \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
-   --outdir <OUTDIR>
+   --outdir <OUTDIR> \
+   --databases databases.csv \
+   --run_humann_v3
 ```
 
 > [!WARNING]
