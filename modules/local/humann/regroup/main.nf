@@ -1,5 +1,5 @@
 
-process HUMANN_REGROUP {
+process HUMANNREGROUP {
     tag "$meta.id"
     label 'process_low'
 

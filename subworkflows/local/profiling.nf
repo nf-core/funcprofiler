@@ -4,6 +4,7 @@
 
 include { MIFASER                                       } from '../../modules/local/mifaser/main'
 include { HUMANN3; HUMANN4                              } from '../../modules/local/humann/humann/main'
+include { HUMANNREGROUP                                 } from '../../modules/local/humann/regroup/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPAHUMANN3;
 	 METAPHLAN_METAPHLAN as MPAHUMANN4              } from '../../modules/nf-core/metaphlan/metaphlan/main'
@@ -221,7 +222,8 @@ workflow PROFILING {
 	if (true){
             MPAHUMANN3 ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
             HUMANN3 ( ch_input_for_humann.reads, MPAHUMANN3.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db, ch_input_for_humann.util_db
-	                     )
+	    )
+	    HUMANNREGROUP(HUMANN3.out.genefamilies, "ec")
 	} else {
 	    println("not enabled")
 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
