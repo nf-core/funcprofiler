@@ -18,16 +18,16 @@ You will need to create a samplesheet with information about the samples you wou
 
 The samplesheet is a comma-separated file with the following columns:
 
-| Column                | Required | Description                                                                                                                              |
-| --------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`              | Yes      | Sample name. Rows with the same `sample` name (and different `run_accession`) are merged before profiling.                               |
-| `run_accession`       | Yes      | Unique run identifier (e.g. `RUN1`, `SRR12345`). Used to distinguish multiple sequencing runs of the same sample.                       |
-| `instrument_platform` | Yes      | Sequencing platform. Must be one of: `ILLUMINA`, `OXFORD_NANOPORE`, `PACBIO_SMRT`, `ION_TORRENT`, `BGISEQ`, `DNBSEQ`, or `LS454`.       |
-| `fastq_1`             | No*      | Full path to gzipped FASTQ file for read 1. Must end in `.fastq.gz` or `.fq.gz`.                                                        |
-| `fastq_2`             | No       | Full path to gzipped FASTQ file for read 2 (paired-end only). Leave empty for single-end or Nanopore reads.                             |
-| `fasta`               | No*      | Full path to gzipped FASTA file. Provide instead of FASTQ if your data is already assembled. Must end in `.fa.gz`, `.fna.gz`, or `.fasta.gz`. |
+| Column                | Required | Description                                                                                                                                   |
+| --------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sample`              | Yes      | Sample name. Rows with the same `sample` name (and different `run_accession`) are merged before profiling.                                    |
+| `run_accession`       | Yes      | Unique run identifier (e.g. `RUN1`, `SRR12345`). Used to distinguish multiple sequencing runs of the same sample.                             |
+| `instrument_platform` | Yes      | Sequencing platform. Must be one of: `ILLUMINA`, `OXFORD_NANOPORE`, `PACBIO_SMRT`, `ION_TORRENT`, `BGISEQ`, `DNBSEQ`, or `LS454`.             |
+| `fastq_1`             | No\*     | Full path to gzipped FASTQ file for read 1. Must end in `.fastq.gz` or `.fq.gz`.                                                              |
+| `fastq_2`             | No       | Full path to gzipped FASTQ file for read 2 (paired-end only). Leave empty for single-end or Nanopore reads.                                   |
+| `fasta`               | No\*     | Full path to gzipped FASTA file. Provide instead of FASTQ if your data is already assembled. Must end in `.fa.gz`, `.fna.gz`, or `.fasta.gz`. |
 
-> *Either `fastq_1` or `fasta` must be provided for each row.
+> \*Either `fastq_1` or `fasta` must be provided for each row.
 
 ### Example samplesheet
 
@@ -49,14 +49,14 @@ In this example, `SAMPLE1` has two runs which will be merged before profiling. `
 
 The databases sheet is a comma-separated file that specifies which databases to use for each profiler. Only tools enabled via `--run_<tool>` flags will use the corresponding database entries.
 
-| Column      | Required | Description                                                                                                                                                                  |
-| ----------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tool`      | Yes      | Profiler name. Must be one of: `humann_v3`, `humann_v4`, `fmhfunprofiler`, `rgi`.                                                                                           |
-| `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                                       |
-| `db_entity` | No       | For HUMANn only: specifies which database component this row provides. Must be one of: `humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`.           |
-| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                           |
-| `db_type`   | No       | Read type this database applies to: `short`, `long`, or `short;long` (default). Use to restrict a database to only short-read or long-read samples.                          |
-| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                            |
+| Column      | Required | Description                                                                                                                                                         |
+| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tool`      | Yes      | Profiler name. Must be one of: `humann_v3`, `humann_v4`, `fmhfunprofiler`, `rgi`.                                                                                   |
+| `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                              |
+| `db_entity` | No       | For HUMANn only: specifies which database component this row provides. Must be one of: `humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`. |
+| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                  |
+| `db_type`   | No       | Read type this database applies to: `short`, `long`, or `short;long` (default). Use to restrict a database to only short-read or long-read samples.                 |
+| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                   |
 
 ### HUMANn databases
 
@@ -109,7 +109,7 @@ diamond makedb --in proteins.faa --db proteins
 
 See the [DIAMOND makedb documentation](https://github.com/bbuchfink/diamond/wiki/3.-Command-line-options#makedb-options) for all available options (e.g. adding taxonomy, setting block size).
 
-```
+````
 
 > [!IMPORTANT]
 > The path should point to the **directory** containing the `.dmnd` file, not the file itself. The pipeline will automatically locate the `.dmnd` file within that directory.
@@ -127,7 +127,7 @@ nextflow run nf-core/funcprofiler \
    --run_humann_v3                \
    --run_fmhfunprofiler           \
    -profile docker
-```
+````
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
@@ -144,13 +144,13 @@ work                # Directory containing the nextflow working files
 
 At least one profiler must be enabled via command-line flags. The pipeline will only run the profilers you explicitly turn on:
 
-| Flag                   | Profiler          | Status              |
-| ---------------------- | ----------------- | ------------------- |
-| `--run_humann_v3`      | HUMANn v3         | Available           |
-| `--run_humann_v4`      | HUMANn v4         | Available           |
-| `--run_fmhfunprofiler` | FMH FunProfiler   | Available           |
-| `--run_rgi`            | RGI               | Work in progress    |
-| `--run_mifaser`        | mifaser           | Planned             |
+| Flag                   | Profiler        | Status           |
+| ---------------------- | --------------- | ---------------- |
+| `--run_humann_v3`      | HUMANn v3       | Available        |
+| `--run_humann_v4`      | HUMANn v4       | Available        |
+| `--run_fmhfunprofiler` | FMH FunProfiler | Available        |
+| `--run_rgi`            | RGI             | Work in progress |
+| `--run_mifaser`        | mifaser         | Planned          |
 
 ### Parameters
 
