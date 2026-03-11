@@ -1,32 +1,17 @@
+include { getConda; getContainer; getExt; getProcessName } from '../utils'
 // Taken 98% from https://github.com/nf-core/modules/pull/1089/files
 
-def getProcessName(task_process) {
-    return task_process.tokenize(':')[-1]
-}
-
-def containerMap = [
-    'HUMANN3': 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1',
-    'HUMANN4': 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final'
-]
-def condaMap = [
-    'HUMANN3': 'bioconda::humann=3.6.1',
-    'HUMANN4': 'bioconda::humann=4.0.0.alpha.1-final'
-]
-def extMap = [
-    'HUMANN3': '*.ffn.gz',
-    'HUMANN4': '*.fna.gz'
-]
 
 
 process HUMANN_HUMANN {
     tag "$meta.id"
     label 'process_high'
 
-    conda (params.enable_conda ? { condaMap[getProcessName(task.process)] } : null)
+    conda (params.enable_conda ? { getConda(getProcessName(task.process)) } : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container)	{
-        container { "docker://" + containerMap[getProcessName(task.process)] }
+        container { "docker://" + getContainer(getProcessName(task.process)) }
     } else {
-    container { containerMap[getProcessName(task.process)] }
+    container { getContainer(getProcessName(task.process)) }
     }
     input:
     tuple val(meta), path(input)
@@ -46,10 +31,10 @@ process HUMANN_HUMANN {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    if (extMap[getProcessName(task.process)] == null){
+    if (getExt(getProcessName(task.process)) == null){
 	throw new IllegalArgumentException("this process must be aliased to either HUMANN3 or HUMANN4 to ensure the right parameters and containers are used; detected ${getProcessName(task.process)}")
     }
-    def nuc_ext = extMap[getProcessName(task.process)]
+    def nuc_ext = getExt(getProcessName(task.process))
     // TODO: I never got this to successfully run
     //  def pangenome_string = "--metaphlan-options \"-t rel_ab --bowtie2db ./${pangenome_db} --index ${pangenome_db_index_name} \""
     def pangenome_string = "--taxonomic-profile ${profile}"

@@ -1,24 +1,28 @@
-
+include { getConda; getContainer; getExt; getProcessName } from '../utils'
+def getProcessNamePrefix(task_process) {
+    return task_process.tokenize(':')[-1].tokenize('_')[0]
+}
 process HUMANNREGROUP {
     tag "$meta.id"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::humann=3.0.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/humann:3.0.0--pyh5e36f6f_1"
+    conda (params.enable_conda ? { getConda(getProcessNamePrefix(task.process)) } : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container)	{
+        container { "docker://" + getContainer(getProcessNamePrefix(task.process)) }
     } else {
-        container "quay.io/biocontainers/humann:3.0.0--pyh5e36f6f_1"
+	container { getContainer(getProcessNamePrefix(task.process)) }
     }
-
     input:
     tuple val(meta), path(input)
     val groups
+    path utility_db
 
     output:
     tuple val(meta), path("*_regroup.tsv.gz"), emit: regroup
     path "versions.yml"                      , emit: versions
 
     script:
+
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
@@ -27,7 +31,10 @@ process HUMANNREGROUP {
     else
         mv $input input.tsv
     fi
-
+    STATIC_CONFIG=`python -c "import humann; print(humann.__file__.replace('__init__.py', 'humann.cfg'))"`
+    cat \$STATIC_CONFIG  | sed "s|utility_mapping = .*|utility_mapping = ${utility_db}|g" > humann.cfg
+    export HUMANN_CONFIG=humann.cfg
+    humann_config --print
     humann_regroup_table \\
         --input input.tsv \\
         --output ${prefix}_regroup.tsv \\
@@ -37,8 +44,8 @@ process HUMANNREGROUP {
     gzip -n ${prefix}_regroup.tsv
 
     cat <<-END_VERSIONS > versions.yml
-    ${task.process}:
-        ${humann}: \$( humann --version 2>&1 | sed 's/humann v//' )
+    HUMANNREGROUP:
+        Humann regroup version: \$( humann --version 2>&1 | sed 's/humann v//' )
     END_VERSIONS
     """
 
@@ -49,8 +56,8 @@ process HUMANNREGROUP {
     touch ${prefix}_regroup.tsv.gz
 
     cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        humann: \$( humann --version 2>&1 | sed 's/humann v//' )
+    HUMANNREGROUP:
+        Humann regroup version: \$( humann --version 2>&1 | sed 's/humann v//' )
     END_VERSIONS
     """
 }
