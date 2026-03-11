@@ -31,7 +31,8 @@ Supported profilers:
 2. [**HUMANn v4**](https://huttenhower.sph.harvard.edu/humann/) — functional profiling via MetaPhlAn + HUMANn 4 (`--run_humann_v4`)
 3. [**FMH FunProfiler**](https://github.com/dib-lab/fmh_funprofiler) — sketch-based functional profiling (`--run_fmhfunprofiler`)
 4. **RGI** — antimicrobial resistance gene identification (`--run_rgi`, work in progress)
-5. **mifaser** — functional profiling via mifaser (`--run_mifaser`, planned)
+5. **mifaser** — functional profiling via mifaser (`--run_mifaser`, available)
+6. **DIAMOND** — alignment with DIAMOND blastx (`--run_diamond`, available)
 
 ## Usage
 
