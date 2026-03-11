@@ -256,8 +256,8 @@ workflow PROFILING {
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
             MPAHUMANN4 ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, false )
-            HUMANN4 ( ch_input_for_humann4.reads, MPAHUMANN4.out.profile, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db,
-	                     )
+            HUMANN4 ( ch_input_for_humann4.reads, MPAHUMANN4.out.profile, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db)
+	    HUMANN4_REGROUP(HUMANN4.out.genefamilies, "uniclust90_level4ec", ch_input_for_humann4.util_db)
 	} else {
 	    println("not enabled")
 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
