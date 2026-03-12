@@ -299,9 +299,6 @@
             "$ref": "#/$defs/profiling_options"
         },
         {
-            "$ref": "#/$defs/preprocessing_run_merging_options"
-        },
-        {
             "$ref": "#/$defs/institutional_config_options"
         },
         {
