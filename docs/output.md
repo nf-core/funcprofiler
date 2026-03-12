@@ -31,6 +31,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 Enable with `--run_diamond`. Requires a pre-built `.dmnd` database (see [usage docs](usage.md#diamond-blastx)).
 
 ### FastQC
+
 - [Short reads QC and preprocessing](https://nf-co.re/subworkflows/fastq_shortreads_preprocess_qc/), see [Output section](https://nf-co.re/subworkflows/fastq_shortreads_preprocess_qc/#output) for details.
 - Long reads QC and preprocessing (WIP)
 - [HUMANn v3 / v4](#humann-v3--v4) — functional profiling via MetaPhlAn + HUMANn (`--run_humann_v3`, `--run_humann_v4`)
