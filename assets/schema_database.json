@@ -9,8 +9,8 @@
         "properties": {
             "tool": {
                 "type": "string",
-                "enum": ["humann_v3", "humann_v4", "fmhfunprofiler", "rgi"],
-                "errorMessage": "Invalid tool name. Please see documentation for all supported profilers. Currently these classifers are included: humann_v3, humann_v4, metaphlan, fmhfunprofiler.",
+                "enum": ["humann_v3", "humann_v4", "fmhfunprofiler", "rgi", "mifaser", "diamond"],
+                "errorMessage": "Invalid tool name. Please see documentation for all supported profilers. Currently these classifers are included: humann_v3, humann_v4, metaphlan, fmhfunprofiler, mifaser, diamond.",
                 "meta": ["tool"]
             },
             "db_name": {
