@@ -12,7 +12,7 @@ graph TD
     %% Nodes
     input([Input Samples\nFASTQ])
     input_dbs([Input Databases])
-    
+
     untar_dbs(UNTAR Databases)
 
     sr_qc(Read Preprocessing)
@@ -39,7 +39,7 @@ graph TD
 
     %% Preprocessing
     input -->|qc| sr_qc
-    
+
     sr_qc -->|concat| merge
 
     %% Profiling split
