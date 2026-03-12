@@ -106,7 +106,6 @@
                     "fa_icon": "fas fa-toggle-on",
                     "description": "Turn on profiling with fmhfunprofiler; Requires database to be present CSV file passed to --databases"
                 },
-
                 "run_humann_v3": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toggle-on",
