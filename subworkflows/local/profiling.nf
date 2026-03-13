@@ -12,6 +12,7 @@ include { METAPHLAN_METAPHLAN as MPAHUMANN3;
 include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
 include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
 include { DIAMOND_BLASTX                                } from '../../modules/nf-core/diamond/blastx/main'
+include { RGI_BWT                                       } from '../../modules/nf-core/rgi/bwt/main'
 
 
 // Custom Functions
@@ -286,12 +287,19 @@ workflow PROFILING {
         ch_raw_profiles = ch_raw_profiles.mix( DIAMOND_BLASTX.out.tsv )
     }
 
-// 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
+    if ( params.run_rgi ) {
+        ch_input_for_rgi = ch_paired_input_for_profiling.rgi
+            .multiMap {
+                meta, reads, db_meta, db ->
+                def new_meta = meta + db_meta
+                reads: [ new_meta, [reads].flatten() ]
+                card:  db[0].db_path
+            }
+        RGI_BWT( ch_input_for_rgi.reads, ch_input_for_rgi.card, [] )
 
-//     /////////////   PAIRED Inputs
-//     if ( params.run_rgi ) {
-// 	println("WIP")
-//     }
+        ch_versions     = ch_versions.mix( RGI_BWT.out.versions_rgi.first() )
+        ch_raw_profiles = ch_raw_profiles.mix( RGI_BWT.out.tsv )
+    }
 
     emit:
     profiles        = ch_raw_profiles    // channel: [ val(meta), [ reads ] ] - should be text files or biom
