@@ -136,6 +136,12 @@
                     "type": "boolean",
                     "description": "Turn on profiling with mi-faser. Requires database to be present CSV file passed to --databases",
                     "default": false
+                },
+                "run_eggnogmapper": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on functional annotation with EggNOG-mapper. Requires `eggnogmapper`-tagged database entries in the CSV file passed to --databases",
+                    "default": false
                 }
             }
         },

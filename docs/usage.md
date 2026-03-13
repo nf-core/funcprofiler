@@ -49,14 +49,14 @@ In this example, `SAMPLE1` has two runs which will be merged before profiling. `
 
 The databases sheet is a comma-separated file that specifies which databases to use for each profiler. Only tools enabled via `--run_<tool>` flags will use the corresponding database entries.
 
-| Column      | Required | Description                                                                                                                                                         |
-| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tool`      | Yes      | Profiler name. Must be one of: `humann_v3`, `humann_v4`, `fmhfunprofiler`, `rgi`.                                                                                   |
-| `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                              |
-| `db_entity` | No       | For HUMANn only: specifies which database component this row provides. Must be one of: `humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`. |
-| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                  |
-| `db_type`   | No       | Read type this database applies to: `short`, `long`, or `short;long` (default). Use to restrict a database to only short-read or long-read samples.                 |
-| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                   |
+| Column      | Required | Description                                                                                                                                                                         |
+| ----------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tool`      | Yes      | Profiler name. Must be one of: `humann_v3`, `humann_v4`, `fmhfunprofiler`, `rgi`, `eggnogmapper`.                                                                                   |
+| `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                                              |
+| `db_entity` | No       | For HUMANn: specifies the component (`humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`). For EggNOG-mapper: `eggnogmapper_db` or `eggnogmapper_data_dir`. |
+| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                                  |
+| `db_type`   | No       | Read type this database applies to: `short`, `long`, or `short;long` (default). Use to restrict a database to only short-read or long-read samples.                                 |
+| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                                   |
 
 ### HUMANn databases
 
@@ -78,6 +78,18 @@ FMH FunProfiler requires a single sketch database:
 tool,db_name,db_entity,db_params,db_type,db_path
 fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
 ```
+
+### EggNOG-mapper databases
+
+EggNOG-mapper requires two database entries per named database: the search database and the EggNOG data directory. The `db_params` field of the `eggnogmapper_db` row must specify the search mode (e.g. `diamond`, `mmseqs`, `hmmer`).
+
+```csv
+tool,db_name,db_entity,db_params,db_type,db_path
+eggnogmapper,eggnog_v5,eggnogmapper_db,diamond,,/data/databases/eggnog_mapper/eggnog_proteins.dmnd
+eggnogmapper,eggnog_v5,eggnogmapper_data_dir,,,/data/databases/eggnog_mapper/data
+```
+
+> The EggNOG data directory can be downloaded with `download_eggnog_data.py` from the eggnog-mapper package. See the [EggNOG-mapper documentation](https://github.com/eggnogdb/eggnog-mapper/wiki) for details.
 
 ### Full example databases sheet
 
@@ -151,6 +163,7 @@ At least one profiler must be enabled via command-line flags. The pipeline will 
 | `--run_fmhfunprofiler` | FMH FunProfiler | Available        |
 | `--run_mifaser`        | mifaser         | Available        |
 | `--run_diamond`        | diamond         | Available        |
+| `--run_eggnogmapper`   | EggNOG-mapper   | Available        |
 | `--run_rgi`            | RGI             | Work in progress |
 
 ### Parameters
