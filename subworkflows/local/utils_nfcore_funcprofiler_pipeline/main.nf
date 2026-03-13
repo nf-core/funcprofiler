@@ -182,6 +182,14 @@ def toolCitationText() {
         "Enzyme function annotation was performed with mi-faser (Zhu et al. 2017)."
     ].join(' ').trim()
 
+    def text_eggnogmapper = [
+        "Functional Annotation, Orthology Assignments, and Domain Prediction was performed with eggNOG-mapper v2 (Cantalapiedra et. al 2021)",
+    ].join(' ').trim()
+
+    def text_rgi = [
+       "Resistome prediction was performed using RGI (Alcock et. al 2023)",
+    ].join(' ').trim()
+
     def citation_text = [
         "Tools used in the workflow included:",
         !params.skip_preprocessing_qc ? text_qc : "",
@@ -189,6 +197,8 @@ def toolCitationText() {
         params.run_diamond ? text_diamond : "",
         params.run_fmhfunprofiler ? text_fmhfunprofiler : "",
         params.run_mifaser ? text_mifaser : "",
+        params.run_eggnogmapper ? text_eggnogmapper : "",
+        params.run_rgi ? text_rgi : "",
         "Pipeline results statistics were summarised with MultiQC (Ewels et al. 2016).",
     ].join(' ').trim().replaceAll("[,|.] +\\.", ".")
 
