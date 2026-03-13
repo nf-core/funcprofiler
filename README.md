@@ -29,7 +29,6 @@
 
 ![](./assets/pipeline_light.svg)
 
-
 Supported profilers:
 
 1. [**HUMANn v3**](https://huttenhower.sph.harvard.edu/humann/) — functional profiling via MetaPhlAn + HUMANn 3 (`--run_humann_v3`)

@@ -49,15 +49,14 @@ In this example, `SAMPLE1` has two runs which will be merged before profiling. `
 
 The databases sheet is a comma-separated file that specifies which databases to use for each profiler. Only tools enabled via `--run_<tool>` flags will use the corresponding database entries.
 
-| Column      | Required | Description                                                                                                                                                         |
-| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Column      | Required | Description                                                                                                                                                                         |
+| ----------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `tool`      | Yes      | Profiler name. Must be one of: `humann_v3`, `humann_v4`, `fmhfunprofiler`, `mifaser`, `diamond`, `rgi`, `eggnogmapper`.                                                             |
-| `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                              |
+| `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                                              |
 | `db_entity` | No       | For HUMANn: specifies the component (`humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`). For EggNOG-mapper: `eggnogmapper_db` or `eggnogmapper_data_dir`. |
-| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                  |
-| `db_type`   | No       | Read type this database applies to: `short`, `long`, or `short;long` (default). Use to restrict a database to only short-read or long-read samples.                 |
-| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                   |
-
+| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                                  |
+| `db_type`   | No       | Read type this database applies to: `short`, `long`, or `short;long` (default). Use to restrict a database to only short-read or long-read samples.                                 |
+| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                                   |
 
 ### HUMANn databases
 
@@ -188,9 +187,8 @@ At least one profiler must be enabled via command-line flags. The pipeline will 
 | `--run_fmhfunprofiler` | FMH FunProfiler | Available |
 | `--run_mifaser`        | mifaser         | Available |
 | `--run_diamond`        | diamond         | Available |
-| `--run_eggnogmapper`   | EggNOG-mapper   | Available        |
+| `--run_eggnogmapper`   | EggNOG-mapper   | Available |
 | `--run_rgi`            | RGI BWT         | Available |
-
 
 ### Parameters
 
