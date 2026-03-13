@@ -12,6 +12,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [FastQC](#fastqc) - Raw read QC
 - [DIAMOND blastx](#diamond-blastx) - Translated alignment against a protein database _(optional)_
+- [EggNOG-mapper](#eggnog-mapper) - Functional annotation via orthology assignment _(optional)_
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
@@ -44,6 +45,22 @@ Enabled with `--run_rgi`. Aligns reads against the CARD database using Bowtie2/B
 [DIAMOND](https://github.com/bbuchfink/diamond/wiki/) performs fast translated alignment of metagenomic reads against a protein reference database. Each read is aligned in all six reading frames against the database and only significant hits are reported. The output is a tab-separated file compatible with standard BLAST tabular output parsers.
 
 Enable with `--run_diamond`. Requires a pre-built `.dmnd` database (see [usage docs](usage.md#diamond-blastx)).
+
+### EggNOG-mapper
+
+Enabled with `--run_eggnogmapper`. Assigns functional annotations to sequences by mapping them to orthologous groups in the EggNOG database.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `eggnogmapper/`
+  - `*.emapper.annotations`: TSV file with functional annotations per query sequence, including GO terms, KEGG pathways, COG categories, and more.
+  - `*.emapper.seed_orthologs`: TSV linking query sequences to their best seed orthologs _(optional, produced when search is performed)_.
+  - `*.emapper.hits`: TSV with raw search hits from the search phase _(optional)_.
+
+</details>
+
+---
 
 ### FastQC
 

@@ -9,10 +9,10 @@ include { HUMANNREGROUP as HUMANN3_REGROUP;
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPAHUMANN3;
 	 METAPHLAN_METAPHLAN as MPAHUMANN4              } from '../../modules/nf-core/metaphlan/metaphlan/main'
-include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
 include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
 include { DIAMOND_BLASTX                                } from '../../modules/nf-core/diamond/blastx/main'
 include { RGI_BWT                                       } from '../../modules/nf-core/rgi/bwt/main'
+include { EGGNOGMAPPER                                  } from '../../modules/nf-core/eggnogmapper/main'
 
 
 // Custom Functions
@@ -64,6 +64,7 @@ def prepareInputs(pairedreads, databases, singleFqTool=False){
             humann_v4:      db_meta.tool == 'humann_v4'
             fmhfunprofiler: db_meta.tool == 'fmhfunprofiler'
             diamond:        db_meta.tool == 'diamond'
+            eggnogmapper:   db_meta.tool == 'eggnogmapper'
             unknown:        true
         }
     } else {
@@ -296,6 +297,31 @@ workflow PROFILING {
                 card:  db[0].db_path
             }
         RGI_BWT( ch_input_for_rgi.reads, ch_input_for_rgi.card, [] )
+    if ( params.run_eggnogmapper ) {
+        ch_input_for_eggnogmapper = ch_merged_input_for_profiling.eggnogmapper
+            .multiMap {
+                meta, reads, db_meta, db ->
+                def new_meta = meta + db_meta
+                def flat_reads = [reads].flatten()
+                if ( flat_reads.size() != 1 ) {
+                    error("eggnogmapper requires exactly one input FASTA, got ${flat_reads.size()} files for sample ${meta.id}")
+                }
+                fasta:    [ new_meta, flat_reads[0] ]
+                search_db: [ db.findAll { it.db_entity == "eggnogmapper_db" }.first().db_params,
+                             db.findAll { it.db_entity == "eggnogmapper_db" }.first().db_path ]
+                data_dir:  db.findAll { it.db_entity == "eggnogmapper_data_dir" }.first().db_path
+            }
+        EGGNOGMAPPER (
+            ch_input_for_eggnogmapper.fasta,
+            ch_input_for_eggnogmapper.search_db,
+            ch_input_for_eggnogmapper.data_dir
+        )
+
+        ch_versions     = ch_versions.mix( EGGNOGMAPPER.out.versions_eggnogmapper.first() )
+        ch_raw_profiles = ch_raw_profiles.mix( EGGNOGMAPPER.out.annotations )
+    }
+
+// 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
         ch_versions     = ch_versions.mix( RGI_BWT.out.versions_rgi.first() )
         ch_raw_profiles = ch_raw_profiles.mix( RGI_BWT.out.tsv )
