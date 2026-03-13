@@ -168,14 +168,14 @@ work                # Directory containing the nextflow working files
 
 At least one profiler must be enabled via command-line flags. The pipeline will only run the profilers you explicitly turn on:
 
-| Flag                   | Profiler        | Status           |
-| ---------------------- | --------------- | ---------------- |
-| `--run_humann_v3`      | HUMANn v3       | Available        |
-| `--run_humann_v4`      | HUMANn v4       | Available        |
-| `--run_fmhfunprofiler` | FMH FunProfiler | Available        |
-| `--run_mifaser`        | mifaser         | Available        |
-| `--run_diamond`        | diamond         | Available        |
-| `--run_rgi`            | RGI BWT         | Available        |
+| Flag                   | Profiler        | Status    |
+| ---------------------- | --------------- | --------- |
+| `--run_humann_v3`      | HUMANn v3       | Available |
+| `--run_humann_v4`      | HUMANn v4       | Available |
+| `--run_fmhfunprofiler` | FMH FunProfiler | Available |
+| `--run_mifaser`        | mifaser         | Available |
+| `--run_diamond`        | diamond         | Available |
+| `--run_rgi`            | RGI BWT         | Available |
 
 ### Parameters
 
