@@ -1,4 +1,4 @@
-graph TD
+graph LR
     %%metro line: qc | Preprocessing & QC | #4CAF50
     %%metro line: concat | Merge & Concat | #2196F3
     %%metro line: diamond | DIAMOND | #9C27B0
@@ -6,6 +6,7 @@ graph TD
     %%metro line: humann4 | HUMAnN 4 | #FF5722
     %%metro line: mifaser | mi-faser | #00BCD4
     %%metro line: fmh | fmhfunprofiler | #E91E63
+    %%metro line: eggnog | eggnog-mapper | #3F51B5
     %%metro line: multiqc | Reporting | #795548
     %%metro line: db | Database Prep | #607D8B
 
@@ -23,6 +24,7 @@ graph TD
     humann4(HUMAnN v4)
 
     diamond(DIAMOND blastx)
+    eggnog_mapper(eggnog-mapper)
     fmhfunprofiler(fmhfunprofiler)
     mifaser(mi-faser)
 
@@ -34,6 +36,7 @@ graph TD
     untar_dbs -->|db| humann3
     untar_dbs -->|db| humann4
     untar_dbs -->|db| diamond
+    untar_dbs -->|db| eggnog_mapper
     untar_dbs -->|db| fmhfunprofiler
     untar_dbs -->|db| mifaser
 
@@ -46,6 +49,7 @@ graph TD
     merge -->|humann3| humann3
     merge -->|humann4| humann4
     merge -->|diamond| diamond
+    merge -->|eggnog| eggnog_mapper
     merge -->|fmh| fmhfunprofiler
     merge -->|mifaser| mifaser
 
@@ -54,6 +58,7 @@ graph TD
     humann3 -->|multiqc| multiqc
     humann4 -->|multiqc| multiqc
     diamond -->|multiqc| multiqc
+    eggnog_mapper -->|multiqc| multiqc
     fmhfunprofiler -->|multiqc| multiqc
     mifaser -->|multiqc| multiqc
 
@@ -62,5 +67,6 @@ graph TD
     humann3 -->|humann3| output
     humann4 -->|humann4| output
     diamond -->|diamond| output
+    eggnog_mapper -->|eggnog| output
     fmhfunprofiler -->|fmh| output
     mifaser -->|mifaser| output
