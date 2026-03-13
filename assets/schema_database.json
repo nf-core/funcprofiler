@@ -9,8 +9,8 @@
         "properties": {
             "tool": {
                 "type": "string",
-                "enum": ["humann_v3", "humann_v4", "fmhfunprofiler", "rgi", "mifaser", "diamond"],
-                "errorMessage": "Invalid tool name. Please see documentation for all supported profilers. Currently these classifers are included: humann_v3, humann_v4, metaphlan, fmhfunprofiler, mifaser, diamond.",
+                "enum": ["humann_v3", "humann_v4", "fmhfunprofiler", "rgi", "mifaser", "diamond", "eggnogmapper"],
+                "errorMessage": "Invalid tool name. Please see documentation for all supported profilers. Currently these classifers are included: humann_v3, humann_v4, metaphlan, fmhfunprofiler, mifaser, diamond, eggnogmapper.",
                 "meta": ["tool"]
             },
             "db_name": {
@@ -21,8 +21,8 @@
             },
             "db_entity": {
                 "type": "string",
-                "enum": ["humann_metaphlan", "humann_nucleotide", "humann_utility", "humann_protein"],
-                "errorMessage": "The unique name of the database entity should be provided. (eg, for HUMAnN, specify whether db_path is the humann_nucleotide, humann_protein, or humann_metaphlan database)",
+                "enum": ["humann_metaphlan", "humann_nucleotide", "humann_utility", "humann_protein", "eggnogmapper_db", "eggnogmapper_data_dir"],
+                "errorMessage": "The unique name of the database entity should be provided. (eg, for HUMAnN, specify whether db_path is the humann_nucleotide, humann_protein, or humann_metaphlan database; for eggnogmapper, specify eggnogmapper_db or eggnogmapper_data_dir)",
                 "meta": ["db_entity"]
             },
             "db_params": {
