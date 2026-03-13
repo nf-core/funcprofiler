@@ -16,6 +16,21 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
+### RGI BWT
+
+Enabled with `--run_rgi`. Aligns reads against the CARD database using Bowtie2/BWA to identify antimicrobial resistance genes.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `rgi/<db_name>/`
+  - `*.txt`: Tab-separated AMR gene hit table with gene family, resistance mechanism, drug class, and read counts.
+  - `*.json`: Full RGI output in JSON format with detailed per-hit annotations.
+
+</details>
+
+---
+
 ### DIAMOND blastx
 
 <details markdown="1">

@@ -49,14 +49,15 @@ In this example, `SAMPLE1` has two runs which will be merged before profiling. `
 
 The databases sheet is a comma-separated file that specifies which databases to use for each profiler. Only tools enabled via `--run_<tool>` flags will use the corresponding database entries.
 
-| Column      | Required | Description                                                                                                                                                                         |
-| ----------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tool`      | Yes      | Profiler name. Must be one of: `humann_v3`, `humann_v4`, `fmhfunprofiler`, `rgi`, `eggnogmapper`.                                                                                   |
-| `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                                              |
+| Column      | Required | Description                                                                                                                                                         |
+| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tool`      | Yes      | Profiler name. Must be one of: `humann_v3`, `humann_v4`, `fmhfunprofiler`, `mifaser`, `diamond`, `rgi`, `eggnogmapper`.                                                             |
+| `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                              |
 | `db_entity` | No       | For HUMANn: specifies the component (`humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`). For EggNOG-mapper: `eggnogmapper_db` or `eggnogmapper_data_dir`. |
-| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                                  |
-| `db_type`   | No       | Read type this database applies to: `short`, `long`, or `short;long` (default). Use to restrict a database to only short-read or long-read samples.                                 |
-| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                                   |
+| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                  |
+| `db_type`   | No       | Read type this database applies to: `short`, `long`, or `short;long` (default). Use to restrict a database to only short-read or long-read samples.                 |
+| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                   |
+
 
 ### HUMANn databases
 
@@ -105,6 +106,30 @@ humann_v4,uniref90_v4,humann_protein,,,/data/databases/uniref90_v4_diamond
 humann_v4,uniref90_v4,humann_utility,,,/data/databases/utility_mapping_v4
 fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
 ```
+
+### RGI BWT
+
+[RGI](https://github.com/arpcard/rgi) (Resistance Gene Identifier) uses the Comprehensive Antibiotic Resistance Database (CARD) to identify AMR genes. The `bwt` subcommand aligns reads directly to CARD using Bowtie2/BWA. Enable with `--run_rgi`.
+
+#### Database preparation
+
+Download the CARD database and extract it to a directory:
+
+```bash
+wget https://card.mcmaster.ca/latest/data
+tar -xvf data ./card.json
+rgi load --card_json card.json --local
+```
+
+The `db_path` in the databases CSV must point to the directory containing `card.json` and the pre-built CARD annotation files (`card_database_v*.fasta`).
+
+```csv
+tool,db_name,db_entity,db_params,db_type,db_path
+rgi,card_v3,,,,/data/databases/card
+```
+
+> [!NOTE]
+> Wildcard variant databases are not currently supported by the pipeline. Only the core CARD database is used.
 
 ### DIAMOND blastx
 
@@ -156,15 +181,16 @@ work                # Directory containing the nextflow working files
 
 At least one profiler must be enabled via command-line flags. The pipeline will only run the profilers you explicitly turn on:
 
-| Flag                   | Profiler        | Status           |
-| ---------------------- | --------------- | ---------------- |
-| `--run_humann_v3`      | HUMANn v3       | Available        |
-| `--run_humann_v4`      | HUMANn v4       | Available        |
-| `--run_fmhfunprofiler` | FMH FunProfiler | Available        |
-| `--run_mifaser`        | mifaser         | Available        |
-| `--run_diamond`        | diamond         | Available        |
+| Flag                   | Profiler        | Status    |
+| ---------------------- | --------------- | --------- |
+| `--run_humann_v3`      | HUMANn v3       | Available |
+| `--run_humann_v4`      | HUMANn v4       | Available |
+| `--run_fmhfunprofiler` | FMH FunProfiler | Available |
+| `--run_mifaser`        | mifaser         | Available |
+| `--run_diamond`        | diamond         | Available |
 | `--run_eggnogmapper`   | EggNOG-mapper   | Available        |
-| `--run_rgi`            | RGI             | Work in progress |
+| `--run_rgi`            | RGI BWT         | Available |
+
 
 ### Parameters
 
