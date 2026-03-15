@@ -182,6 +182,14 @@ def toolCitationText() {
         "Enzyme function annotation was performed with mi-faser (Zhu et al. 2017)."
     ].join(' ').trim()
 
+    def text_eggnogmapper = [
+        "Functional Annotation, Orthology Assignments, and Domain Prediction was performed with eggNOG-mapper v2 (Cantalapiedra et. al 2021)",
+    ].join(' ').trim()
+
+    def text_rgi = [
+       "Resistome prediction was performed using RGI (Alcock et. al 2023)",
+    ].join(' ').trim()
+
     def citation_text = [
         "Tools used in the workflow included:",
         !params.skip_preprocessing_qc ? text_qc : "",
@@ -189,6 +197,8 @@ def toolCitationText() {
         params.run_diamond ? text_diamond : "",
         params.run_fmhfunprofiler ? text_fmhfunprofiler : "",
         params.run_mifaser ? text_mifaser : "",
+        params.run_eggnogmapper ? text_eggnogmapper : "",
+        params.run_rgi ? text_rgi : "",
         "Pipeline results statistics were summarised with MultiQC (Ewels et al. 2016).",
     ].join(' ').trim().replaceAll("[,|.] +\\.", ".")
 
@@ -220,9 +230,19 @@ def toolBibliographyText() {
         params.run_mifaser ? "<li>Zhu, C., Delmont, T. O., Vogel, T. M., & Bromberg, Y. (2015). Functional basis of microorganism classification. PLoS Computational Biology, 11(8), e1004472. <a href=\"https://doi.org/10.1371/journal.pcbi.1004472\">10.1371/journal.pcbi.1004472</a></li>" : "",
     ].join(' ').trim()
 
+    def text_eggnggmapper = [
+        params.run_eggnogmapper ? "<li>Carlos P Cantalapiedra, Ana Hernández-Plaza, Ivica Letunic, Peer Bork, Jaime Huerta-Cepas, eggNOG-mapper v2: Functional Annotation, Orthology Assignments, and Domain Prediction at the Metagenomic Scale, Molecular Biology and Evolution, Volume 38, Issue 12, December 2021, <a href = \"https://doi.org/10.1093/molbev/msab293\">0.1093/molbev/msab293</a></li>" : "",
+    ].join(' ').trim()
+
+    def text_rgi = [
+        params.run_rgi ? "<li>Alcock et al. 2023. CARD 2023: expanded curation, support for machine learning, and resistome prediction at the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research<a href = \"https://doi.org/10.1093/molbev/msab293\"<a href=\"https://pubmed.ncbi.nlm.nih.gov/36263822/\">pubmed.ncbi.nlm.nih.gov/36263822</a></li>" : "",
+    ].join(' ').trim()
+
     def reference_text = [
         text_qc,
         text_humann,
+        text_eggnggmapper,
+        text_rgi,
         text_diamond,
         text_fmhfunprofiler,
         text_mifaser,
