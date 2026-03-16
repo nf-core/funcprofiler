@@ -21,8 +21,8 @@ graph LR
         sr_qc(Short Read \nPreprocess)
         lr_qc(Long Read \nPreprocess)
         merge(MERGE_RUNS)
-    end    
-    
+    end
+
     subgraph profiling[Functional Profiling]
         humann3(HUMAnN v3)
         humann4(HUMAnN v4)
@@ -49,7 +49,7 @@ graph LR
     input_dbs -->|db| mifaser
     input_dbs -->|db| diamond
     input_dbs -->|db| eggnog_mapper
-    
+
     %% Preprocessing
     input_short -->|qc| sr_qc
     input_long -->|qc| lr_qc
@@ -86,4 +86,3 @@ graph LR
     mifaser -->|mifaser| output
     diamond -->|diamond| output
     eggnog_mapper -->|eggnog| output
-    
