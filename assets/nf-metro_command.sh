@@ -1,0 +1,2 @@
+nf-metro render pipeline.mmd -o pipeline_light.svg --logo nf-core-funcprofiler_logo_light.png --theme light --animate
+nf-metro render pipeline.mmd -o pipeline_nf-core.svg --logo nf-core-funcprofiler_logo_light.png --theme nfcore --animate
