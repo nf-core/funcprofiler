@@ -12,14 +12,9 @@ graph LR
     %%metro line: db | Database Prep | #607D8B
 
     subgraph input[Input]
-        input_short([Illumina])
-        input_long([Oxford \nNanopore])
+        input_short([Short Read\nFASTQ])
         input_dbs([Input Databases])
-    end
-
-    subgraph preprocess[Preprocess]
-        sr_qc(Short Read \nPreprocess)
-        lr_qc(Long Read \nPreprocess)
+        sr_qc(Preprocess)
         merge(MERGE_RUNS)
     end
 
@@ -52,10 +47,7 @@ graph LR
 
     %% Preprocessing
     input_short -->|qc| sr_qc
-    input_long -->|qc| lr_qc
-
     sr_qc -->|concat| merge
-    lr_qc -->|concat| merge
 
     %% Profiling split
     merge -->|humann3| humann3
@@ -68,12 +60,11 @@ graph LR
 
     %% Reporting
     sr_qc -->|multiqc| multiqc
-    lr_qc -->|multiqc| multiqc
     humann3 -->|multiqc| multiqc
     humann4 -->|multiqc| multiqc
     fmhfunprofiler -->|multiqc| multiqc
     RGI -->|multiqc| multiqc
-    mifaser --> |multiqc| multiqc
+    mifaser -->|multiqc| multiqc
     diamond -->|multiqc| multiqc
     eggnog_mapper -->|multiqc| multiqc
 
