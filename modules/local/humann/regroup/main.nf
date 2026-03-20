@@ -19,7 +19,7 @@ process HUMANNREGROUP {
 
     output:
     tuple val(meta), path("*_regroup.tsv.gz"), emit: regroup
-    path "versions.yml"                      , emit: versions
+    tuple val("${task.process}"), val('HUMAnN'), eval("humann --version 2>&1 | sed 's/humann v//'"), emit: versions_humann, topic: versions
 
     script:
 
@@ -43,10 +43,6 @@ process HUMANNREGROUP {
 
     gzip -n ${prefix}_regroup.tsv
 
-    cat <<-END_VERSIONS > versions.yml
-    HUMANNREGROUP:
-        Humann regroup version: \$( humann --version 2>&1 | sed 's/humann v//' )
-    END_VERSIONS
     """
 
     stub:
@@ -55,9 +51,5 @@ process HUMANNREGROUP {
     """
     touch ${prefix}_regroup.tsv.gz
 
-    cat <<-END_VERSIONS > versions.yml
-    HUMANNREGROUP:
-        Humann regroup version: \$( humann --version 2>&1 | sed 's/humann v//' )
-    END_VERSIONS
     """
 }

@@ -16,6 +16,7 @@ process MIFASER {
     tuple val(meta), path("*multi_ec.tsv"), emit: multi_ec
     tuple val(meta), path("*analysis.tsv"), emit: analysis
     tuple val(meta), path("*ec_count.tsv"), emit: ec_counts
+    tuple val("${task.process}"), val('mi-faser'), eval("mifaser --version 2>&1 | sed 's/* v//'"), emit: versions_mifaser, topic: versions
     path "versions.yml",                    emit: versions
     when:
     task.ext.when == null || task.ext.when
@@ -37,12 +38,6 @@ process MIFASER {
     do
          mv mifaser-${prefix}/\$suf ${prefix}_\${suf}
     done
-cat <<-END_VERSIONS > versions.yml
-    MIFASER:
-        MIFASER version: \$( mifaser --version 2>&1' )
-        Diamond version: \$( diamond --version 2>&1' )
-        database: $db_path
-END_VERSIONS
 
     """
 
@@ -63,6 +58,5 @@ END_VERSIONS
     do
         touch ${prefix}_\$suf
     done
-touch versions.yml
     """
 }

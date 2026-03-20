@@ -8,7 +8,7 @@ include { HUMANNREGROUP as HUMANN3_REGROUP;
 	  HUMANNREGROUP as HUMANN4_REGROUP                    } from '../../modules/local/humann/regroup/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPAHUMANN3;
-	 METAPHLAN_METAPHLAN as MPAHUMANN4              } from '../../modules/nf-core/metaphlan/metaphlan/main'
+          METAPHLAN_METAPHLAN as MPAHUMANN4             } from '../../modules/nf-core/metaphlan/metaphlan/main'
 include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
 include { DIAMOND_BLASTX                                } from '../../modules/nf-core/diamond/blastx/main'
 include { RGI_BWT                                       } from '../../modules/nf-core/rgi/bwt/main'

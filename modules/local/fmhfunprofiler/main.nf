@@ -39,7 +39,7 @@ process FMHFUNPROFILER {
     // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
     tuple val(meta), path("*.fmhfuncprofiler.ko"), emit: ko
     // TODO nf-core: List additional required output channels/values here
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('fmh-funprofiler'), eval("funcprofiler.py --version 2>&1 | sed 's/* v//'"), emit: versions_fmhfunprofiler, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -66,13 +66,7 @@ process FMHFUNPROFILER {
         $args  \\
         ${prefix}.fmhfuncprofiler.ko
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fmhfunprofiler-database: $fmhfunprofiler_db
-    END_VERSIONS
     """
-    // TODO add  container somehow
-    //fmhfunprofiler: $task.process.container
 
     stub:
     def args = task.ext.args ?: ''
@@ -89,9 +83,5 @@ process FMHFUNPROFILER {
 
     touch ${prefix}.fmhfuncprofiler.ko
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fmhfunprofiler: $task.container
-        fmhfunprofiler-database: $fmhfunprofiler_db
-    END_VERSIONS    """
+    """
 }

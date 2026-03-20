@@ -26,7 +26,8 @@ process HUMANN_HUMANN {
     tuple val(meta), path("*_pathcoverage.tsv.gz") , emit: pathcoverage, optional:true
     tuple val(meta), path("*_reactions.tsv.gz")    , emit: reactions, optional:true
     tuple val(meta), path("*.log")                 , emit: log
-    path "versions.yml"                            , emit: versions
+    tuple val("${task.process}"), val('HUMAnN'), eval("humann --version 2>&1 | sed 's/humann v//'"), emit: versions_humann, topic: versions
+    tuple val("${task.process}"), val('MetaPHLan'), eval("metaphlan --version 2>&1 | sed 's/metaphlan v//'"), emit: versions_metaphlan, topic: versions
 
     script:
     def args = task.ext.args ?: ''
@@ -63,13 +64,6 @@ process HUMANN_HUMANN {
 
     gzip -n *.tsv
 
-cat <<-END_VERSIONS > versions.yml
-    HUMANN:
-        Humann version: \$( humann --version 2>&1 | sed 's/humann v//' )
-        Protein database: $protein_db
-        Nucleotide database: $nucleotide_db
-        Metaphlan profile or database: $pangenome_string
-END_VERSIONS
     """
     stub:
     def args = task.ext.args ?: ''
@@ -81,6 +75,5 @@ END_VERSIONS
     do
         touch ${prefix}_\$suf
     done
-touch versions.yml
     """
 }
