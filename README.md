@@ -25,14 +25,19 @@
 
 **nf-core/funcprofiler** is a bioinformatics pipeline for read-based functional profiling of microbiome sequencing data. It accepts short-read (Illumina) and long-read (Oxford Nanopore) FASTQ files and runs one or more functional profilers against user-supplied databases, producing gene family abundances, pathway abundances, pathway coverages, and antimicrobial resistance profiles.
 
+### Pipeline Summary
+
+![](./assets/pipeline_light.svg)
+
 Supported profilers:
 
 1. [**HUMANn v3**](https://huttenhower.sph.harvard.edu/humann/) — functional profiling via MetaPhlAn + HUMANn 3 (`--run_humann_v3`)
 2. [**HUMANn v4**](https://huttenhower.sph.harvard.edu/humann/) — functional profiling via MetaPhlAn + HUMANn 4 (`--run_humann_v4`)
 3. [**FMH FunProfiler**](https://github.com/dib-lab/fmh_funprofiler) — sketch-based functional profiling (`--run_fmhfunprofiler`)
-4. **RGI** — antimicrobial resistance gene identification (`--run_rgi`, work in progress)
-5. **mifaser** — functional profiling via mifaser (`--run_mifaser`, available)
-6. **DIAMOND** — alignment with DIAMOND blastx (`--run_diamond`, available)
+4. [**RGI**](https://github.com/arpcard/rgi) — antimicrobial resistance gene identification (`--run_rgi`, available)
+5. [**mifaser**](https://bromberglab.org/project/mifaser/) — functional profiling via mifaser (`--run_mifaser`, available)
+6. [**DIAMOND**](https://github.com/bbuchfink/diamond) — alignment with DIAMOND blastx (`--run_diamond`, available)
+7. [**eggNOG-mapper**](https://academic.oup.com/mbe/article/38/12/5825/6379734) — functional annotation, orthology assignments and domain prediction (`--run_eggnogmapper`, available)
 
 ## Usage
 
@@ -51,7 +56,17 @@ SAMPLE2,RUN1,OXFORD_NANOPORE,/path/to/sample2.fastq.gz,,
 
 Each row represents a sequencing run. Multiple rows with the same `sample` and different `run_accession` values will be merged before profiling.
 
-Then prepare a databases sheet — see [docs/usage.md](docs/usage.md) for the full format.
+Then prepare a databases sheet — see [docs/usage.md](docs/usage.md) for the full format. Here is an abbreviated example for running HUMANn (which requires 4 databases):
+
+`databases.csv`
+
+```csv
+tool,db_name,db_entity,db_params,db_type,db_path
+humann_v3,uniref90_v3,humann_metaphlan,,,/data/databases/metaphlan_db
+humann_v3,uniref90_v3,humann_nucleotide,,,/data/databases/chocophlan
+humann_v3,uniref90_v3,humann_protein,,,/data/databases/uniref90_diamond
+humann_v3,uniref90_v3,humann_utility,,,/data/databases/utility_mapping
+```
 
 Now, you can run the pipeline using:
 

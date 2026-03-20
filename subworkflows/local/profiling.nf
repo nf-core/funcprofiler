@@ -5,7 +5,7 @@
 include { MIFASER                                       } from '../../modules/local/mifaser/main'
 include { HUMANN3; HUMANN4                              } from '../../modules/local/humann/humann/main'
 include { HUMANNREGROUP as HUMANN3_REGROUP;
-	  HUMANNREGROUP as HUMANN4_REGROUP                    } from '../../modules/local/humann/regroup/main'
+	  HUMANNREGROUP as HUMANN4_REGROUP              } from '../../modules/local/humann/regroup/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPAHUMANN3;
 	 METAPHLAN_METAPHLAN as MPAHUMANN4              } from '../../modules/nf-core/metaphlan/metaphlan/main'
@@ -13,7 +13,8 @@ include { CONCAT_ALL                                    } from '../../subworkflo
 include { DIAMOND_BLASTX                                } from '../../modules/nf-core/diamond/blastx/main'
 include { RGI_BWT                                       } from '../../modules/nf-core/rgi/bwt/main'
 include { EGGNOGMAPPER                                  } from '../../modules/nf-core/eggnogmapper/main'
-
+include { SEQKIT_FQ2FA                                  } from '../../modules/nf-core/seqkit/fq2fa/main'
+include { GUNZIP                                        } from '../../modules/nf-core/gunzip/main'
 
 // Custom Functions
 
@@ -297,6 +298,10 @@ workflow PROFILING {
                 card:  db[0].db_path
             }
         RGI_BWT( ch_input_for_rgi.reads, ch_input_for_rgi.card, [] )
+
+        ch_versions     = ch_versions.mix( RGI_BWT.out.versions_rgi.first() )
+        ch_raw_profiles = ch_raw_profiles.mix( RGI_BWT.out.tsv )
+    }
     if ( params.run_eggnogmapper ) {
         ch_input_for_eggnogmapper = ch_merged_input_for_profiling.eggnogmapper
             .multiMap {
@@ -306,25 +311,21 @@ workflow PROFILING {
                 if ( flat_reads.size() != 1 ) {
                     error("eggnogmapper requires exactly one input FASTA, got ${flat_reads.size()} files for sample ${meta.id}")
                 }
-                fasta:    [ new_meta, flat_reads[0] ]
-                search_db: [ db.findAll { it.db_entity == "eggnogmapper_db" }.first().db_params,
-                             db.findAll { it.db_entity == "eggnogmapper_db" }.first().db_path ]
+                fastq:    [ new_meta, flat_reads[0] ]
+                search_db: db.findAll { it.db_entity == "eggnogmapper_db" }.first().db_path
                 data_dir:  db.findAll { it.db_entity == "eggnogmapper_data_dir" }.first().db_path
             }
+	SEQKIT_FQ2FA(ch_input_for_eggnogmapper.fastq)
+	GUNZIP(SEQKIT_FQ2FA.out.fasta)
         EGGNOGMAPPER (
-            ch_input_for_eggnogmapper.fasta,
-            ch_input_for_eggnogmapper.search_db,
+            GUNZIP.out.gunzip,
+            ch_input_for_eggnogmapper.search_db.map { db -> [ 'diamond', db ] },
             ch_input_for_eggnogmapper.data_dir
         )
 
         ch_versions     = ch_versions.mix( EGGNOGMAPPER.out.versions_eggnogmapper.first() )
         ch_raw_profiles = ch_raw_profiles.mix( EGGNOGMAPPER.out.annotations )
-    }
 
-// 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
-
-        ch_versions     = ch_versions.mix( RGI_BWT.out.versions_rgi.first() )
-        ch_raw_profiles = ch_raw_profiles.mix( RGI_BWT.out.tsv )
     }
 
     emit:
