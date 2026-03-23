@@ -22,8 +22,8 @@ process FMHFUNPROFILER {
     // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
 //    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/vdblab/fmhfunprofiler:20250930' :
-        'ghcr.io/vdblab/fmhfunprofiler:20250930' }"
+        'ghcr.io/vdblab/fmhfunprofiler:20250930a' :
+        'ghcr.io/vdblab/fmhfunprofiler:20250930a' }"
 
     input:// TODO nf-core: Where applicable all sample-specific information e.g. "id", "single_end", "read_group"
     //               MUST be provided as an input via a Groovy Map called "meta".

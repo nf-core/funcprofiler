@@ -37,7 +37,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "cb9f4bec379866ca560f7f79d9a9a06bea8c9b51",
                         "installed_by": ["modules"]
                     },
                     "rgi/bwt": {

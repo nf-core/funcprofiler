@@ -33,21 +33,45 @@
     "humann_v4 sarscov2 - fastq - stub": {
         "content": [
             [
-                
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/c6b6cacbc3c6adb4d2aad458aa5e2f91/work/11/92bc0371c0d67984ddb9d6d79fc0f0/test__genefamilies.tsv.gz"
+                ]
             ],
             [
-                
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/c6b6cacbc3c6adb4d2aad458aa5e2f91/work/11/92bc0371c0d67984ddb9d6d79fc0f0/test__pathabundance.tsv.gz"
+                ]
             ],
             [
-                
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/c6b6cacbc3c6adb4d2aad458aa5e2f91/work/11/92bc0371c0d67984ddb9d6d79fc0f0/test__pathcoverage.tsv.gz"
+                ]
             ],
             [
-                
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/c6b6cacbc3c6adb4d2aad458aa5e2f91/work/11/92bc0371c0d67984ddb9d6d79fc0f0/test__reactions.tsv.gz"
+                ]
             ]
         ],
-        "timestamp": "2026-03-13T17:08:52.024169",
+        "timestamp": "2026-03-23T14:26:44.049248",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     }
