@@ -183,14 +183,6 @@ workflow FUNCPROFILER {
         ch_shortreads_preprocessed = ch_input.fastq
     }
 
-    if ( params.perform_longread_qc ) {
-        ch_longreads_preprocessed = LONGREAD_PREPROCESSING ( ch_input.nanopore ).reads
-                                        .map { it -> [ it[0], [it[1]] ] }
-        ch_versions = ch_versions.mix( LONGREAD_PREPROCESSING.out.versions )
-    } else {
-        ch_longreads_preprocessed = ch_input.nanopore
-    }
-
     if ( params.perform_runmerging || true ) {
 
         ch_reads_for_cat_branch = ch_shortreads_preprocessed
@@ -311,7 +303,7 @@ workflow FUNCPROFILER {
     MULTIQC(
         ch_multiqc_files.flatten().collect().map { files ->
             [
-                [id: '{{ short_name }}'],
+                [id: 'funcprofiler'],
                 files,
                 params.multiqc_config
                     ? file(params.multiqc_config, checkIfExists: true)
