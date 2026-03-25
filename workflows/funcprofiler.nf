@@ -5,7 +5,6 @@
 */
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { METAPHLAN_METAPHLAN    } from '../modules/nf-core/metaphlan/metaphlan/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -58,13 +57,10 @@ if (params.databases) { ch_databases = file(params.databases, checkIfExists: tru
 // MODULE: Installed directly from nf-core/modules
 //
 include { UNTAR                       } from '../modules/nf-core/untar/main'
-//include { FALCO                       } from '../modules/nf-core/falco/main'
 include { CAT_FASTQ as MERGE_RUNS     } from '../modules/nf-core/cat/fastq/main'
 
 include { CONCAT_ALL                    } from '../subworkflows/local/concatall'
 include { PROFILING                     } from '../subworkflows/local/profiling'
-include { SHORTREAD_PREPROCESSING       } from '../subworkflows/local/shortread_preprocessing'
-include { LONGREAD_PREPROCESSING        } from '../subworkflows/local/longread_preprocessing'
 
 
 
@@ -143,7 +139,6 @@ workflow FUNCPROFILER {
 
     // Untar the databases
     UNTAR ( ch_inputdb_untar )
-    ch_versions = ch_versions.mix( UNTAR.out.versions.first() )
     // Spread out the untarred and shared databases
     ch_outputdb_from_untar = UNTAR.out.untar
         .map {
@@ -185,15 +180,7 @@ workflow FUNCPROFILER {
     } else {
         ch_shortreads_preprocessed = ch_input.fastq
     }
-
-    if ( params.perform_longread_qc ) {
-        ch_longreads_preprocessed = LONGREAD_PREPROCESSING ( ch_input.nanopore ).reads
-                                        .map { it -> [ it[0], [it[1]] ] }
-        ch_versions = ch_versions.mix( LONGREAD_PREPROCESSING.out.versions )
-    } else {
-        ch_longreads_preprocessed = ch_input.nanopore
-    }
-
+    ch_longreads_preprocessed = Channel.empty()
     if ( params.perform_runmerging || true ) {
 
         ch_reads_for_cat_branch = ch_shortreads_preprocessed
@@ -224,7 +211,7 @@ workflow FUNCPROFILER {
             }
             .mix( ch_input.fasta_short, ch_input.fasta_long)
 
-        ch_versions = ch_versions.mix(MERGE_RUNS.out.versions)
+        //ch_versions = ch_versions.mix(MERGE_RUNS.out.versions)
 
     } else {
         ch_reads_runmerged = ch_shortreads_preprocessed
@@ -238,26 +225,7 @@ workflow FUNCPROFILER {
 	ch_grouped_dbs,
     )
 
-    // //
-    // // Module: Run FastQC
-    // //
-    // FASTQC (
-    //     ch_samplesheet
-    // )
-    // ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    // ch_versions = ch_versions.mix(FASTQC.out.versions.first())
-
-    // //
-    // HUMANN_HUMANN(
-    //     ch_samplesheet,
-    // 	config.humann_pangenome_db,
-    // 	config.humann_nucleotide_db,
-    // 	contig.humann_protein_db,
-    // )
-    // //
-    // // Collate and save software versions
-    // //
-    softwareVersionsToYAML(ch_versions)
+   softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_'  +  'funcprofiler_software_'  + 'mqc_'  + 'versions.yml',
@@ -297,16 +265,38 @@ workflow FUNCPROFILER {
         )
     )
 
-    MULTIQC (
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList(),
-        [],
-        []
+
+
+    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+
+    // def ch_summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    // def ch_workflow_summary = channel.value(paramsSummaryMultiqc(ch_summary_params))
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+
+    // def ch_multiqc_custom_methods_description = multiqc_methods_description
+    //     ? file(multiqc_methods_description, checkIfExists: true)
+    //     : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
+    // def ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+    // ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
+
+    MULTIQC(
+        ch_multiqc_files.flatten().collect().map { files ->
+            [
+                [id: 'funcprofiler'],
+                files,
+                params.multiqc_config
+                    ? file(params.multiqc_config, checkIfExists: true)
+                    : file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true),
+                params.multiqc_logo ? file(params.multiqc_logo, checkIfExists: true) : [],
+                [],
+                [],
+            ]
+        }
     )
 
-    emit:multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    emit:
+    multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
+
 //    emit:multiqc_report = Channel.empty()  // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 

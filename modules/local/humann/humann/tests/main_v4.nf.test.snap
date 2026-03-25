@@ -19,14 +19,58 @@
                 "test_2_genefamilies.tsv.gz:md5,34f174a6d642d21bb14af35a6fe9dd69",
                 "test_3_reactions.tsv.gz:md5,c026112aa2b41eb63e3752db315b2515",
                 "test_4_pathabundance.tsv.gz:md5,825a3b76f509e1de6d27d10af6ef885a",
-                "test.bowtie2out.txt:md5,ef46a9c6a8ce9cae26fbfd5527116fd5",
                 "test_profile.txt:md5,0dac5843d397e7042bf088cf65217f92",
                 "test_mock_profile.txt:md5,c155a9c471a135a1dbd6e9e075f3315c"
             ]
         ],
-        "timestamp": "2026-03-04T16:17:16.318161",
+        "timestamp": "2026-03-23T15:10:45.038189",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "humann_v4 sarscov2 - fastq - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/c6b6cacbc3c6adb4d2aad458aa5e2f91/work/a4/3c7d0009cc1fa09357c640e85b2a2f/test__genefamilies.tsv.gz"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/c6b6cacbc3c6adb4d2aad458aa5e2f91/work/a4/3c7d0009cc1fa09357c640e85b2a2f/test__pathabundance.tsv.gz"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/c6b6cacbc3c6adb4d2aad458aa5e2f91/work/a4/3c7d0009cc1fa09357c640e85b2a2f/test__pathcoverage.tsv.gz"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/c6b6cacbc3c6adb4d2aad458aa5e2f91/work/a4/3c7d0009cc1fa09357c640e85b2a2f/test__reactions.tsv.gz"
+                ]
+            ]
+        ],
+        "timestamp": "2026-03-23T15:26:09.946286",
+        "meta": {
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     }

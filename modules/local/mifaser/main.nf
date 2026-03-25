@@ -5,8 +5,8 @@ process MIFASER {
     // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/vdblab/mifaser:1.64c':
-        'ghcr.io/vdblab/mifaser:1.64c' }"
+        'ghcr.io/vdblab/mifaser:1.64d':
+        'ghcr.io/vdblab/mifaser:1.64d' }"
     input:
     tuple val(meta), path(reads)
     path db_path
@@ -16,7 +16,7 @@ process MIFASER {
     tuple val(meta), path("*multi_ec.tsv"), emit: multi_ec
     tuple val(meta), path("*analysis.tsv"), emit: analysis
     tuple val(meta), path("*ec_count.tsv"), emit: ec_counts
-    path "versions.yml",                    emit: versions
+    tuple val("${task.process}"), val('mi-faser'), eval("mifaser --version 2>&1 | sed 's/* v//'"), emit: versions_mifaser, topic: versions
     when:
     task.ext.when == null || task.ext.when
 
@@ -37,12 +37,6 @@ process MIFASER {
     do
          mv mifaser-${prefix}/\$suf ${prefix}_\${suf}
     done
-cat <<-END_VERSIONS > versions.yml
-    MIFASER:
-        MIFASER version: \$( mifaser --version 2>&1' )
-        Diamond version: \$( diamond --version 2>&1' )
-        database: $db_path
-END_VERSIONS
 
     """
 
@@ -63,6 +57,5 @@ END_VERSIONS
     do
         touch ${prefix}_\$suf
     done
-touch versions.yml
     """
 }

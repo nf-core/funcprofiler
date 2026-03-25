@@ -22,8 +22,8 @@ process FMHFUNPROFILER {
     // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
 //    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/vdblab/fmhfunprofiler:20250930' :
-        'ghcr.io/vdblab/fmhfunprofiler:20250930' }"
+        'ghcr.io/vdblab/fmhfunprofiler:20250930a' :
+        'ghcr.io/vdblab/fmhfunprofiler:20250930a' }"
 
     input:// TODO nf-core: Where applicable all sample-specific information e.g. "id", "single_end", "read_group"
     //               MUST be provided as an input via a Groovy Map called "meta".
@@ -39,7 +39,7 @@ process FMHFUNPROFILER {
     // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
     tuple val(meta), path("*.fmhfuncprofiler.ko"), emit: ko
     // TODO nf-core: List additional required output channels/values here
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('fmh-funprofiler'), eval("funcprofiler.py --version 2>&1 | sed 's/* v//'"), emit: versions_fmhfunprofiler, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -66,13 +66,7 @@ process FMHFUNPROFILER {
         $args  \\
         ${prefix}.fmhfuncprofiler.ko
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fmhfunprofiler-database: $fmhfunprofiler_db
-    END_VERSIONS
     """
-    // TODO add  container somehow
-    //fmhfunprofiler: $task.process.container
 
     stub:
     def args = task.ext.args ?: ''
@@ -89,9 +83,5 @@ process FMHFUNPROFILER {
 
     touch ${prefix}.fmhfuncprofiler.ko
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fmhfunprofiler: $task.container
-        fmhfunprofiler-database: $fmhfunprofiler_db
-    END_VERSIONS    """
+    """
 }

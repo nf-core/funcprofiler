@@ -8,7 +8,7 @@ include { HUMANNREGROUP as HUMANN3_REGROUP;
 	  HUMANNREGROUP as HUMANN4_REGROUP              } from '../../modules/local/humann/regroup/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPAHUMANN3;
-	 METAPHLAN_METAPHLAN as MPAHUMANN4              } from '../../modules/nf-core/metaphlan/metaphlan/main'
+          METAPHLAN_METAPHLAN as MPAHUMANN4             } from '../../modules/nf-core/metaphlan/metaphlan/main'
 include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
 include { DIAMOND_BLASTX                                } from '../../modules/nf-core/diamond/blastx/main'
 include { RGI_BWT                                       } from '../../modules/nf-core/rgi/bwt/main'
@@ -182,7 +182,7 @@ workflow PROFILING {
         FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db )
 
         // Generate profile
-        ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions.first() )
+        //ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions_fmhfunprofiler.first() )
         ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
@@ -199,7 +199,7 @@ workflow PROFILING {
         MIFASER ( ch_input_for_mifaser.reads, ch_input_for_mifaser.db )
 
         // Generate profile
-        ch_versions            = ch_versions.mix( MIFASER.out.versions.first() )
+        //ch_versions            = ch_versions.mix( MIFASER.out.versions_mifaser.first() )
         ch_raw_profiles        = ch_raw_profiles.mix( MIFASER.out.ec_counts )
 	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
 
@@ -232,9 +232,9 @@ workflow PROFILING {
 	    println("not enabled")
 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
 	}
-        ch_versions        = ch_versions.mix( MPAHUMANN3.out.versions.first() )
+        //ch_versions        = ch_versions.mix( MPAHUMANN3.out.versions.first() ) // TODO: update to topic once upstream is ready
         ch_raw_profiles    = ch_raw_profiles.mix( MPAHUMANN3.out.profile )
-        ch_versions            = ch_versions.mix( HUMANN3.out.versions.first() )
+        //ch_versions            = ch_versions.mix( HUMANN3.out.versions_humann.first() )
         ch_raw_profiles        = ch_raw_profiles.mix( HUMANN3.out.pathabundance )
 	    .mix( HUMANN3.out.genefamilies )
 	    .mix( HUMANN3.out.pathcoverage )
@@ -265,7 +265,7 @@ workflow PROFILING {
 	    println("not enabled")
 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
 	}
-        ch_versions            = ch_versions.mix( HUMANN4.out.versions.first() )
+        //ch_versions            = ch_versions.mix( HUMANN4.out.versions_humann.first() )
         ch_raw_profiles        = ch_raw_profiles.mix( HUMANN4.out.pathabundance )
 	    .mix( HUMANN4.out.genefamilies )
 	    .mix( HUMANN4.out.reactions )
@@ -285,7 +285,7 @@ workflow PROFILING {
             }
         DIAMOND_BLASTX ( ch_input_for_diamond.reads, ch_input_for_diamond.db, 'tsv', '' )
 
-        ch_versions     = ch_versions.mix( DIAMOND_BLASTX.out.versions.first() )
+        //ch_versions     = ch_versions.mix( DIAMOND_BLASTX.out.versions.first() ) // TODO swap for topic once upstream is ready
         ch_raw_profiles = ch_raw_profiles.mix( DIAMOND_BLASTX.out.tsv )
     }
 
@@ -299,7 +299,7 @@ workflow PROFILING {
             }
         RGI_BWT( ch_input_for_rgi.reads, ch_input_for_rgi.card, [] )
 
-        ch_versions     = ch_versions.mix( RGI_BWT.out.versions_rgi.first() )
+        //ch_versions     = ch_versions.mix( RGI_BWT.out.versions_rgi.first())
         ch_raw_profiles = ch_raw_profiles.mix( RGI_BWT.out.tsv )
     }
     if ( params.run_eggnogmapper ) {
@@ -323,7 +323,7 @@ workflow PROFILING {
             ch_input_for_eggnogmapper.data_dir
         )
 
-        ch_versions     = ch_versions.mix( EGGNOGMAPPER.out.versions_eggnogmapper.first() )
+        //ch_versions     = ch_versions.mix( EGGNOGMAPPER.out.versions_eggnogmapper.first() )
         ch_raw_profiles = ch_raw_profiles.mix( EGGNOGMAPPER.out.annotations )
 
     }

@@ -1,0 +1,37 @@
+{
+    "humann_renorm sarscov2 - tsv - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/fec8da28cd3bee30a50927e43521690f/work/fd/10fec876411a5f1eb3e2388707d184/test_renorm.tsv.gz"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4330d49ec1909d5808af158ea34cbdce"
+                ],
+                "renorm": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/fec8da28cd3bee30a50927e43521690f/work/fd/10fec876411a5f1eb3e2388707d184/test_renorm.tsv.gz"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4330d49ec1909d5808af158ea34cbdce"
+                ]
+            }
+        ],
+        "timestamp": "2026-03-23T15:26:21.631526",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}
