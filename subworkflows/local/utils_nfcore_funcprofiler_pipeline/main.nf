@@ -36,7 +36,7 @@ workflow PIPELINE_INITIALISATION {
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
-    
+
     main:
 
     ch_versions = Channel.empty()
@@ -79,12 +79,12 @@ workflow PIPELINE_INITIALISATION {
         workflow,
         validate_params,
         null,
-        help,                                                 
-        help_full,                                            
-        show_hidden,                                          
-        before_text,                                          
-        after_text,                                           
-        command                                               
+        help,
+        help_full,
+        show_hidden,
+        before_text,
+        after_text,
+        command
 	)
 
     //
