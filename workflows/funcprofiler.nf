@@ -5,7 +5,6 @@
 */
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { METAPHLAN_METAPHLAN    } from '../modules/nf-core/metaphlan/metaphlan/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -140,7 +139,6 @@ workflow FUNCPROFILER {
 
     // Untar the databases
     UNTAR ( ch_inputdb_untar )
-    ch_versions = ch_versions.mix( UNTAR.out.versions.first() )
     // Spread out the untarred and shared databases
     ch_outputdb_from_untar = UNTAR.out.untar
         .map {
@@ -182,7 +180,7 @@ workflow FUNCPROFILER {
     } else {
         ch_shortreads_preprocessed = ch_input.fastq
     }
-
+    ch_longreads_preprocessed = Channel.empty()
     if ( params.perform_runmerging || true ) {
 
         ch_reads_for_cat_branch = ch_shortreads_preprocessed
@@ -213,7 +211,7 @@ workflow FUNCPROFILER {
             }
             .mix( ch_input.fasta_short, ch_input.fasta_long)
 
-        ch_versions = ch_versions.mix(MERGE_RUNS.out.versions)
+        //ch_versions = ch_versions.mix(MERGE_RUNS.out.versions)
 
     } else {
         ch_reads_runmerged = ch_shortreads_preprocessed
@@ -227,26 +225,7 @@ workflow FUNCPROFILER {
 	ch_grouped_dbs,
     )
 
-    // //
-    // // Module: Run FastQC
-    // //
-    // FASTQC (
-    //     ch_samplesheet
-    // )
-    // ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    // ch_versions = ch_versions.mix(FASTQC.out.versions.first())
-
-    // //
-    // HUMANN_HUMANN(
-    //     ch_samplesheet,
-    // 	config.humann_pangenome_db,
-    // 	config.humann_nucleotide_db,
-    // 	contig.humann_protein_db,
-    // )
-    // //
-    // // Collate and save software versions
-    // //
-    softwareVersionsToYAML(ch_versions)
+   softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_'  +  'funcprofiler_software_'  + 'mqc_'  + 'versions.yml',

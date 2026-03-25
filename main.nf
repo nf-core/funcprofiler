@@ -65,8 +65,11 @@ workflow {
         args,
         params.outdir,
         params.input,
-        params.databases
-    )
+        params.databases,
+        params.help,
+        params.help_full,
+        params.show_hidden
+	)
 
     //
     // WORKFLOW: Run main workflow
