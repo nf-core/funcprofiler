@@ -71,9 +71,10 @@ process HUMANN_HUMANN {
     """
     echo $args
 
-    for suf in _genefamilies.tsv.gz _pathabundance.tsv.gz _pathcoverage.tsv.gz _reactions.tsv.gz .log
+    for suf in genefamilies.tsv.gz pathabundance.tsv.gz pathcoverage.tsv.gz reactions.tsv.gz
     do
-        touch ${prefix}_\$suf
+        echo stub | gzip >  ${prefix}_\$suf
     done
+    touch ${prefix}.log
     """
 }

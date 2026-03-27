@@ -49,7 +49,6 @@ process HUMANNREGROUP {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}_regroup.tsv.gz
-
+    echo "stub" | gzip >  ${prefix}_regroup.tsv.gz
     """
 }

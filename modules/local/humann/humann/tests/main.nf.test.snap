@@ -7,7 +7,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/f53dc771430909f307540be0b8b0981f/work/a0/263ce7d9450141323d321368755192/test__genefamilies.tsv.gz"
+                    "test_genefamilies.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                 ]
             ],
             [
@@ -16,7 +16,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/f53dc771430909f307540be0b8b0981f/work/a0/263ce7d9450141323d321368755192/test__pathabundance.tsv.gz"
+                    "test_pathabundance.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                 ]
             ],
             [
@@ -25,7 +25,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/f53dc771430909f307540be0b8b0981f/work/a0/263ce7d9450141323d321368755192/test__pathcoverage.tsv.gz"
+                    "test_pathcoverage.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                 ]
             ],
             [
@@ -34,11 +34,11 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/f53dc771430909f307540be0b8b0981f/work/a0/263ce7d9450141323d321368755192/test__reactions.tsv.gz"
+                    "test_reactions.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                 ]
             ]
         ],
-        "timestamp": "2026-03-27T13:45:23.233569",
+        "timestamp": "2026-03-27T17:07:44.923199",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

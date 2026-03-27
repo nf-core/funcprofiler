@@ -8,11 +8,15 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/27d240d6c12d4d52fcefcaa5a30ce0a8/work/e7/53514d1817ad8f551e500737971c64/test_renorm.tsv.gz"
+                        "test_renorm.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,4330d49ec1909d5808af158ea34cbdce"
+                    [
+                        "HUMANN_RENORM",
+                        "HUMAnN",
+                        "3.0.0"
+                    ]
                 ],
                 "renorm": [
                     [
@@ -20,15 +24,19 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/27d240d6c12d4d52fcefcaa5a30ce0a8/work/e7/53514d1817ad8f551e500737971c64/test_renorm.tsv.gz"
+                        "test_renorm.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,4330d49ec1909d5808af158ea34cbdce"
+                "versions_humann": [
+                    [
+                        "HUMANN_RENORM",
+                        "HUMAnN",
+                        "3.0.0"
+                    ]
                 ]
             }
         ],
-        "timestamp": "2026-03-27T13:46:39.545263",
+        "timestamp": "2026-03-27T17:11:31.047113",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

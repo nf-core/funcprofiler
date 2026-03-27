@@ -15,7 +15,7 @@ process HUMANN_RENORM {
 
     output:
     tuple val(meta), path("*_renorm.tsv.gz"), emit: renorm
-    path "versions.yml"                                  , emit: versions
+    tuple val("${task.process}"), val('HUMAnN'), eval("humann --version 2>&1 | sed 's/humann v//'"), emit: versions_humann, topic: versions
 
     script:
     def args = task.ext.args ?: ''
@@ -34,21 +34,13 @@ process HUMANN_RENORM {
 
     gzip -n ${prefix}_renorm.tsv
 
-    cat <<-END_VERSIONS > versions.yml
-    ${task.process}:
-        humann: \$( humann --version 2>&1 | sed 's/humann v//' )
-    END_VERSIONS
     """
 
     stub:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}_renorm.tsv.gz
+    echo "stub" | gzip > ${prefix}_renorm.tsv.gz
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        humann: \$( humann --version 2>&1 | sed 's/humann v//' )
-    END_VERSIONS
     """
 }
