@@ -18,7 +18,7 @@ process HUMANN_HUMANN {
     }
     //if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container)	{
         // container { "docker://" + getContainer(getProcessName(task.process)) }
-        
+
     //} else {
     //container { getContainer(getProcessName(task.process)) }
     //}
