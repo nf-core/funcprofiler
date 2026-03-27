@@ -10,6 +10,7 @@ process HUMANN_HUMANN {
     conda (params.enable_conda ? { getConda(getProcessName(task.process)) } : null)
     withName: 'HUMANN3' {
         container 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1'
+    }
     withName: 'HUMANN4' {
         container 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final'
     }
