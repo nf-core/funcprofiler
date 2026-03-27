@@ -7,7 +7,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/16ad11f27aade3eb053c8a3d5ed17ef8/work/7f/7db043f7b6c2ab638a89ee0887ff10/test__genefamilies.tsv.gz"
+                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/f53dc771430909f307540be0b8b0981f/work/03/045e4c417fb90249e50be0ed292c1e/test__genefamilies.tsv.gz"
                 ]
             ],
             [
@@ -16,7 +16,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/16ad11f27aade3eb053c8a3d5ed17ef8/work/7f/7db043f7b6c2ab638a89ee0887ff10/test__pathabundance.tsv.gz"
+                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/f53dc771430909f307540be0b8b0981f/work/03/045e4c417fb90249e50be0ed292c1e/test__pathabundance.tsv.gz"
                 ]
             ],
             [
@@ -25,7 +25,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/16ad11f27aade3eb053c8a3d5ed17ef8/work/7f/7db043f7b6c2ab638a89ee0887ff10/test__pathcoverage.tsv.gz"
+                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/f53dc771430909f307540be0b8b0981f/work/03/045e4c417fb90249e50be0ed292c1e/test__pathcoverage.tsv.gz"
                 ]
             ],
             [
@@ -34,11 +34,11 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/funcprofiler/.nf-test/tests/16ad11f27aade3eb053c8a3d5ed17ef8/work/7f/7db043f7b6c2ab638a89ee0887ff10/test__reactions.tsv.gz"
+                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/f53dc771430909f307540be0b8b0981f/work/03/045e4c417fb90249e50be0ed292c1e/test__reactions.tsv.gz"
                 ]
             ]
         ],
-        "timestamp": "2026-03-23T15:25:23.244963",
+        "timestamp": "2026-03-27T12:36:02.631706",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

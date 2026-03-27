@@ -4,8 +4,7 @@
 
 include { MIFASER                                       } from '../../modules/local/mifaser/main'
 include { HUMANN3; HUMANN4                              } from '../../modules/local/humann/humann/main'
-include { HUMANNREGROUP as HUMANN3_REGROUP;
-	  HUMANNREGROUP as HUMANN4_REGROUP              } from '../../modules/local/humann/regroup/main'
+include { HUMANN3_REGROUP;HUMANN4_REGROUP              } from '../../modules/local/humann/regroup/main'
 include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPAHUMANN3;
           METAPHLAN_METAPHLAN as MPAHUMANN4             } from '../../modules/nf-core/metaphlan/metaphlan/main'
