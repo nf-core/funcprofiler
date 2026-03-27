@@ -4,6 +4,7 @@ def getProcessName(task_process) {
 
 def getContainer(name)  {
     return [
+	'HUMANN_HUMANN': 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1', // needed for testing, as nextflow inspect doesn't handle dynamic image selection
 	'HUMANN3': 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1',
 	'HUMANN4': 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final'
     ][name]

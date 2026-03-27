@@ -8,7 +8,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/27d240d6c12d4d52fcefcaa5a30ce0a8/work/6c/b325498f2197b2529e99212b472c94/test_renorm.tsv.gz"
+                        "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/27d240d6c12d4d52fcefcaa5a30ce0a8/work/e7/53514d1817ad8f551e500737971c64/test_renorm.tsv.gz"
                     ]
                 ],
                 "1": [
@@ -20,7 +20,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/27d240d6c12d4d52fcefcaa5a30ce0a8/work/6c/b325498f2197b2529e99212b472c94/test_renorm.tsv.gz"
+                        "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/27d240d6c12d4d52fcefcaa5a30ce0a8/work/e7/53514d1817ad8f551e500737971c64/test_renorm.tsv.gz"
                     ]
                 ],
                 "versions": [
@@ -28,7 +28,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-03-27T12:37:14.966267",
+        "timestamp": "2026-03-27T13:46:39.545263",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

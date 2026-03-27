@@ -37,7 +37,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/34da5f9a1e69b44323d5074e441dc5eb/work/f0/0cc44a64715f8e39ca43fb718237cb/test__genefamilies.tsv.gz"
+                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/34da5f9a1e69b44323d5074e441dc5eb/work/e9/a215188a7274341900ca95af893666/test__genefamilies.tsv.gz"
                 ]
             ],
             [
@@ -46,7 +46,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/34da5f9a1e69b44323d5074e441dc5eb/work/f0/0cc44a64715f8e39ca43fb718237cb/test__pathabundance.tsv.gz"
+                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/34da5f9a1e69b44323d5074e441dc5eb/work/e9/a215188a7274341900ca95af893666/test__pathabundance.tsv.gz"
                 ]
             ],
             [
@@ -55,7 +55,7 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/34da5f9a1e69b44323d5074e441dc5eb/work/f0/0cc44a64715f8e39ca43fb718237cb/test__pathcoverage.tsv.gz"
+                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/34da5f9a1e69b44323d5074e441dc5eb/work/e9/a215188a7274341900ca95af893666/test__pathcoverage.tsv.gz"
                 ]
             ],
             [
@@ -64,11 +64,11 @@
                         "id": "test",
                         "single_end": true
                     },
-                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/34da5f9a1e69b44323d5074e441dc5eb/work/f0/0cc44a64715f8e39ca43fb718237cb/test__reactions.tsv.gz"
+                    "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/34da5f9a1e69b44323d5074e441dc5eb/work/e9/a215188a7274341900ca95af893666/test__reactions.tsv.gz"
                 ]
             ]
         ],
-        "timestamp": "2026-03-27T12:36:53.7239",
+        "timestamp": "2026-03-27T13:46:18.519627",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
