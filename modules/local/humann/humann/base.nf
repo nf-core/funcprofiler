@@ -9,9 +9,9 @@ process HUMANN_HUMANN {
 
     conda (params.enable_conda ? { getConda(getProcessName(task.process)) } : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container { name == 'HUMANN3' ? 'docker://ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1' : 'docker://ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final' }
+        container { task.process == 'HUMANN3' ? 'docker://ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1' : 'docker://ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final' }
     } else {
-        container { name == 'HUMANN3' ? 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1' : 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final' }
+        container { task.process == 'HUMANN3' ? 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1' : 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final' }
     }
     //if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container)	{
         // container { "docker://" + getContainer(getProcessName(task.process)) }
