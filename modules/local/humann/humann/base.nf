@@ -8,17 +8,11 @@ process HUMANN_HUMANN {
     label 'process_high'
 
     conda (params.enable_conda ? { getConda(getProcessName(task.process)) } : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container { task.process == 'HUMANN3' ? 'docker://ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1' : 'docker://ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final' }
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container)	{
+        container { "docker://" + getContainer(getProcessName(task.process)) }
     } else {
-        container { task.process == 'HUMANN3' ? 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1' : 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final' }
+    container { getContainer(getProcessName(task.process)) }
     }
-    //if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container)	{
-        // container { "docker://" + getContainer(getProcessName(task.process)) }
-
-    //} else {
-    //container { getContainer(getProcessName(task.process)) }
-    //}
     input:
     tuple val(meta), path(input)
     tuple val(meta), path(profile)
