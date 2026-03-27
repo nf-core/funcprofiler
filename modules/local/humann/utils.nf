@@ -4,7 +4,6 @@ def getProcessName(task_process) {
 
 def getContainer(name)  {
     return [
-	'HUMANN_HUMANN': 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1', // needed for testing, as nextflow inspect doesn't handle dynamic image selection
 	'HUMANN3': 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1',
 	'HUMANN4': 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final'
     ][name]
@@ -20,4 +19,22 @@ def getExt(name) {
 	'HUMANN3': '*.ffn.gz',
 	'HUMANN4': '*.fna.gz'
     ][name]
+}
+
+
+
+// These mock processes are here to ensure that both containers get downloaded by nextflow inspect/download.  Without this, the command doesn't evaluate the aliases which we are using to select the proper containers
+process testhumann3{
+    container  'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1'
+
+    output:
+    val "x3"
+    shell: """echo x3 """
+}
+process testhumann4{
+    container  'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final'
+    output:
+    val "x4"
+    shell: """echo x4 """
+
 }
