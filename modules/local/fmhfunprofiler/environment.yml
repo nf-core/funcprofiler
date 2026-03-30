@@ -7,13 +7,13 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python=3.11
+  - python
+  - pip
   - conda-forge::wget
   - conda-forge::unzip
   - conda-forge::bc
   - conda-forge::pandas
   - bioconda::sourmash
-  - bioconda::biom-format
-  - pip
+  - bioconda::biom-format=2.1.7
   - pip:
       - git+https://github.com/KoslickiLab/fmh-funprofiler.git@main
