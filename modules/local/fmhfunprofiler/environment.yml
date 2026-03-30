@@ -12,6 +12,9 @@ dependencies:
   - conda-forge::wget
   - conda-forge::unzip
   - conda-forge::bc
+  - conda-forge::git
+  - conda-forge::setuptools
+  - conda-forge::wheel
   - conda-forge::pandas
   - bioconda::sourmash
   - bioconda::biom-format=2.1.7
