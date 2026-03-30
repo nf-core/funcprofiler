@@ -20,7 +20,7 @@ process FMHFUNPROFILER {
     label 'process_medium'
 
     // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
-//    conda "${moduleDir}/environment.yml"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'ghcr.io/vdblab/fmhfunprofiler:20250930a' :
         'ghcr.io/vdblab/fmhfunprofiler:20250930a' }"

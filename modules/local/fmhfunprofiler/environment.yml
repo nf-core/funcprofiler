@@ -8,3 +8,12 @@ channels:
   - bioconda
 dependencies:
   - python>=3.8
+  - conda-forge::wget
+  - conda-forge::unzip
+  - conda-forge::bc
+  - conda-forge::pandas
+  - bioconda::sourmash
+  - bioconda::biom-format
+  - pip
+  - pip:
+    - git+https://github.com/KoslickiLab/fmh-funprofiler.git@main
