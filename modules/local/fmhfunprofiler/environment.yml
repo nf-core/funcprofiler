@@ -16,4 +16,4 @@ dependencies:
   - bioconda::biom-format
   - pip
   - pip:
-    - git+https://github.com/KoslickiLab/fmh-funprofiler.git@main
+      - git+https://github.com/KoslickiLab/fmh-funprofiler.git@main
