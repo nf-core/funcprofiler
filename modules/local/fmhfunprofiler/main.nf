@@ -74,7 +74,7 @@ process FMHFUNPROFILER {
         chmod +x fmh-funprofiler/*.py
     fi
 
-    funcprofiler.py  \\
+    python funcprofiler.py  \\
         $fastqs \\
         $fmhfunprofiler_db \\
         $args  \\
