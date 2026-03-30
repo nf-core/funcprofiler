@@ -39,7 +39,7 @@ process FMHFUNPROFILER {
     // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
     tuple val(meta), path("*.fmhfuncprofiler.ko"), emit: ko
     // TODO nf-core: List additional required output channels/values here
-    tuple val("${task.process}"), val('fmh-funprofiler'), eval("python \$(command -v funcprofiler.py) --version 2>&1 | sed 's/* v//'"), emit: versions_fmhfunprofiler, topic: versions
+    tuple val("${task.process}"), val('fmh-funprofiler'), eval("python \$(command -v funcprofiler.py) --help 2>&1 | sed 's/* v//'"), emit: versions_fmhfunprofiler, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
