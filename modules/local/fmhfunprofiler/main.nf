@@ -93,6 +93,19 @@ process FMHFUNPROFILER {
     //               - The definition of args `def args = task.ext.args ?: ''` above.
     //               - The use of the variable in the script `echo $args ` below.
     """
+    # This conditional step will download the tool from Github in the case it isn't in
+    # the path - which happens in conda and mamba profiles due to the fact
+    # fmh-funprofiler isn't on conda.
+    if ! command -v funcprofiler.py &> /dev/null; then
+        echo "funcprofiler.py not found in PATH. Downloading from GitHub..."
+        wget https://github.com/KoslickiLab/fmh-funprofiler/archive/refs/heads/main.zip
+        unzip main.zip
+        mv fmh-funprofiler-main fmh-funprofiler
+
+        # Add the downloaded directory to the local PATH for this task
+        export PATH=\$PATH:\$PWD/fmh-funprofiler
+        chmod +x fmh-funprofiler/*.py
+    fi
     echo $args
 
     touch ${prefix}.fmhfuncprofiler.ko
