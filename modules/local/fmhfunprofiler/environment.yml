@@ -7,7 +7,7 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python>=3.8
+  - python=3.11
   - conda-forge::wget
   - conda-forge::unzip
   - conda-forge::bc
