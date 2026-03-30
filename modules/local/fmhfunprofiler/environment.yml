@@ -1,8 +1,7 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/environment-schema.json
 # NOTE: fmhfunprofiler is not available on bioconda/conda-forge.
-# Use the container (ghcr.io/vdblab/fmhfunprofiler:20250930) instead.
-# The conda directive in main.nf is intentionally commented out.
+# this container is modified by a conditional process if the conda or mamba profile is used.
 channels:
   - conda-forge
   - bioconda
@@ -18,5 +17,3 @@ dependencies:
   - conda-forge::pandas
   - bioconda::sourmash
   - bioconda::biom-format=2.1.7
-  - pip:
-      - git+https://github.com/KoslickiLab/fmh-funprofiler.git@main

@@ -23,7 +23,7 @@ process FMHFUNPROFILER {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'ghcr.io/vdblab/fmhfunprofiler:20250930a' :
-        'ghcr.io/vdblab/fmhfunprofiler:20250930a' }"
+        'docker://ghcr.io/vdblab/fmhfunprofiler:20250930a' }"
 
     input:// TODO nf-core: Where applicable all sample-specific information e.g. "id", "single_end", "read_group"
     //               MUST be provided as an input via a Groovy Map called "meta".
@@ -60,6 +60,20 @@ process FMHFUNPROFILER {
 	throw new IllegalArgumentException("fmh-funcprofiler must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}:  ${args}")
     }
     """
+    # This conditional step will download the tool from Github in the case it isn't in
+    # the path - which happens in conda and mamba profiles due to the fact
+    # fmh-funprofiler isn't on conda.
+    if ! command -v funcprofiler.py &> /dev/null; then
+        echo "funcprofiler.py not found in PATH. Downloading from GitHub..."
+        wget https://github.com/KoslickiLab/fmh-funprofiler/archive/refs/heads/main.zip
+        unzip main.zip
+        mv fmh-funprofiler-main fmh-funprofiler
+
+        # Add the downloaded directory to the local PATH for this task
+        export PATH=\$PATH:\$PWD/fmh-funprofiler
+        chmod +x fmh-funprofiler/*.py
+    fi
+
     funcprofiler.py  \\
         $fastqs \\
         $fmhfunprofiler_db \\

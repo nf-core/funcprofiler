@@ -10,8 +10,8 @@ def getContainer(name)  {
 }
 def getConda(name) {
     return [
-	'HUMANN3': 'bioconda::humann=3.6.1',
-	'HUMANN4': 'bioconda::humann=4.0.0.alpha.1-final'
+	'HUMANN3': "${moduleDir}/environment_humann3.yml",
+	'HUMANN4': "${moduleDir}/environment_humann4.yml"
     ][name]
 }
 def getExt(name) {

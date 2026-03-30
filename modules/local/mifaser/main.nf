@@ -6,7 +6,7 @@ process MIFASER {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'ghcr.io/vdblab/mifaser:1.64d':
-        'ghcr.io/vdblab/mifaser:1.64d' }"
+        'docker://ghcr.io/vdblab/mifaser:1.64d' }"
     input:
     tuple val(meta), path(reads)
     path db_path
