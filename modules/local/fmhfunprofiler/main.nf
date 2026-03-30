@@ -72,14 +72,18 @@ process FMHFUNPROFILER {
         # Add the downloaded directory to the local PATH for this task
         export PATH=\$PATH:\$PWD/fmh-funprofiler
         chmod +x fmh-funprofiler/*.py
+        python \$(command -v funcprofiler.py)  \\
+            $fastqs \\
+            $fmhfunprofiler_db \\
+            $args  \\
+            ${prefix}.fmhfuncprofiler.ko
+    else
+        funcprofiler.py  \\
+            $fastqs \\
+            $fmhfunprofiler_db \\
+            $args  \\
+            ${prefix}.fmhfuncprofiler.ko
     fi
-
-    python funcprofiler.py  \\
-        $fastqs \\
-        $fmhfunprofiler_db \\
-        $args  \\
-        ${prefix}.fmhfuncprofiler.ko
-
     """
 
     stub:
