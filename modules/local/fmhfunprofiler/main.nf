@@ -20,10 +20,10 @@ process FMHFUNPROFILER {
     label 'process_medium'
 
     // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
-    conda "${moduleDir}/environment.yml"
+//    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'ghcr.io/vdblab/fmhfunprofiler:20250930a' :
-        'docker://ghcr.io/vdblab/fmhfunprofiler:20250930a' }"
+        'ghcr.io/vdblab/fmhfunprofiler:20250930a' }"
 
     input:// TODO nf-core: Where applicable all sample-specific information e.g. "id", "single_end", "read_group"
     //               MUST be provided as an input via a Groovy Map called "meta".
@@ -39,7 +39,7 @@ process FMHFUNPROFILER {
     // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
     tuple val(meta), path("*.fmhfuncprofiler.ko"), emit: ko
     // TODO nf-core: List additional required output channels/values here
-    tuple val("${task.process}"), val('fmh-funprofiler'), eval("python \$(command -v funcprofiler.py) --help 2>&1 | sed 's/* v//'"), emit: versions_fmhfunprofiler, topic: versions
+    tuple val("${task.process}"), val('fmh-funprofiler'), eval("funcprofiler.py --version 2>&1 | sed 's/* v//'"), emit: versions_fmhfunprofiler, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -60,30 +60,12 @@ process FMHFUNPROFILER {
 	throw new IllegalArgumentException("fmh-funcprofiler must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}:  ${args}")
     }
     """
-    # This conditional step will download the tool from Github in the case it isn't in
-    # the path - which happens in conda and mamba profiles due to the fact
-    # fmh-funprofiler isn't on conda.
-    if ! command -v funcprofiler.py &> /dev/null; then
-        echo "funcprofiler.py not found in PATH. Downloading from GitHub..."
-        wget https://github.com/KoslickiLab/fmh-funprofiler/archive/refs/heads/main.zip
-        unzip main.zip
-        mv fmh-funprofiler-main fmh-funprofiler
+    funcprofiler.py  \\
+        $fastqs \\
+        $fmhfunprofiler_db \\
+        $args  \\
+        ${prefix}.fmhfuncprofiler.ko
 
-        # Add the downloaded directory to the local PATH for this task
-        export PATH=\$PATH:\$PWD/fmh-funprofiler
-        chmod +x fmh-funprofiler/*.py
-        python \$(command -v funcprofiler.py)  \\
-            $fastqs \\
-            $fmhfunprofiler_db \\
-            $args  \\
-            ${prefix}.fmhfuncprofiler.ko
-    else
-        funcprofiler.py  \\
-            $fastqs \\
-            $fmhfunprofiler_db \\
-            $args  \\
-            ${prefix}.fmhfuncprofiler.ko
-    fi
     """
 
     stub:
@@ -97,19 +79,6 @@ process FMHFUNPROFILER {
     //               - The definition of args `def args = task.ext.args ?: ''` above.
     //               - The use of the variable in the script `echo $args ` below.
     """
-    # This conditional step will download the tool from Github in the case it isn't in
-    # the path - which happens in conda and mamba profiles due to the fact
-    # fmh-funprofiler isn't on conda.
-    if ! command -v funcprofiler.py &> /dev/null; then
-        echo "funcprofiler.py not found in PATH. Downloading from GitHub..."
-        wget https://github.com/KoslickiLab/fmh-funprofiler/archive/refs/heads/main.zip
-        unzip main.zip
-        mv fmh-funprofiler-main fmh-funprofiler
-
-        # Add the downloaded directory to the local PATH for this task
-        export PATH=\$PATH:\$PWD/fmh-funprofiler
-        chmod +x fmh-funprofiler/*.py
-    fi
     echo $args
 
     touch ${prefix}.fmhfuncprofiler.ko
