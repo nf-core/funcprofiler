@@ -8,11 +8,7 @@ process HUMANN_HUMANN {
     label 'process_high'
 
     conda (params.enable_conda ? { getConda(getProcessName(task.process)) } : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container)	{
-        container { "docker://" + getContainer(getProcessName(task.process)) }
-    } else {
     container { getContainer(getProcessName(task.process)) }
-    }
     input:
     tuple val(meta), path(input)
     tuple val(meta), path(profile)
