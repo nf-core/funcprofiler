@@ -7,4 +7,4 @@ dependencies:
   - python=3.10
   - pip
   - pip:
-      - mifaser==0.2.1
+      - mifaser==1.60
