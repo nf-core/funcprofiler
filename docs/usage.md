@@ -161,7 +161,6 @@ See the [DIAMOND makedb documentation](https://github.com/bbuchfink/diamond/wiki
 > [!IMPORTANT]
 > The path should point to the **directory** containing the `.dmnd` file, not the file itself. The pipeline will automatically locate the `.dmnd` file within that directory.
 
-
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
@@ -174,7 +173,7 @@ nextflow run nf-core/funcprofiler \
    --run_humann_v3                \
    --run_fmhfunprofiler           \
    -profile docker
-````
+```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
@@ -219,9 +218,9 @@ nextflow run nf-core/funcprofiler -profile docker -params-file params.yaml
 with:
 
 ```yaml title="params.yaml"
-input: './samplesheet.csv'
-databases: './databases.csv'
-outdir: './results/'
+input: "./samplesheet.csv"
+databases: "./databases.csv"
+outdir: "./results/"
 run_humann_v3: true
 ```
 
