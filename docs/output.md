@@ -8,18 +8,20 @@ The directories listed below will be created in the results directory after the 
 
 ## Pipeline overview
 
-The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
+The pipeline processes data using the following steps:
 
 - [FastQC](#fastqc) - Raw read QC and preprocessing
-- [HUMANn v3 / v4](#humann-v3--v4) - Functional profiling via MetaPhlAn + HUMANn _(optional)_
-- [FMH FunProfiler](#fmh-funprofiler) - Sketch-based functional profiling _(optional)_
-- [mifaser](#mifaser) - Read-level functional profiling _(optional)_
-- [DIAMOND blastx](#diamond-blastx) - Translated alignment against a protein database _(optional)_
-- [EggNOG-mapper](#eggnog-mapper) - Functional annotation via orthology assignment _(optional)_
-- [RGI BWT](#rgi-bwt) - Antimicrobial resistance gene identification _(optional)_
+- [HUMANn v3 / v4](#humann-v3--v4) - Functional profiling via MetaPhlAn + HUMANn 
+- [FMH FunProfiler](#fmh-funprofiler) - Sketch-based functional profiling 
+- [mifaser](#mifaser) - Read-level functional profiling 
+- [DIAMOND blastx](#diamond-blastx) - Translated alignment against a protein database 
+- [EggNOG-mapper](#eggnog-mapper) - Functional annotation via orthology assignment 
+- [RGI BWT](#rgi-bwt) - Antimicrobial resistance gene identification 
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
+
+Other than FastQC, MultiQC and pipeline information, all other steps (the profilers) are off by default, and must be switched on manually.
 ---
 
 ### FastQC
@@ -103,7 +105,7 @@ Enabled with `--run_eggnogmapper`. Assigns functional annotations to sequences b
 - `eggnogmapper/<db_name>/`
   - `*.emapper.annotations`: TSV file with functional annotations per query sequence, including GO terms, KEGG pathways, COG categories, and more.
   - `*.emapper.seed_orthologs`: TSV linking query sequences to their best seed orthologs _(optional, produced when search is performed)_.
-  - `*.emapper.hits`: TSV with raw search hits from the search phase _(optional)_.
+  - `*.emapper.hits`: TSV with raw search hits from the search phase .
 
 </details>
 
