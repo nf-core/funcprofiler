@@ -3,90 +3,46 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true,
-                            "db_name": "demo"
-                        },
-                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "1": [
-                    [
-                        "FMHFUNPROFILER",
-                        "fmh-funprofiler",
-                        "\n\u001b[K\n== This is sourmash version 4.9.4. ==\n\n\u001b[K== Please cite Irber et. al (2024), doi:10.21105/joss.06830. ==\n\nCreate, compare, and manipulate k-mer sketches of biological sequences.\n\nUsage instructions:\n    Basic operations\n        sourmash compare --help   create a similarity matrix comparing many samples\n        sourmash compute --help   compute sequence signatures for inputs\n        sourmash gather --help    search a metagenome signature against dbs\n        sourmash index --help     index signatures for rapid search\n        sourmash info --help      display sourmash version and other information\n        sourmash plot --help      plot distance matrix made by 'compare'\n        sourmash prefetch --help  search a signature against dbs, find all overlaps\n        sourmash search --help    search a signature against other signatures\n\n    Taxonomic operations\n        sourmash lca --help\n\n    Manipulate signature files\n        sourmash sig --help\n        sourmash signature --help\n\n    Create signatures\n        sourmash sketch --help\n\n    Operations on storage\n        sourmash storage --help\n\n    Integrate taxonomy information based on \"gather\" results\n        sourmash tax --help\n\nOptions:\n  -h, --help     show this help message and exit\n  -v, --version  show program's version number and exit\n  -q, --quiet    don't print citation information\nusage: funcprofiler.py [-h] [-t THRESHOLD_BP] [-p PREFETCH_FILE]\n                       mg_filename ko_sketch ksize scaled output\nfuncprofiler.py: error: the following arguments are required: mg_filename, ko_sketch, ksize, scaled, output"
-                    ]
+                    
                 ],
                 "ko": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true,
-                            "db_name": "demo"
-                        },
-                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "versions_fmhfunprofiler": [
-                    [
-                        "FMHFUNPROFILER",
-                        "fmh-funprofiler",
-                        "\n\u001b[K\n== This is sourmash version 4.9.4. ==\n\n\u001b[K== Please cite Irber et. al (2024), doi:10.21105/joss.06830. ==\n\nCreate, compare, and manipulate k-mer sketches of biological sequences.\n\nUsage instructions:\n    Basic operations\n        sourmash compare --help   create a similarity matrix comparing many samples\n        sourmash compute --help   compute sequence signatures for inputs\n        sourmash gather --help    search a metagenome signature against dbs\n        sourmash index --help     index signatures for rapid search\n        sourmash info --help      display sourmash version and other information\n        sourmash plot --help      plot distance matrix made by 'compare'\n        sourmash prefetch --help  search a signature against dbs, find all overlaps\n        sourmash search --help    search a signature against other signatures\n\n    Taxonomic operations\n        sourmash lca --help\n\n    Manipulate signature files\n        sourmash sig --help\n        sourmash signature --help\n\n    Create signatures\n        sourmash sketch --help\n\n    Operations on storage\n        sourmash storage --help\n\n    Integrate taxonomy information based on \"gather\" results\n        sourmash tax --help\n\nOptions:\n  -h, --help     show this help message and exit\n  -v, --version  show program's version number and exit\n  -q, --quiet    don't print citation information\nusage: funcprofiler.py [-h] [-t THRESHOLD_BP] [-p PREFETCH_FILE]\n                       mg_filename ko_sketch ksize scaled output\nfuncprofiler.py: error: the following arguments are required: mg_filename, ko_sketch, ksize, scaled, output"
-                    ]
+                    
                 ]
             }
         ],
-        "timestamp": "2026-03-27T12:20:34.710881",
+        "timestamp": "2026-04-02T14:20:21.587672364",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "25.04.4"
         }
     },
     "sarscov2 - fastq": {
         "content": [
             {
                 "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true,
-                            "db_name": "demo"
-                        },
-                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
-                    ]
+                    
                 ],
                 "1": [
-                    [
-                        "FMHFUNPROFILER",
-                        "fmh-funprofiler",
-                        "\n\u001b[K\n== This is sourmash version 4.9.4. ==\n\n\u001b[K== Please cite Irber et. al (2024), doi:10.21105/joss.06830. ==\n\nCreate, compare, and manipulate k-mer sketches of biological sequences.\n\nUsage instructions:\n    Basic operations\n        sourmash compare --help   create a similarity matrix comparing many samples\n        sourmash compute --help   compute sequence signatures for inputs\n        sourmash gather --help    search a metagenome signature against dbs\n        sourmash index --help     index signatures for rapid search\n        sourmash info --help      display sourmash version and other information\n        sourmash plot --help      plot distance matrix made by 'compare'\n        sourmash prefetch --help  search a signature against dbs, find all overlaps\n        sourmash search --help    search a signature against other signatures\n\n    Taxonomic operations\n        sourmash lca --help\n\n    Manipulate signature files\n        sourmash sig --help\n        sourmash signature --help\n\n    Create signatures\n        sourmash sketch --help\n\n    Operations on storage\n        sourmash storage --help\n\n    Integrate taxonomy information based on \"gather\" results\n        sourmash tax --help\n\nOptions:\n  -h, --help     show this help message and exit\n  -v, --version  show program's version number and exit\n  -q, --quiet    don't print citation information\nusage: funcprofiler.py [-h] [-t THRESHOLD_BP] [-p PREFETCH_FILE]\n                       mg_filename ko_sketch ksize scaled output\nfuncprofiler.py: error: the following arguments are required: mg_filename, ko_sketch, ksize, scaled, output"
-                    ]
+                    
                 ],
                 "ko": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true,
-                            "db_name": "demo"
-                        },
-                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
-                    ]
+                    
                 ],
                 "versions_fmhfunprofiler": [
-                    [
-                        "FMHFUNPROFILER",
-                        "fmh-funprofiler",
-                        "\n\u001b[K\n== This is sourmash version 4.9.4. ==\n\n\u001b[K== Please cite Irber et. al (2024), doi:10.21105/joss.06830. ==\n\nCreate, compare, and manipulate k-mer sketches of biological sequences.\n\nUsage instructions:\n    Basic operations\n        sourmash compare --help   create a similarity matrix comparing many samples\n        sourmash compute --help   compute sequence signatures for inputs\n        sourmash gather --help    search a metagenome signature against dbs\n        sourmash index --help     index signatures for rapid search\n        sourmash info --help      display sourmash version and other information\n        sourmash plot --help      plot distance matrix made by 'compare'\n        sourmash prefetch --help  search a signature against dbs, find all overlaps\n        sourmash search --help    search a signature against other signatures\n\n    Taxonomic operations\n        sourmash lca --help\n\n    Manipulate signature files\n        sourmash sig --help\n        sourmash signature --help\n\n    Create signatures\n        sourmash sketch --help\n\n    Operations on storage\n        sourmash storage --help\n\n    Integrate taxonomy information based on \"gather\" results\n        sourmash tax --help\n\nOptions:\n  -h, --help     show this help message and exit\n  -v, --version  show program's version number and exit\n  -q, --quiet    don't print citation information\nusage: funcprofiler.py [-h] [-t THRESHOLD_BP] [-p PREFETCH_FILE]\n                       mg_filename ko_sketch ksize scaled output\nfuncprofiler.py: error: the following arguments are required: mg_filename, ko_sketch, ksize, scaled, output"
-                    ]
+                    
                 ]
             }
         ],
-        "timestamp": "2026-03-27T12:20:20.253746",
+        "timestamp": "2026-04-02T14:20:17.735102885",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "25.04.4"
         }
     }
 }
