@@ -6,5 +6,4 @@ channels:
 dependencies:
   - python=3.10
   - pip
-  - pip:
-      - mifaser==1.64 #To match the container version.
+  - mifaser==1.60 
