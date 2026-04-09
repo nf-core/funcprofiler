@@ -91,6 +91,19 @@ eggnogmapper,eggnog_v5,eggnogmapper_data_dir,,,/data/databases/eggnog_mapper/dat
 
 > The EggNOG data directory can be downloaded with `download_eggnog_data.py` from the eggnog-mapper package. See the [EggNOG-mapper documentation](https://github.com/eggnogdb/eggnog-mapper/wiki) for details.
 
+### mifaser
+
+[mifaser](https://bromberglab.org/project/mifaser/) performs functional profiling by mapping reads to functional databases at the protein level. It supports both short-read and long-read data. Enable with `--run_mifaser`.
+
+#### Database preparation
+
+Download a pre-built mifaser database (e.g. GS-21 or GS-580) from the [mifaser website](https://bromberglab.org/project/mifaser/). The `db_path` should point to the directory containing the database files.
+
+```csv
+tool,db_name,db_entity,db_params,db_type,db_path
+mifaser,gs21,,,short,/data/databases/mifaser/GS-21
+```
+
 ### Full example databases sheet
 
 ```csv
@@ -145,11 +158,8 @@ diamond makedb --in proteins.faa --db proteins
 
 See the [DIAMOND makedb documentation](https://github.com/bbuchfink/diamond/wiki/3.-Command-line-options#makedb-options) for all available options (e.g. adding taxonomy, setting block size).
 
-````
-
 > [!IMPORTANT]
 > The path should point to the **directory** containing the `.dmnd` file, not the file itself. The pipeline will automatically locate the `.dmnd` file within that directory.
-
 
 ## Running the pipeline
 
@@ -163,7 +173,7 @@ nextflow run nf-core/funcprofiler \
    --run_humann_v3                \
    --run_fmhfunprofiler           \
    -profile docker
-````
+```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
@@ -208,10 +218,10 @@ nextflow run nf-core/funcprofiler -profile docker -params-file params.yaml
 with:
 
 ```yaml title="params.yaml"
-input: './samplesheet.csv'
-outdir: './results/'
-genome: 'GRCh37'
-<...>
+input: "./samplesheet.csv"
+databases: "./databases.csv"
+outdir: "./results/"
+run_humann_v3: true
 ```
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
