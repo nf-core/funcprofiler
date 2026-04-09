@@ -93,12 +93,10 @@
                 "2613_profile.txt:md5,8e942cbd5deb242827fa4aecd5000d75",
                 "2612_profile.txt:md5,998fba3471b312db4c28aa5e3df3c8f2",
                 "2613_profile.txt:md5,81638be78db35ca42197f4e325a0fd6f",
-                "llms-full.txt:md5,eb0a313b67673e0b9bcec94a27f34a71",
-                "multiqc.parquet:md5,ac19df13971f933c332ae2bc75576d18",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-04-09T12:47:47.685697",
+        "timestamp": "2026-04-09T18:18:50.970263",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
