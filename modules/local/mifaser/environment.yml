@@ -6,4 +6,4 @@ channels:
 dependencies:
   - python=3.10
   - pip
-  - mifaser==1.60 
+  - mifaser==1.60
