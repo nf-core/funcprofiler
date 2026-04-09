@@ -58,10 +58,9 @@ runs:
       shell: bash
       env:
         NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
-        NFT_PROFILE: ${{ !contains(inputs.profile, 'conda') && format('{0},run_conda_free_steps', inputs.profile) || inputs.profile }}
       run: |
         nf-test test \
-          --profile=+${{ NFT_PROFILE }} \
+          --profile=+${{ inputs.profile }} \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
           --ci \
           --changed-since HEAD^ \
