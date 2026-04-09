@@ -7,11 +7,11 @@ process HUMANNREGROUP {
     label 'process_low'
 
     conda (params.enable_conda ? { getConda(getProcessNamePrefix(task.process)) } : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container)	{
-        container { "docker://" + getContainer(getProcessNamePrefix(task.process)) }
-    } else {
-	container { getContainer(getProcessNamePrefix(task.process)) }
-    }
+    //if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container)	{
+    //    container { "docker://" + getContainer(getProcessNamePrefix(task.process)) }
+    //} else {
+    container { getContainer(getProcessNamePrefix(task.process)) }
+    //}
     input:
     tuple val(meta), path(input)
     val groups
