@@ -2,7 +2,6 @@
     "humann_v4 sarscov2 - fastq": {
         "content": [
             7,
-            null,
             [
                 "humann4",
                 "humann4/test_2_genefamilies.tsv.gz",
@@ -23,7 +22,7 @@
                 "test_mock_profile.txt:md5,c155a9c471a135a1dbd6e9e075f3315c"
             ]
         ],
-        "timestamp": "2026-03-23T15:10:45.038189",
+        "timestamp": "2026-04-09T14:08:41.72622",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
