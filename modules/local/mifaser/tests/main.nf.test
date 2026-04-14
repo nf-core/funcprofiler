@@ -47,11 +47,15 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
+                { assert file(process.out.multi_ec[0][1]).exists() },
+                { assert file(process.out.analysis[0][1]).exists() },
+                { assert file(process.out.ec_counts[0][1]).exists() },
                 { assert snapshot(
-                    process.out
+                    file(process.out.multi_ec[0][1]).name,
+                    file(process.out.analysis[0][1]).name,
+                    file(process.out.ec_counts[0][1]).name,
+                    process.out.versions_mifaser
                 ).match() }
-                //TODO nf-core: Add all required assertions to verify the test output.
-                // See https://nf-co.re/docs/contributing/tutorials/nf-test_assertions for more information and examples.
             )
         }
 
@@ -79,8 +83,14 @@ nextflow_process {
         then {
             assert process.success
             assertAll(
+                { assert file(process.out.multi_ec[0][1]).exists() },
+                { assert file(process.out.analysis[0][1]).exists() },
+                { assert file(process.out.ec_counts[0][1]).exists() },
                 { assert snapshot(
-                    process.out,
+                    file(process.out.multi_ec[0][1]).name,
+                    file(process.out.analysis[0][1]).name,
+                    file(process.out.ec_counts[0][1]).name,
+                    process.out.versions_mifaser
                 ).match() }
             )
         }
