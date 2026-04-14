@@ -4,11 +4,8 @@ process HUMANN_RENORM {
     label 'process_low'
 
     conda (params.enable_conda ? "bioconda::humann=3.0.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/humann:3.0.0--pyh5e36f6f_1"
-    } else {
-        container "quay.io/biocontainers/humann:3.0.0--pyh5e36f6f_1"
-    }
+    // We aren't setting this dynamically, we are just going to use the most up-to-date utility scripts for renomalizing
+    container 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final_smaller-pt2'
 
     input:
     tuple val(meta), path(input)
