@@ -98,13 +98,15 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
+      - name: list contents
+        run: ls -R "${{ env.NFT_WORKDIR }}"
+      - name: list funcprofilercontents
+        run: ls -R /home/runner/_work/funcprofiler/funcprofiler/
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: my-artifact
-          path: ${{ env.NFT_WORKDIR }}
-      - name: list contents
-        run: ls -R "${{ env.NFT_WORKDIR }}"
+          path: /home/runner/_work/funcprofiler/funcprofiler/
       - name: Report test status
         if: ${{ always() }}
         run: |
