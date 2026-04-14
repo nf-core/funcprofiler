@@ -98,8 +98,8 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-      - name: download artifacts
-        uses: actions/download-artifact@v8
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
         with:
           name: my-artifact
           path: ${{ env.NFT_WORKDIR }}
