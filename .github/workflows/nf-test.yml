@@ -96,7 +96,7 @@ jobs:
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
         with:
           profile: ${{ matrix.profile }}
-          shard: ${{ matrix.shard }}${{ matrix.profile }}
+          shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
       - name: list contents
         run: ls -R "${{ env.NFT_WORKDIR }}"
