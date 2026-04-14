@@ -98,13 +98,13 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-      - uses: actions/download-artifact@v8
-        if: ${{ contains(needs.*.result, 'failure') }}
+      - name: download artifacts
+        uses: actions/download-artifact@v8
         with:
-           name: my-artifact
-           path: ${{ env.NFT_WORKDIR }}
-      - name: Display structure of downloaded files
-           run: ls -R ${{ env.NFT_WORKDIR }}
+          name: my-artifact
+          path: ${{ env.NFT_WORKDIR }}
+      - name: list contents
+        run: ls -R "${{ env.NFT_WORKDIR }}"
       - name: Report test status
         if: ${{ always() }}
         run: |
