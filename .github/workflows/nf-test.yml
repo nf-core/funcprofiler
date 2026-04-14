@@ -100,7 +100,7 @@ jobs:
           total_shards: ${{ env.TOTAL_SHARDS }}
 steps:
       - uses: actions/download-artifact@v8
-         with:
+        with:
            name: my-artifact
            path: ${{ env.NFT_WORKDIR }}
       - name: Display structure of downloaded files
