@@ -98,8 +98,8 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-steps:
       - uses: actions/download-artifact@v8
+        if: ${{ contains(needs.*.result, 'failure') }}
         with:
            name: my-artifact
            path: ${{ env.NFT_WORKDIR }}
