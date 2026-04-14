@@ -89,14 +89,14 @@
                 "minigut_analysis.tsv:md5,1cda8e4b88a34f56539d04cc2dac0914",
                 "minigut_ec_count.tsv:md5,4307b730f2a040ab95479e161ef84477",
                 "minigut_multi_ec.tsv:md5,55fb89d6fcf8afd7dc33c664c86af28c",
-                "2612_profile.txt:md5,f2c7cb6e6d3d48c29300b92bc4829ecd",
-                "minigut_profile.txt:md5,3626528364270f93cce7fcbea07f1923",
-                "2612_profile.txt:md5,960ae11754880488e8baaedddb0af69d",
-                "minigut_profile.txt:md5,aaaf777de27f8a2c0678c9dfa06d2f2f",
+                "2612_profile.txt:md5,149ad7d60f551845bbe57537896594c7",
+                "minigut_profile.txt:md5,fee11b34f04b177f425f643601295968",
+                "2612_profile.txt:md5,cbea2ba3e71c12d44d7d2251d93e930e",
+                "minigut_profile.txt:md5,1525c5faa1a9e2614a8245f3412e16e4",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-04-14T17:41:26.76262",
+        "timestamp": "2026-04-14T18:22:25.928989",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
