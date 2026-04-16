@@ -214,7 +214,7 @@ nextflow_workflow {
                             db_entity: 'humann_nucleotide',
                             db_params: ''
                         ],
-                        file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz')
+                        'chocophlan_nfDEMO.tar.gz'
                     ],
                     [
                         [
@@ -224,7 +224,7 @@ nextflow_workflow {
                             db_entity: 'humann_protein',
                             db_params: ''
                         ],
-                        file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz')
+                        'uniref_nfDEMO.tar.gz'
                     ],
                     [
                         [
@@ -234,7 +234,7 @@ nextflow_workflow {
                             db_entity: 'humann_utility',
                             db_params: ''
                         ],
-                        file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz')
+                        'utility_nfDEMO.tar.gz'
                     ]
                 )
 

@@ -153,12 +153,7 @@ workflow PROFILING {
     if ( params.run_mifaser ) {
         ch_input_for_mifaser =  prepareInputs(reads_concat, databases, 'mifaser', true)
         MIFASER ( ch_input_for_mifaser.reads, ch_input_for_mifaser.db_files)
-
-        // Generate profile
-        //ch_versions            = ch_versions.mix( MIFASER.out.versions_mifaser.first() )
         ch_raw_profiles        = ch_raw_profiles.mix( MIFASER.out.ec_counts )
-	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
-
     }
 
     // if ( params.run_humann_v3 ) {

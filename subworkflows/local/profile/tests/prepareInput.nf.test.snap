@@ -221,75 +221,6 @@
             "nextflow": "25.10.4"
         }
     },
-    "prep inputs - single FQ tool": {
-        "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "2612",
-                            "sample": "2612",
-                            "run_accession": "ERR5766176",
-                            "instrument_platform": "ILLUMINA",
-                            "single_end": false,
-                            "needs_concat": true
-                        },
-                        [
-                            "ERX5474932_ERR5766176_1.fastq.gz",
-                            "ERX5474932_ERR5766176_2.fastq.gz"
-                        ],
-                        {
-                            "tool": "fmhfunprofiler",
-                            "db_name": "fmhfunprofiler1000",
-                            "db_params": "11 1000",
-                            "db_entities": [
-                                "main"
-                            ],
-                            "num_files": 1,
-                            "id": "fmhfunprofiler_fmhfunprofiler1000_11_1000"
-                        },
-                        {
-                            "main": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
-                        }
-                    ]
-                ],
-                "result": [
-                    [
-                        {
-                            "id": "2612",
-                            "sample": "2612",
-                            "run_accession": "ERR5766176",
-                            "instrument_platform": "ILLUMINA",
-                            "single_end": false,
-                            "needs_concat": true
-                        },
-                        [
-                            "ERX5474932_ERR5766176_1.fastq.gz",
-                            "ERX5474932_ERR5766176_2.fastq.gz"
-                        ],
-                        {
-                            "tool": "fmhfunprofiler",
-                            "db_name": "fmhfunprofiler1000",
-                            "db_params": "11 1000",
-                            "db_entities": [
-                                "main"
-                            ],
-                            "num_files": 1,
-                            "id": "fmhfunprofiler_fmhfunprofiler1000_11_1000"
-                        },
-                        {
-                            "main": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
-                        }
-                    ]
-                ]
-            }
-        ],
-        "timestamp": "2026-04-16T16:20:25.251988",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
-    },
     "prep multisampleinputs - grouped databases (humann_v3)": {
         "content": [
             {
@@ -318,9 +249,9 @@
                             "id": "humann_v3_demo_v3_"
                         },
                         {
-                            "humann_nucleotide": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz",
-                            "humann_protein": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz",
-                            "humann_utility": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz"
+                            "humann_nucleotide": "chocophlan_nfDEMO.tar.gz",
+                            "humann_protein": "uniref_nfDEMO.tar.gz",
+                            "humann_utility": "utility_nfDEMO.tar.gz"
                         }
                     ],
                     [
@@ -347,9 +278,9 @@
                             "id": "humann_v3_demo_v3_"
                         },
                         {
-                            "humann_nucleotide": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz",
-                            "humann_protein": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz",
-                            "humann_utility": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz"
+                            "humann_nucleotide": "chocophlan_nfDEMO.tar.gz",
+                            "humann_protein": "uniref_nfDEMO.tar.gz",
+                            "humann_utility": "utility_nfDEMO.tar.gz"
                         }
                     ]
                 ],
@@ -378,9 +309,9 @@
                             "id": "humann_v3_demo_v3_"
                         },
                         {
-                            "humann_nucleotide": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz",
-                            "humann_protein": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz",
-                            "humann_utility": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz"
+                            "humann_nucleotide": "chocophlan_nfDEMO.tar.gz",
+                            "humann_protein": "uniref_nfDEMO.tar.gz",
+                            "humann_utility": "utility_nfDEMO.tar.gz"
                         }
                     ],
                     [
@@ -407,15 +338,15 @@
                             "id": "humann_v3_demo_v3_"
                         },
                         {
-                            "humann_nucleotide": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz",
-                            "humann_protein": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz",
-                            "humann_utility": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz"
+                            "humann_nucleotide": "chocophlan_nfDEMO.tar.gz",
+                            "humann_protein": "uniref_nfDEMO.tar.gz",
+                            "humann_utility": "utility_nfDEMO.tar.gz"
                         }
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-04-16T17:17:15.780456",
+        "timestamp": "2026-04-16T17:30:24.721097",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
