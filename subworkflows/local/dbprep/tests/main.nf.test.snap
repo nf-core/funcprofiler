@@ -1,45 +1,4 @@
 {
-    "sarscov2 - bam - single_end": {
-        "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "tool": null,
-                            "db_name": null
-                        },
-                        [
-                            {
-                                "db_entity": null,
-                                "db_params": "",
-                                "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
-                            }
-                        ]
-                    ]
-                ],
-                "dbs": [
-                    [
-                        {
-                            "tool": null,
-                            "db_name": null
-                        },
-                        [
-                            {
-                                "db_entity": null,
-                                "db_params": "",
-                                "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
-                            }
-                        ]
-                    ]
-                ]
-            }
-        ],
-        "timestamp": "2026-04-15T22:31:25.563053",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
-    },
     "untar test db": {
         "content": [
             {

@@ -45,7 +45,7 @@ workflow DATAPREP {
 
     ch_shortreads_preprocessed = ch_input.fastq
 
-    if ( params.perform_runmerging || true ) {
+    if ( params.perform_runmerging ) {
 
         ch_reads_for_cat_branch = ch_shortreads_preprocessed
             .map {
@@ -78,6 +78,11 @@ workflow DATAPREP {
 
     } else {
         ch_reads_runmerged = ch_shortreads_preprocessed
+	    .map {meta, reads ->
+		def meta_new = meta
+		meta_new["id"] = meta["id"]  + "--" + meta['run_accession']
+		[meta_new, reads]
+	    }
     }
 
 
