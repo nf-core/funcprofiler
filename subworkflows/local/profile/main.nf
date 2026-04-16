@@ -1,19 +1,19 @@
-//
+//A
 // Run profiling
 //
 
-include { MIFASER                                       } from '../../modules/local/mifaser/main'
-include { HUMANN3; HUMANN4                              } from '../../modules/local/humann/humann/main'
-include { HUMANN3_REGROUP;HUMANN4_REGROUP              } from '../../modules/local/humann/regroup/main'
-include { FMHFUNPROFILER                                } from '../../modules/local/fmhfunprofiler/main'
+include { MIFASER                                       } from '../../../modules/local/mifaser/main'
+include { HUMANN3; HUMANN4                              } from '../../../modules/local/humann/humann/main'
+include { HUMANN3_REGROUP;HUMANN4_REGROUP               } from '../../../modules/local/humann/regroup/main'
+include { FMHFUNPROFILER                                } from '../../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPAHUMANN3;
-          METAPHLAN_METAPHLAN as MPAHUMANN4             } from '../../modules/nf-core/metaphlan/metaphlan/main'
-include { CONCAT_ALL                                    } from '../../subworkflows/local/concatall'
-include { DIAMOND_BLASTX                                } from '../../modules/nf-core/diamond/blastx/main'
-include { RGI_BWT                                       } from '../../modules/nf-core/rgi/bwt/main'
-include { EGGNOGMAPPER                                  } from '../../modules/nf-core/eggnogmapper/main'
-include { SEQKIT_FQ2FA                                  } from '../../modules/nf-core/seqkit/fq2fa/main'
-include { GUNZIP                                        } from '../../modules/nf-core/gunzip/main'
+          METAPHLAN_METAPHLAN as MPAHUMANN4             } from '../../../modules/nf-core/metaphlan/metaphlan/main'
+include { CONCAT_ALL                                    } from '../../../subworkflows/local/concatall'
+include { DIAMOND_BLASTX                                } from '../../../modules/nf-core/diamond/blastx/main'
+include { RGI_BWT                                       } from '../../../modules/nf-core/rgi/bwt/main'
+include { EGGNOGMAPPER                                  } from '../../../modules/nf-core/eggnogmapper/main'
+include { SEQKIT_FQ2FA                                  } from '../../../modules/nf-core/seqkit/fq2fa/main'
+include { GUNZIP                                        } from '../../../modules/nf-core/gunzip/main'
 
 // Custom Functions
 
@@ -28,115 +28,131 @@ include { GUNZIP                                        } from '../../modules/nf
 * @return A multiMap'ed output channel with two sub channels, one with the profile and the other with the db
 */
 
-def prepareInputs(pairedreads, databases, singleFqTool=False){
+def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false, testing=false) {
     /*
-        COMBINE READS WITH POSSIBLE DATABASES
+        COMBINE READS WITH DATABASES - GROUPED BY TOOL, VERSION, AND PARAMS
+
+        Input:
+        - pairedreads: channel of [meta, [reads]]
+        - databases: channel of [meta_db, file]
+        - tool_name: string - filter databases to only this tool (e.g., 'humann_v3', 'rgi')
+        - singleFqTool: boolean - if true, reads need concatenation for PE samples
+
+        Output:
+        - channel of [meta_sample, reads, meta_db_grouped, db_files_map]
+          where each sample has entries for the specified tool
     */
 
-    // Separate default 'short;long' (when necessary) databases when short/long specified in database sheet
-    // TODO: check combined dbs have same type
-    ch_dbs = databases
-        .map{
-            tool_and_name, meta_db ->
-	    def first_type = meta_db[0].db_type
-            [ [first_type.split(";")].flatten(), tool_and_name, meta_db]
+    // Step 1: Filter databases to only the requested tool, then group by db_name and db_params
+    def ch_dbs_grouped = databases
+        .filter { meta_db, file ->
+            meta_db.tool == tool_name
         }
-        .transpose(by: 0)
-        .map{
-            type, meta_db, dblist ->
-            [[type: type], meta_db.subMap(meta_db.keySet() - 'db_type') + [type: type], dblist]
+        .map { meta_db, file ->
+            // Create grouping key: [tool, db_name, db_params]
+            def group_key = [
+                meta_db.tool,
+                meta_db.db_name ?: '',
+                meta_db.db_params ?: ''
+            ]
+            [group_key, meta_db, file]
+        }
+        .groupTuple()  // Group all files for same tool+db_name+db_params
+        .map { group_key, meta_db_list, files ->
+            // group_key: [tool, db_name, db_params]
+            // meta_db_list: list of metadata maps (one per file/entity)
+            // files: list of file paths
+
+            def tool = group_key[0]
+            def db_name = group_key[1]
+            def db_params = group_key[2]
+
+            // Create a map of db_entity -> file for easy access
+            def db_files_map = [:]
+
+            meta_db_list.eachWithIndex { meta, idx ->
+                def entity = meta.db_entity ?: 'main'
+                db_files_map[entity] = files[idx]
+            }
+
+            // Create consolidated metadata
+            def meta_db_grouped = [
+                tool: tool,
+                db_name: db_name,
+                db_params: db_params,
+                db_entities: meta_db_list.collect { it.db_entity ?: 'main' },
+                num_files: files.size(),
+                // Create a composite ID for tracking
+                id: "${tool}_${db_name}_${db_params}".replaceAll(/\s+/, '_')
+            ]
+
+            // Return: [grouped_meta, files_map]
+            [meta_db_grouped, db_files_map]
         }
 
-    reads_with_dbs = pairedreads
-        .map{
-            meta, reads ->
-            [[type: meta.type], meta, reads]
+    // Step 2: Combine reads with ALL grouped databases (cartesian product)
+    // Each sample will get one entry per unique db_name+db_params combination for this tool
+    def reads_with_dbs = pairedreads
+        .combine(ch_dbs_grouped)
+        .map { meta_sample, reads, meta_db, db_files_map ->
+            // Flatten reads to ensure consistent list format
+            def flat_reads = [reads].flatten()
+
+            // Return: [meta_sample, reads_list, meta_db, db_files_map]
+            [meta_sample, flat_reads, meta_db, db_files_map]
         }
-        .combine(ch_dbs, by: 0)
-        .map{
-            db_type, meta, reads, db_meta, db ->
-            [ meta, reads, db_meta, db ]
-        }
-    if (singleFqTool){
-        return reads_with_dbs
-        .branch { meta, reads, db_meta, db ->
-            humann_v3:      db_meta.tool == 'humann_v3'
-            humann_v4:      db_meta.tool == 'humann_v4'
-            fmhfunprofiler: db_meta.tool == 'fmhfunprofiler'
-            diamond:        db_meta.tool == 'diamond'
-            eggnogmapper:   db_meta.tool == 'eggnogmapper'
-            unknown:        true
-        }
-    } else {
-        // PE-aware tool path: reads preserves original meta.single_end.
-        // For SE samples: meta.single_end == true,  reads == [R1]
-        // For PE samples: meta.single_end == false, reads == [R1, R2]
-        // Every tool in this branch MUST use meta.single_end to switch
-        // between single-file and paired-file CLI arguments.
-        return reads_with_dbs
-            .map { meta, reads, db_meta, db ->
-                def flat_reads = [reads].flatten()
+
+    // Step 3: Validate and add metadata based on tool type
+    if (singleFqTool) {
+        // Single-FQ tools: need concatenation for PE samples, pass-through for SE
+         result = reads_with_dbs
+            .map { meta, reads, db_meta, db_files ->
+                // For PE samples (single_end == false): keep both [R1, R2] for CONCAT_ALL
+                // For SE samples (single_end == true): keep [R1] as-is
                 def expected = meta.single_end ? 1 : 2
-                if ( flat_reads.size() != expected ) {
-                    error("PE-aware tool '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${flat_reads.size()}")
+                if (reads.size() != expected) {
+                    error("Single-FQ tool '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${reads.size()}")
                 }
-                [ meta, flat_reads, db_meta, db ]
+
+                // Add flag to meta indicating if concatenation is needed
+                def meta_with_concat = meta + [needs_concat: !meta.single_end]
+
+                [meta_with_concat, reads, db_meta, db_files]
             }
-	    .branch { meta, reads, db_meta, db ->
- 		rgi:         db_meta.tool == 'rgi'
-		mifaser:         db_meta.tool == 'mifaser'
-		unknown:    true
+    } else {
+        // PE-aware tools: validate read counts
+        result = reads_with_dbs
+            .map { meta, reads, db_meta, db_files ->
+                def expected = meta.single_end ? 1 : 2
+                if (reads.size() != expected) {
+                    error("PE-aware tool '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${reads.size()}")
+                }
+                [meta, reads, db_meta, db_files]
             }
     }
+    return result
+
 }
-// def prepareMergedInputs(mergedreads, databases){
-//         ch_dbs = databases
-//         .map{
-//             tool_and_name, meta_db ->
-// 	    def first_type = meta_db[0].db_type
-//             [ [first_type.split(";")].flatten(), tool_and_name, meta_db]
-//         }
-//         .transpose(by: 0).view()
-//         .map{
-//             type, meta_db, dblist ->
-//             [[type: type], meta_db.subMap(meta_db.keySet() - 'db_type') + [type: type], dblist]
-//         }
 
 
-//     return mergedreads
-//         .map{
-//             meta, reads ->
-//             [[type: meta.type], meta, reads]
-//         }
-//         .combine(ch_dbs, by: 0)
-//         .map{
-//             db_type, meta, reads, db_meta, db ->
-//             [ meta, reads, db_meta, db ]
-//         }
-//         .branch { meta, reads, db_meta, db ->
-//             humann:         db_meta.tool == 'humann'
-//             fmhfunprofiler: db_meta.tool == 'fmhfunprofiler'
-//             unknown:    true
-//         }
-// }
+workflow PREPARE_ALL_INPUTS {
+    take:
+    reads      // channel: tuple val(meta), path(reads)
+    databases  // channel: tuple val(meta), path(db_files)
 
+    main:
+    // Call prepareInputs for each tool
+    humann_v3_inputs = prepareInputs(reads, databases, 'humann_v3', true)
+    fmhfunprofiler_inputs = prepareInputs(reads, databases, 'fmhfunprofiler', true)
+    rgi_inputs = prepareInputs(reads, databases, 'rgi', false)
+    mifaser_inputs = prepareInputs(reads, databases, 'mifaser', false)
 
-
-
-
-// def combineProfilesWithDatabase(ch_profile, ch_database) {
-
-// return ch_profile
-//     .map { meta, profile -> [meta.db_name, meta, profile] }
-//     .combine(ch_database, by: 0)
-//     .multiMap {
-//         key, meta, profile, db_meta, db ->
-//             profile: [meta, profile]
-//             db: db
-//     }
-// }
-
-
+    emit:
+    humann_v3 = humann_v3_inputs
+    fmhfunprofiler = fmhfunprofiler_inputs
+    rgi = rgi_inputs
+    mifaser = mifaser_inputs
+}
 
 workflow PROFILING {
     take:
@@ -178,7 +194,7 @@ workflow PROFILING {
                 reads: [ new_meta, flat_reads ]
                 db: db[0].db_path
 	    }
-        FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db )
+        FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, getToolDB(databases, 'fmhfunprofiler'))
 
         // Generate profile
         //ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions_fmhfunprofiler.first() )
@@ -195,7 +211,7 @@ workflow PROFILING {
                 reads: [ new_meta,  [reads].flatten() ]
                 db: db[0].db_path
 	    }
-        MIFASER ( ch_input_for_mifaser.reads, ch_input_for_mifaser.db )
+        MIFASER ( ch_input_for_mifaser.reads, getToolDB(databases, 'mifaser'))
 
         // Generate profile
         //ch_versions            = ch_versions.mix( MIFASER.out.versions_mifaser.first() )
@@ -209,8 +225,6 @@ workflow PROFILING {
     	    .multiMap {
 		meta, reads, db_meta, db ->
 		def new_meta = meta +  db_meta
-		//TODO add the params in
-		//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
 		def flat_reads = [reads].flatten()
 		if ( flat_reads.size() != 1 ) {
 		    error("humann_v3 requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
@@ -223,7 +237,7 @@ workflow PROFILING {
 	    }
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
-            MPAHUMANN3 ( ch_input_for_humann.reads, ch_input_for_humann.mpa_db, false )
+            MPAHUMANN3 ( ch_input_for_humann.reads, getToolDB(databases, 'humann_v3', "humann_metaphlan"), false )
             HUMANN3 ( ch_input_for_humann.reads, MPAHUMANN3.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db, ch_input_for_humann.util_db
 	    )
 	    HUMANN3_REGROUP(HUMANN3.out.genefamilies, "uniref90_level4ec", ch_input_for_humann.util_db)

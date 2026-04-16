@@ -1,0 +1,143 @@
+{
+    "sarscov2 - bam - single_end": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "tool": null,
+                            "db_name": null
+                        },
+                        [
+                            {
+                                "db_entity": null,
+                                "db_params": "",
+                                "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
+                            }
+                        ]
+                    ]
+                ],
+                "dbs": [
+                    [
+                        {
+                            "tool": null,
+                            "db_name": null
+                        },
+                        [
+                            {
+                                "db_entity": null,
+                                "db_params": "",
+                                "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
+                            }
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-15T22:31:25.563053",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "untar test db": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "tool": "humann_v4",
+                            "db_name": "demo_v4"
+                        },
+                        [
+                            {
+                                "db_entity": "humann_metaphlan",
+                                "db_params": "",
+                                "db_path": [
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.pkl:md5,005453b7c66c85f3e01218653d09e266",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87"
+                                ]
+                            }
+                        ]
+                    ]
+                ],
+                "dbs": [
+                    [
+                        {
+                            "tool": "humann_v4",
+                            "db_name": "demo_v4"
+                        },
+                        [
+                            {
+                                "db_entity": "humann_metaphlan",
+                                "db_params": "",
+                                "db_path": [
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.pkl:md5,005453b7c66c85f3e01218653d09e266",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
+                                    "mpa_vOct22_CHOCOPhlAnSGB_202403.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87"
+                                ]
+                            }
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-15T22:40:51.275207",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "leave untarred alone": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "tool": "test",
+                            "db_name": "test_dontuntar"
+                        },
+                        [
+                            {
+                                "db_entity": null,
+                                "db_params": "",
+                                "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
+                            }
+                        ]
+                    ]
+                ],
+                "dbs": [
+                    [
+                        {
+                            "tool": "test",
+                            "db_name": "test_dontuntar"
+                        },
+                        [
+                            {
+                                "db_entity": null,
+                                "db_params": "",
+                                "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
+                            }
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-15T22:40:44.449439",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

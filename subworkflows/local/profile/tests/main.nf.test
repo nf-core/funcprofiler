@@ -1,0 +1,146 @@
+nextflow_function {
+
+    name "Test Subworkflow PROFILE"
+    script "../main.nf"
+    function "prepareInputs"
+
+    tag "subworkflows"
+    tag "subworkflows_"
+    tag "subworkflows/profile"
+
+    test("prep inputs - single FQ tool (fmhfunprofiler)") {
+        when {
+            function{
+                """
+                input[0] = Channel.of([
+                    [
+                        id: '2612',
+                        sample: '2612',
+                        run_accession: 'ERR5766176',
+                        instrument_platform: 'ILLUMINA',
+                        single_end: false
+                    ],
+                    ['ERX5474932_ERR5766176_1.fastq.gz', 'ERX5474932_ERR5766176_2.fastq.gz']
+                ])
+
+                input[1] = Channel.of([
+                    [
+                        id: 'fmhfunprofiler_fmhfunprofiler1000',
+                        tool: 'fmhfunprofiler',
+                        db_name: 'fmhfunprofiler1000',
+                        db_entity: '',
+                        db_params: '11 1000'
+                    ],
+                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip')
+                ])
+
+                input[2] = 'fmhfunprofiler'  // tool_name
+                input[3] = true              // singleFqTool
+		return prepareInputs(input[0], input[1], input[2], input[3]).toList()
+                """
+            }
+        }
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+    }
+
+    test("prep inputs - PE aware tool (rgi)") {
+        when {
+            function {
+                """
+                input[0] = Channel.of([
+                    [
+                        id: '2612',
+                        sample: '2612',
+                        run_accession: 'ERR5766176',
+                        instrument_platform: 'ILLUMINA',
+                        single_end: false
+                    ],
+                    ['ERX5474932_ERR5766176_1.fastq.gz', 'ERX5474932_ERR5766176_2.fastq.gz']
+                ])
+
+                input[1] = Channel.of([
+                    [
+                        id: 'rgi_4.0.1',
+                        tool: 'rgi',
+                        db_name: '4.0.1',
+                        db_entity: '',
+                        db_params: ''
+                    ],
+                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/rgi/broadstreet-v4.0.1.tar.bz2')
+                ])
+
+                input[2] = 'rgi'    // tool_name
+                input[3] = false    // singleFqTool
+                """
+            }
+        }
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+    }
+
+    test("prep inputs - grouped databases (humann_v3)") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        id: '2612',
+                        sample: '2612',
+                        run_accession: 'ERR5766176',
+                        instrument_platform: 'ILLUMINA',
+                        single_end: false
+                    ],
+                    ['ERX5474932_ERR5766176_1.fastq.gz', 'ERX5474932_ERR5766176_2.fastq.gz']
+                ])
+
+                input[1] = Channel.of(
+                    [
+                        [
+                            id: 'humann_v3_demo_v3_humann_nucleotide',
+                            tool: 'humann_v3',
+                            db_name: 'demo_v3',
+                            db_entity: 'humann_nucleotide',
+                            db_params: ''
+                        ],
+                        file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz')
+                    ],
+                    [
+                        [
+                            id: 'humann_v3_demo_v3_humann_protein',
+                            tool: 'humann_v3',
+                            db_name: 'demo_v3',
+                            db_entity: 'humann_protein',
+                            db_params: ''
+                        ],
+                        file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz')
+                    ],
+                    [
+                        [
+                            id: 'humann_v3_demo_v3_humann_utility',
+                            tool: 'humann_v3',
+                            db_name: 'demo_v3',
+                            db_entity: 'humann_utility',
+                            db_params: ''
+                        ],
+                        file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz')
+                    ]
+                )
+
+                input[2] = 'humann_v3'  // tool_name
+                input[3] = true         // singleFqTool
+		input[4] = false
+                """
+            }
+        }
+        then {
+            assert workflow.success
+//	    println(function.result)
+//            assert snapshot(function.result).match()
+        }
+    }
+}

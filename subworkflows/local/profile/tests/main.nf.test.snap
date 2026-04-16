@@ -1,0 +1,38 @@
+{
+    "prep inputs - single FQ tool (fmhfunprofiler)": {
+        "content": [
+            {
+                
+            }
+        ],
+        "timestamp": "2026-04-15T17:35:04.921686",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "prep inputs - grouped databases (humann_v3)": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "timestamp": "2026-04-15T17:38:20.84628",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "prep inputs - PE aware tool (rgi)": {
+        "content": [
+            {
+                
+            }
+        ],
+        "timestamp": "2026-04-15T17:35:11.008629",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}
