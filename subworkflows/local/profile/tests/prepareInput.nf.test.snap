@@ -1,0 +1,424 @@
+{
+    "prep inputs - single FQ tool ": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "2612",
+                            "sample": "2612",
+                            "run_accession": "ERR5766176",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false
+                        },
+                        [
+                            "ERX5474932_ERR5766176_merged.fastq.gz"
+                        ],
+                        {
+                            "tool": "fmhfunprofiler",
+                            "db_name": "fmhfunprofiler1000",
+                            "db_params": "11 1000",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "fmhfunprofiler_fmhfunprofiler1000_11_1000"
+                        },
+                        {
+                            "main": "KOs_sketched_scaled_1000_demo.sig.zip"
+                        }
+                    ]
+                ],
+                "result": [
+                    [
+                        {
+                            "id": "2612",
+                            "sample": "2612",
+                            "run_accession": "ERR5766176",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false
+                        },
+                        [
+                            "ERX5474932_ERR5766176_merged.fastq.gz"
+                        ],
+                        {
+                            "tool": "fmhfunprofiler",
+                            "db_name": "fmhfunprofiler1000",
+                            "db_params": "11 1000",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "fmhfunprofiler_fmhfunprofiler1000_11_1000"
+                        },
+                        {
+                            "main": "KOs_sketched_scaled_1000_demo.sig.zip"
+                        }
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-16T17:08:54.28613",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "prep inputs - grouped databases (humann_v3)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "2612",
+                            "sample": "2612",
+                            "run_accession": "ERR5766176",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false
+                        },
+                        [
+                            "ERX5474932_ERR5766176_merged.fastq.gz"
+                        ],
+                        {
+                            "tool": "humann_v3",
+                            "db_name": "demo_v3",
+                            "db_params": "",
+                            "db_entities": [
+                                "humann_nucleotide",
+                                "humann_protein",
+                                "humann_utility"
+                            ],
+                            "num_files": 3,
+                            "id": "humann_v3_demo_v3_"
+                        },
+                        {
+                            "humann_nucleotide": "chocophlan_nfDEMO.tar.gz",
+                            "humann_protein": "uniref_nfDEMO.tar.gz",
+                            "humann_utility": "utility_nfDEMO.tar.gz"
+                        }
+                    ]
+                ],
+                "result": [
+                    [
+                        {
+                            "id": "2612",
+                            "sample": "2612",
+                            "run_accession": "ERR5766176",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false
+                        },
+                        [
+                            "ERX5474932_ERR5766176_merged.fastq.gz"
+                        ],
+                        {
+                            "tool": "humann_v3",
+                            "db_name": "demo_v3",
+                            "db_params": "",
+                            "db_entities": [
+                                "humann_nucleotide",
+                                "humann_protein",
+                                "humann_utility"
+                            ],
+                            "num_files": 3,
+                            "id": "humann_v3_demo_v3_"
+                        },
+                        {
+                            "humann_nucleotide": "chocophlan_nfDEMO.tar.gz",
+                            "humann_protein": "uniref_nfDEMO.tar.gz",
+                            "humann_utility": "utility_nfDEMO.tar.gz"
+                        }
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-16T17:09:03.744529",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "prep inputs - single FQ tool -- fail when given paired data": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "result": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-04-16T17:06:51.053152",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "prep inputs - PE aware tool (rgi)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "2612",
+                            "sample": "2612",
+                            "run_accession": "ERR5766176",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false
+                        },
+                        [
+                            "ERX5474932_ERR5766176_1.fastq.gz",
+                            "ERX5474932_ERR5766176_2.fastq.gz"
+                        ],
+                        {
+                            "tool": "rgi",
+                            "db_name": "4.0.1",
+                            "db_params": "",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "rgi_4.0.1_"
+                        },
+                        {
+                            "main": "broadstreet-v4.0.1.tar.bz2"
+                        }
+                    ]
+                ],
+                "result": [
+                    [
+                        {
+                            "id": "2612",
+                            "sample": "2612",
+                            "run_accession": "ERR5766176",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false
+                        },
+                        [
+                            "ERX5474932_ERR5766176_1.fastq.gz",
+                            "ERX5474932_ERR5766176_2.fastq.gz"
+                        ],
+                        {
+                            "tool": "rgi",
+                            "db_name": "4.0.1",
+                            "db_params": "",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "rgi_4.0.1_"
+                        },
+                        {
+                            "main": "broadstreet-v4.0.1.tar.bz2"
+                        }
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-16T17:08:59.017557",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "prep inputs - single FQ tool": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "2612",
+                            "sample": "2612",
+                            "run_accession": "ERR5766176",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false,
+                            "needs_concat": true
+                        },
+                        [
+                            "ERX5474932_ERR5766176_1.fastq.gz",
+                            "ERX5474932_ERR5766176_2.fastq.gz"
+                        ],
+                        {
+                            "tool": "fmhfunprofiler",
+                            "db_name": "fmhfunprofiler1000",
+                            "db_params": "11 1000",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "fmhfunprofiler_fmhfunprofiler1000_11_1000"
+                        },
+                        {
+                            "main": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
+                        }
+                    ]
+                ],
+                "result": [
+                    [
+                        {
+                            "id": "2612",
+                            "sample": "2612",
+                            "run_accession": "ERR5766176",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false,
+                            "needs_concat": true
+                        },
+                        [
+                            "ERX5474932_ERR5766176_1.fastq.gz",
+                            "ERX5474932_ERR5766176_2.fastq.gz"
+                        ],
+                        {
+                            "tool": "fmhfunprofiler",
+                            "db_name": "fmhfunprofiler1000",
+                            "db_params": "11 1000",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "fmhfunprofiler_fmhfunprofiler1000_11_1000"
+                        },
+                        {
+                            "main": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
+                        }
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-16T16:20:25.251988",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "prep multisampleinputs - grouped databases (humann_v3)": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "2612",
+                            "instrument_platform": "ILLUMINA",
+                            "is_fasta": false,
+                            "single_end": true,
+                            "type": "short"
+                        },
+                        [
+                            "2612.merged.fastq.gz:md5,270bf4c4d9707c6afc970fe5622cc673"
+                        ],
+                        {
+                            "tool": "humann_v3",
+                            "db_name": "demo_v3",
+                            "db_params": "",
+                            "db_entities": [
+                                "humann_nucleotide",
+                                "humann_protein",
+                                "humann_utility"
+                            ],
+                            "num_files": 3,
+                            "id": "humann_v3_demo_v3_"
+                        },
+                        {
+                            "humann_nucleotide": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz",
+                            "humann_protein": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz",
+                            "humann_utility": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz"
+                        }
+                    ],
+                    [
+                        {
+                            "id": "minigut",
+                            "instrument_platform": "ILLUMINA",
+                            "is_fasta": false,
+                            "single_end": true,
+                            "type": "short"
+                        },
+                        [
+                            "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129"
+                        ],
+                        {
+                            "tool": "humann_v3",
+                            "db_name": "demo_v3",
+                            "db_params": "",
+                            "db_entities": [
+                                "humann_nucleotide",
+                                "humann_protein",
+                                "humann_utility"
+                            ],
+                            "num_files": 3,
+                            "id": "humann_v3_demo_v3_"
+                        },
+                        {
+                            "humann_nucleotide": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz",
+                            "humann_protein": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz",
+                            "humann_utility": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz"
+                        }
+                    ]
+                ],
+                "result": [
+                    [
+                        {
+                            "id": "2612",
+                            "instrument_platform": "ILLUMINA",
+                            "is_fasta": false,
+                            "single_end": true,
+                            "type": "short"
+                        },
+                        [
+                            "2612.merged.fastq.gz:md5,270bf4c4d9707c6afc970fe5622cc673"
+                        ],
+                        {
+                            "tool": "humann_v3",
+                            "db_name": "demo_v3",
+                            "db_params": "",
+                            "db_entities": [
+                                "humann_nucleotide",
+                                "humann_protein",
+                                "humann_utility"
+                            ],
+                            "num_files": 3,
+                            "id": "humann_v3_demo_v3_"
+                        },
+                        {
+                            "humann_nucleotide": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz",
+                            "humann_protein": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz",
+                            "humann_utility": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz"
+                        }
+                    ],
+                    [
+                        {
+                            "id": "minigut",
+                            "instrument_platform": "ILLUMINA",
+                            "is_fasta": false,
+                            "single_end": true,
+                            "type": "short"
+                        },
+                        [
+                            "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129"
+                        ],
+                        {
+                            "tool": "humann_v3",
+                            "db_name": "demo_v3",
+                            "db_params": "",
+                            "db_entities": [
+                                "humann_nucleotide",
+                                "humann_protein",
+                                "humann_utility"
+                            ],
+                            "num_files": 3,
+                            "id": "humann_v3_demo_v3_"
+                        },
+                        {
+                            "humann_nucleotide": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz",
+                            "humann_protein": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz",
+                            "humann_utility": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz"
+                        }
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-16T17:17:15.780456",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

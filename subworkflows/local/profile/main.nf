@@ -99,34 +99,14 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
         }
 
     // Step 3: Validate and add metadata based on tool type
-    def result
-    if (singleFqTool) {
-        // Single-FQ tools: need concatenation for PE samples, pass-through for SE
-         result = reads_with_dbs
+    def result = reads_with_dbs
             .map { meta, reads, db_meta, db_files ->
-                // For PE samples (single_end == false): keep both [R1, R2] for CONCAT_ALL
-                // For SE samples (single_end == true): keep [R1] as-is
-                def expected = meta.single_end ? 1 : 2
+                def expected = meta.single_end | singleFqTool ? 1 : 2
                 if (reads.size() != expected) {
-                    error("Single-FQ tool '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${reads.size()}")
-                }
-
-                // Add flag to meta indicating if concatenation is needed
-                def meta_with_concat = meta + [needs_concat: !meta.single_end]
-
-                [meta_with_concat, reads, db_meta, db_files]
-            }
-    } else {
-        // PE-aware tools: validate read counts
-        result = reads_with_dbs
-            .map { meta, reads, db_meta, db_files ->
-                def expected = meta.single_end ? 1 : 2
-                if (reads.size() != expected) {
-                    error("PE-aware tool '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${reads.size()}")
+                error("PE-aware tool (${!singleFqTool})  '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${reads.size()}")
                 }
                 [meta, reads, db_meta, db_files]
             }
-    }
     return result
 
 }
@@ -306,4 +286,19 @@ workflow PROFILING {
     profiles        = ch_raw_profiles    // channel: [ val(meta), [ reads ] ] - should be text files or biom
     versions        = ch_versions          // channel: [ versions.yml ]
     mqc             = ch_multiqc_files
+}
+
+
+workflow TEST_PREPAREINPUTS_WRAPPER {
+    // due to  https://github.com/askimed/nf-test/issues/309)
+    take:
+    reads
+    databases
+    tool_name
+    singleFqTool
+
+    main:
+    testresult = prepareInputs(reads, databases, tool_name, singleFqTool)
+    emit:
+    result = testresult
 }
