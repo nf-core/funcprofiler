@@ -1,4 +1,4 @@
-//A
+//
 // Run profiling
 //
 
@@ -27,8 +27,7 @@ include { GUNZIP                                        } from '../../../modules
 * @param ch_database A channel containing a key, the database meta, and the database file/folders itself
 * @return A multiMap'ed output channel with two sub channels, one with the profile and the other with the db
 */
-
-def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false, testing=false) {
+def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
     /*
         COMBINE READS WITH DATABASES - GROUPED BY TOOL, VERSION, AND PARAMS
 
@@ -42,7 +41,6 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false, testi
         - channel of [meta_sample, reads, meta_db_grouped, db_files_map]
           where each sample has entries for the specified tool
     */
-
     // Step 1: Filter databases to only the requested tool, then group by db_name and db_params
     def ch_dbs_grouped = databases
         .filter { meta_db, file ->
@@ -62,11 +60,9 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false, testi
             // group_key: [tool, db_name, db_params]
             // meta_db_list: list of metadata maps (one per file/entity)
             // files: list of file paths
-
             def tool = group_key[0]
             def db_name = group_key[1]
             def db_params = group_key[2]
-
             // Create a map of db_entity -> file for easy access
             def db_files_map = [:]
 
@@ -103,6 +99,7 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false, testi
         }
 
     // Step 3: Validate and add metadata based on tool type
+    def result
     if (singleFqTool) {
         // Single-FQ tools: need concatenation for PE samples, pass-through for SE
          result = reads_with_dbs
@@ -135,29 +132,12 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false, testi
 }
 
 
-workflow PREPARE_ALL_INPUTS {
-    take:
-    reads      // channel: tuple val(meta), path(reads)
-    databases  // channel: tuple val(meta), path(db_files)
-
-    main:
-    // Call prepareInputs for each tool
-    humann_v3_inputs = prepareInputs(reads, databases, 'humann_v3', true)
-    fmhfunprofiler_inputs = prepareInputs(reads, databases, 'fmhfunprofiler', true)
-    rgi_inputs = prepareInputs(reads, databases, 'rgi', false)
-    mifaser_inputs = prepareInputs(reads, databases, 'mifaser', false)
-
-    emit:
-    humann_v3 = humann_v3_inputs
-    fmhfunprofiler = fmhfunprofiler_inputs
-    rgi = rgi_inputs
-    mifaser = mifaser_inputs
-}
 
 workflow PROFILING {
     take:
-    reads // [ [ meta ], [ reads ] ]
-    databases // [ [ meta ], path ]
+    reads         // [ [ meta ], [ reads ] ]
+    reads_concat  // [ [ meta ], [ reads ] ]
+    databases     // [ [ meta ], path ]
 
     main:
     ch_versions             = Channel.empty()
@@ -167,51 +147,32 @@ workflow PROFILING {
     /*
         COMBINE READS WITH POSSIBLE DATABASES
     */
-
-    // Separate default 'short;long' (when necessary) databases when short/long specified in database sheet
-
     /*
         PREPARE PROFILER INPUT CHANNELS & RUN PROFILING
     */
-    CONCAT_ALL(reads)
-    ch_paired_input_for_profiling = prepareInputs(reads, databases, false)
-    ch_merged_input_for_profiling = prepareInputs(CONCAT_ALL.out.ch_input_reads_merged, databases, true)
     // Each tool as a slightly different input structure and generally separate
     // input channels for reads vs databases. We restructure the channel tuple
     // for each tool and make liberal use of multiMap to keep reads/databases
     // channel element order in sync with each other
+
+    // PAIRED-END READ TOOLS
+    rgi_inputs = prepareInputs(reads_concat, databases, 'rgi', false)
+
+    // CONCAT READ TOOLS
+    ch_input_for_fmhfunprofiler = prepareInputs(reads_concat, databases, 'fmhfunprofiler', true)
+    ch_input_for_humann_v3 = prepareInputs(reads_concat, databases, 'humann_v3', true)
+    ch_input_for_humann_v4 = prepareInputs(reads_concat, databases, 'humann_v4', true)
+    ch_input_for_mifaser = prepareInputs(reads_concat, databases, 'mifaser', true)
+
+
+
     if ( params.run_fmhfunprofiler ) {
-	// stolen logic from taxprofiler.  except for undoing the mutliple-database maddness imposed earlier
-        ch_input_for_fmhfunprofiler =  ch_merged_input_for_profiling.fmhfunprofiler
-            .multiMap {
-                meta, reads, db_meta, db ->
-		def new_meta = meta +  db_meta
-		new_meta.db_params = db[0]["db_params"]
-		def flat_reads = [reads].flatten()
-		if ( flat_reads.size() != 1 ) {
-		    error("fmhfunprofiler requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
-		}
-                reads: [ new_meta, flat_reads ]
-                db: db[0].db_path
-	    }
-        FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, getToolDB(databases, 'fmhfunprofiler'))
-
-        // Generate profile
-        //ch_versions            = ch_versions.mix( FMHFUNPROFILER.out.versions_fmhfunprofiler.first() )
-        ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
-	//  ch_multiqc_files       = ch_multiqc_files.mix( CENTRIFUGE_KREPORT.out.kreport )
-
+         FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db_files)
+         ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
     }
     if ( params.run_mifaser ) {
-        ch_input_for_mifaser =  ch_paired_input_for_profiling.mifaser
-            .multiMap {
-                meta, reads, db_meta, db ->
-		def new_meta = meta +  db_meta
-		new_meta.db_params = db[0]["db_params"]
-                reads: [ new_meta,  [reads].flatten() ]
-                db: db[0].db_path
-	    }
-        MIFASER ( ch_input_for_mifaser.reads, getToolDB(databases, 'mifaser'))
+        ch_input_for_mifaser =  prepareInputs(reads_concat, databases, 'mifaser', true)
+        MIFASER ( ch_input_for_mifaser.reads, ch_input_for_mifaser.db_files)
 
         // Generate profile
         //ch_versions            = ch_versions.mix( MIFASER.out.versions_mifaser.first() )
@@ -220,126 +181,126 @@ workflow PROFILING {
 
     }
 
-    if ( params.run_humann_v3 ) {
-	ch_input_for_humann =  ch_merged_input_for_profiling.humann_v3
-    	    .multiMap {
-		meta, reads, db_meta, db ->
-		def new_meta = meta +  db_meta
-		def flat_reads = [reads].flatten()
-		if ( flat_reads.size() != 1 ) {
-		    error("humann_v3 requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
-		}
-		reads: [ new_meta, flat_reads ]
-		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
-		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
-		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
-		util_db: db.findAll { it.db_entity == "humann_utility" }.first().db_path
-	    }
-	//if (params.run_humann && !input.mpa_profile){
-	if (true){
-            MPAHUMANN3 ( ch_input_for_humann.reads, getToolDB(databases, 'humann_v3', "humann_metaphlan"), false )
-            HUMANN3 ( ch_input_for_humann.reads, MPAHUMANN3.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db, ch_input_for_humann.util_db
-	    )
-	    HUMANN3_REGROUP(HUMANN3.out.genefamilies, "uniref90_level4ec", ch_input_for_humann.util_db)
-	} else {
-	    println("not enabled")
-	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
-	}
-        //ch_versions        = ch_versions.mix( MPAHUMANN3.out.versions.first() ) // TODO: update to topic once upstream is ready
-        ch_raw_profiles    = ch_raw_profiles.mix( MPAHUMANN3.out.profile )
-        //ch_versions            = ch_versions.mix( HUMANN3.out.versions_humann.first() )
-        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN3.out.pathabundance )
-	    .mix( HUMANN3.out.genefamilies )
-	    .mix( HUMANN3.out.pathcoverage )
-    }
-    if ( params.run_humann_v4 ) {
-	ch_input_for_humann4 =  ch_merged_input_for_profiling.humann_v4
-    	    .multiMap {
-		meta, reads, db_meta, db ->
-		def new_meta = meta +  db_meta
-		//TODO add the params in
-		//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
-		def flat_reads = [reads].flatten()
-		if ( flat_reads.size() != 1 ) {
-		    error("humann_v4 requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
-		}
-		reads: [ new_meta, flat_reads ]
-		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
-		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
-		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
-		util_db: db.findAll { it.db_entity == "humann_utility" }.first().db_path
-	    }
-	//if (params.run_humann && !input.mpa_profile){
-	if (true){
-            MPAHUMANN4 ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, false )
-            HUMANN4 ( ch_input_for_humann4.reads, MPAHUMANN4.out.profile, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db)
-	    HUMANN4_REGROUP(HUMANN4.out.genefamilies, "uniclust90_level4ec", ch_input_for_humann4.util_db)
-	} else {
-	    println("not enabled")
-	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
-	}
-        //ch_versions            = ch_versions.mix( HUMANN4.out.versions_humann.first() )
-        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN4.out.pathabundance )
-	    .mix( HUMANN4.out.genefamilies )
-	    .mix( HUMANN4.out.reactions )
-    }
+    // if ( params.run_humann_v3 ) {
+    // 	ch_input_for_humann =  ch_merged_input_for_profiling.humann_v3
+    // 	    .multiMap {
+    // 		meta, reads, db_meta, db ->
+    // 		def new_meta = meta +  db_meta
+    // 		def flat_reads = [reads].flatten()
+    // 		if ( flat_reads.size() != 1 ) {
+    // 		    error("humann_v3 requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
+    // 		}
+    // 		reads: [ new_meta, flat_reads ]
+    // 		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
+    // 		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
+    // 		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
+    // 		util_db: db.findAll { it.db_entity == "humann_utility" }.first().db_path
+    // 	    }
+    // 	//if (params.run_humann && !input.mpa_profile){
+    // 	if (true){
+    //         MPAHUMANN3 ( ch_input_for_humann.reads, getToolDB(databases, 'humann_v3', "humann_metaphlan"), false )
+    //         HUMANN3 ( ch_input_for_humann.reads, MPAHUMANN3.out.profile, ch_input_for_humann.nuc_db, ch_input_for_humann.prot_db, ch_input_for_humann.util_db
+    // 	    )
+    // 	    HUMANN3_REGROUP(HUMANN3.out.genefamilies, "uniref90_level4ec", ch_input_for_humann.util_db)
+    // 	} else {
+    // 	    println("not enabled")
+    // 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
+    // 	}
+    //     //ch_versions        = ch_versions.mix( MPAHUMANN3.out.versions.first() ) // TODO: update to topic once upstream is ready
+    //     ch_raw_profiles    = ch_raw_profiles.mix( MPAHUMANN3.out.profile )
+    //     //ch_versions            = ch_versions.mix( HUMANN3.out.versions_humann.first() )
+    //     ch_raw_profiles        = ch_raw_profiles.mix( HUMANN3.out.pathabundance )
+    // 	    .mix( HUMANN3.out.genefamilies )
+    // 	    .mix( HUMANN3.out.pathcoverage )
+    // }
+    // if ( params.run_humann_v4 ) {
+    // 	ch_input_for_humann4 =  ch_merged_input_for_profiling.humann_v4
+    // 	    .multiMap {
+    // 		meta, reads, db_meta, db ->
+    // 		def new_meta = meta +  db_meta
+    // 		//TODO add the params in
+    // 		//		new_meta.db_params = Channel.fromList(db).map{ t -> t.db_params}.collect().flatten() //  [0]["db_params"]
+    // 		def flat_reads = [reads].flatten()
+    // 		if ( flat_reads.size() != 1 ) {
+    // 		    error("humann_v4 requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
+    // 		}
+    // 		reads: [ new_meta, flat_reads ]
+    // 		mpa_db: db.findAll { it.db_entity == "humann_metaphlan" }.first().db_path
+    // 		nuc_db: db.findAll { it.db_entity == "humann_nucleotide" }.first().db_path
+    // 		prot_db: db.findAll { it.db_entity == "humann_protein" }.first().db_path
+    // 		util_db: db.findAll { it.db_entity == "humann_utility" }.first().db_path
+    // 	    }
+    // 	//if (params.run_humann && !input.mpa_profile){
+    // 	if (true){
+    //         MPAHUMANN4 ( ch_input_for_humann4.reads, ch_input_for_humann4.mpa_db, false )
+    //         HUMANN4 ( ch_input_for_humann4.reads, MPAHUMANN4.out.profile, ch_input_for_humann4.nuc_db, ch_input_for_humann4.prot_db, ch_input_for_humann4.util_db)
+    // 	    HUMANN4_REGROUP(HUMANN4.out.genefamilies, "uniclust90_level4ec", ch_input_for_humann4.util_db)
+    // 	} else {
+    // 	    println("not enabled")
+    // 	    // HUMANN_HUMANN ( ch_input_for_humann, ch_input_for_humann.metaphlan_profile , humann_dbs_raw.nucleotide, humann_dbs_raw.protein)
+    // 	}
+    //     //ch_versions            = ch_versions.mix( HUMANN4.out.versions_humann.first() )
+    //     ch_raw_profiles        = ch_raw_profiles.mix( HUMANN4.out.pathabundance )
+    // 	    .mix( HUMANN4.out.genefamilies )
+    // 	    .mix( HUMANN4.out.reactions )
+    // }
 
-    if ( params.run_diamond ) {
-        ch_input_for_diamond = ch_merged_input_for_profiling.diamond
-            .multiMap {
-                meta, reads, db_meta, db ->
-                def new_meta = meta + db_meta
-                def flat_reads = [reads].flatten()
-                if ( flat_reads.size() != 1 ) {
-                    error("diamond blastx requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
-                }
-                reads: [ new_meta, flat_reads[0] ]
-                db:    [ db_meta, db[0].db_path ]
-            }
-        DIAMOND_BLASTX ( ch_input_for_diamond.reads, ch_input_for_diamond.db, 'tsv', '' )
+    // if ( params.run_diamond ) {
+    //     ch_input_for_diamond = ch_merged_input_for_profiling.diamond
+    //         .multiMap {
+    //             meta, reads, db_meta, db ->
+    //             def new_meta = meta + db_meta
+    //             def flat_reads = [reads].flatten()
+    //             if ( flat_reads.size() != 1 ) {
+    //                 error("diamond blastx requires exactly one (concatenated) input FASTQ, got ${flat_reads.size()} files for sample ${meta.id}")
+    //             }
+    //             reads: [ new_meta, flat_reads[0] ]
+    //             db:    [ db_meta, db[0].db_path ]
+    //         }
+    //     DIAMOND_BLASTX ( ch_input_for_diamond.reads, ch_input_for_diamond.db, 'tsv', '' )
 
-        //ch_versions     = ch_versions.mix( DIAMOND_BLASTX.out.versions.first() ) // TODO swap for topic once upstream is ready
-        ch_raw_profiles = ch_raw_profiles.mix( DIAMOND_BLASTX.out.tsv )
-    }
+    //     //ch_versions     = ch_versions.mix( DIAMOND_BLASTX.out.versions.first() ) // TODO swap for topic once upstream is ready
+    //     ch_raw_profiles = ch_raw_profiles.mix( DIAMOND_BLASTX.out.tsv )
+    // }
 
-    if ( params.run_rgi ) {
-        ch_input_for_rgi = ch_paired_input_for_profiling.rgi
-            .multiMap {
-                meta, reads, db_meta, db ->
-                def new_meta = meta + db_meta
-                reads: [ new_meta, [reads].flatten() ]
-                card:  db[0].db_path
-            }
-        RGI_BWT( ch_input_for_rgi.reads, ch_input_for_rgi.card, [] )
+    // if ( params.run_rgi ) {
+    //     ch_input_for_rgi = ch_paired_input_for_profiling.rgi
+    //         .multiMap {
+    //             meta, reads, db_meta, db ->
+    //             def new_meta = meta + db_meta
+    //             reads: [ new_meta, [reads].flatten() ]
+    //             card:  db[0].db_path
+    //         }
+    //     RGI_BWT( ch_input_for_rgi.reads, ch_input_for_rgi.card, [] )
 
-        //ch_versions     = ch_versions.mix( RGI_BWT.out.versions_rgi.first())
-        ch_raw_profiles = ch_raw_profiles.mix( RGI_BWT.out.tsv )
-    }
-    if ( params.run_eggnogmapper ) {
-        ch_input_for_eggnogmapper = ch_merged_input_for_profiling.eggnogmapper
-            .multiMap {
-                meta, reads, db_meta, db ->
-                def new_meta = meta + db_meta
-                def flat_reads = [reads].flatten()
-                if ( flat_reads.size() != 1 ) {
-                    error("eggnogmapper requires exactly one input FASTA, got ${flat_reads.size()} files for sample ${meta.id}")
-                }
-                fastq:    [ new_meta, flat_reads[0] ]
-                search_db: db.findAll { it.db_entity == "eggnogmapper_db" }.first().db_path
-                data_dir:  db.findAll { it.db_entity == "eggnogmapper_data_dir" }.first().db_path
-            }
-	SEQKIT_FQ2FA(ch_input_for_eggnogmapper.fastq)
-	GUNZIP(SEQKIT_FQ2FA.out.fasta)
-        EGGNOGMAPPER (
-            GUNZIP.out.gunzip,
-            ch_input_for_eggnogmapper.search_db.map { db -> [ 'diamond', db ] },
-            ch_input_for_eggnogmapper.data_dir
-        )
+    //     //ch_versions     = ch_versions.mix( RGI_BWT.out.versions_rgi.first())
+    //     ch_raw_profiles = ch_raw_profiles.mix( RGI_BWT.out.tsv )
+    // }
+    // if ( params.run_eggnogmapper ) {
+    //     ch_input_for_eggnogmapper = ch_merged_input_for_profiling.eggnogmapper
+    //         .multiMap {
+    //             meta, reads, db_meta, db ->
+    //             def new_meta = meta + db_meta
+    //             def flat_reads = [reads].flatten()
+    //             if ( flat_reads.size() != 1 ) {
+    //                 error("eggnogmapper requires exactly one input FASTA, got ${flat_reads.size()} files for sample ${meta.id}")
+    //             }
+    //             fastq:    [ new_meta, flat_reads[0] ]
+    //             search_db: db.findAll { it.db_entity == "eggnogmapper_db" }.first().db_path
+    //             data_dir:  db.findAll { it.db_entity == "eggnogmapper_data_dir" }.first().db_path
+    //         }
+    // 	SEQKIT_FQ2FA(ch_input_for_eggnogmapper.fastq)
+    // 	GUNZIP(SEQKIT_FQ2FA.out.fasta)
+    //     EGGNOGMAPPER (
+    //         GUNZIP.out.gunzip,
+    //         ch_input_for_eggnogmapper.search_db.map { db -> [ 'diamond', db ] },
+    //         ch_input_for_eggnogmapper.data_dir
+    //     )
 
-        //ch_versions     = ch_versions.mix( EGGNOGMAPPER.out.versions_eggnogmapper.first() )
-        ch_raw_profiles = ch_raw_profiles.mix( EGGNOGMAPPER.out.annotations )
+    //     //ch_versions     = ch_versions.mix( EGGNOGMAPPER.out.versions_eggnogmapper.first() )
+    //     ch_raw_profiles = ch_raw_profiles.mix( EGGNOGMAPPER.out.annotations )
 
-    }
+    // }
 
     emit:
     profiles        = ch_raw_profiles    // channel: [ val(meta), [ reads ] ] - should be text files or biom

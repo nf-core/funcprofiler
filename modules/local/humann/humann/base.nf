@@ -9,6 +9,7 @@ process HUMANN_HUMANN {
 
     conda (params.enable_conda ? { getConda(getProcessName(task.process)) } : null)
     container { getContainer(getProcessName(task.process)) }
+
     input:
     tuple val(meta), path(input)
     tuple val(meta), path(profile)

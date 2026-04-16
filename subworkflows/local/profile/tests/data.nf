@@ -1,4 +1,4 @@
-def Samplesheet(){
+Adef Samplesheet(){
     return [      [
                     [
                         id: '2612',  // or could be '2612_ERR5766176' depending on schema
@@ -200,4 +200,3 @@ def DatabaseSheet() {
     ]
 
 }
-return this
