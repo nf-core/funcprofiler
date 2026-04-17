@@ -37,18 +37,16 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                // Test that non-taredfiles don't get mutilated
-                input[0] = Channel.of(                [
-                    [
-                        id: 'humann_v4_demo_v4_humann_metaphlan',
-                        tool: 'humann_v4',
-                        db_name: 'demo_v4',
-                        db_entity: 'humann_metaphlan',
-                        db_params: ''
-                    ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/metaphlan/metaphlan_demo_for_humann4.tar.gz')
-                ],
-)
+                input[0] = Channel.of([
+		[
+		id: 'testfmh',
+		tool: 'fmhfunprofiler',
+		    db_name: 'fmhfunprofiler1000',
+		    db_entity: '',
+		    db_params: '11 1000'
+	    ],
+                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip')
+                ])
                 """
             }
         }

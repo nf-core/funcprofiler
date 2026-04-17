@@ -43,6 +43,7 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
     */
     // Step 1: Filter databases to only the requested tool, then group by db_name and db_params
     def ch_dbs_grouped = databases
+	.view()
     .flatMap { meta_db, file_list ->
         // Flatten: emit one tuple per file object
         file_list.collect { file_obj ->
