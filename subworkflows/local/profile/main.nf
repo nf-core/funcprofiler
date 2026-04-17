@@ -96,12 +96,12 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
 
     // Step 3: Validate and add metadata based on tool type
     def result = reads_with_dbs
-            .map { meta, reads, db_meta, db_files ->
-                def expected = meta.single_end | singleFqTool ? 1 : 2
-                if (reads.size() != expected) {
+        .map { meta, reads, db_meta, db_files ->
+            def expected = meta.single_end | singleFqTool ? 1 : 2
+            if (reads.size() != expected) {
                 error("PE-aware tool (${!singleFqTool})  '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${reads.size()}")
-                }
-                [meta, reads, db_meta, db_files]
+            }
+            [meta, reads, db_meta, db_files]
         }
 	.multiMap { it ->
             reads: [it[0] , it[1]]
@@ -113,7 +113,7 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
 
 def getDbPath(groupeddb, entity='main'){
     // this extracts the relevant
-    def dbpath = groupeddb
+    def dbpath  =groupeddb
         .map { meta_db, file_list ->
             def matching_files = file_list
 		.findAll { f -> f.db_entity == entity }
@@ -165,7 +165,12 @@ workflow PROFILING {
 
 
     if ( params.run_fmhfunprofiler ) {
-         FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, getDbPath(ch_input_for_fmhfunprofiler.db, 'main'))
+        FMHFUNPROFILER (
+	    ch_input_for_fmhfunprofiler.reads,
+	    ch_input_for_fmhfunprofiler.db
+		.map { meta_db, file_list ->
+		    def matching_files = file_list
+			.findAll { f -> f.db_entity == entity })
          ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
     }
     if ( params.run_mifaser ) {
