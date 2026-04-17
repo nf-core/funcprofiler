@@ -13,23 +13,98 @@
                         },
                         [
                             "ERX5474932_ERR5766176_merged.fastq.gz"
-                        ],
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "sample": "sample2",
+                            "run_accession": "abc",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false
+                        },
+                        [
+                            "sample2_merged.fastq.gz"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
                         {
                             "tool": "fmhfunprofiler",
                             "db_name": "fmhfunprofiler1000",
-                            "db_params": "11 1000",
+                            "db_params": "",
                             "db_entities": [
                                 "main"
                             ],
                             "num_files": 1,
-                            "id": "fmhfunprofiler_fmhfunprofiler1000_11_1000"
+                            "id": "fmhfunprofiler_fmhfunprofiler1000_"
                         },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/a17165791b64815748a50c427338c5c0/KOs_sketched_scaled_1000_demo.sig.zip"
+                            }
+                        ]
+                    ],
+                    [
                         {
-                            "main": "KOs_sketched_scaled_1000_demo.sig.zip"
-                        }
+                            "tool": "fmhfunprofiler",
+                            "db_name": "fmhfunprofiler1000",
+                            "db_params": "",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "fmhfunprofiler_fmhfunprofiler1000_"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/a17165791b64815748a50c427338c5c0/KOs_sketched_scaled_1000_demo.sig.zip"
+                            }
+                        ]
                     ]
                 ],
-                "result": [
+                "db": [
+                    [
+                        {
+                            "tool": "fmhfunprofiler",
+                            "db_name": "fmhfunprofiler1000",
+                            "db_params": "",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "fmhfunprofiler_fmhfunprofiler1000_"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/a17165791b64815748a50c427338c5c0/KOs_sketched_scaled_1000_demo.sig.zip"
+                            }
+                        ]
+                    ],
+                    [
+                        {
+                            "tool": "fmhfunprofiler",
+                            "db_name": "fmhfunprofiler1000",
+                            "db_params": "",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "fmhfunprofiler_fmhfunprofiler1000_"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/a17165791b64815748a50c427338c5c0/KOs_sketched_scaled_1000_demo.sig.zip"
+                            }
+                        ]
+                    ]
+                ],
+                "reads": [
                     [
                         {
                             "id": "2612",
@@ -40,25 +115,24 @@
                         },
                         [
                             "ERX5474932_ERR5766176_merged.fastq.gz"
-                        ],
+                        ]
+                    ],
+                    [
                         {
-                            "tool": "fmhfunprofiler",
-                            "db_name": "fmhfunprofiler1000",
-                            "db_params": "11 1000",
-                            "db_entities": [
-                                "main"
-                            ],
-                            "num_files": 1,
-                            "id": "fmhfunprofiler_fmhfunprofiler1000_11_1000"
+                            "id": "sample2",
+                            "sample": "sample2",
+                            "run_accession": "abc",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false
                         },
-                        {
-                            "main": "KOs_sketched_scaled_1000_demo.sig.zip"
-                        }
+                        [
+                            "sample2_merged.fastq.gz"
+                        ]
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-04-16T17:08:54.28613",
+        "timestamp": "2026-04-17T09:14:30.324007",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -78,7 +152,11 @@
                         },
                         [
                             "ERX5474932_ERR5766176_merged.fastq.gz"
-                        ],
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
                         {
                             "tool": "humann_v3",
                             "db_name": "demo_v3",
@@ -91,14 +169,53 @@
                             "num_files": 3,
                             "id": "humann_v3_demo_v3_"
                         },
-                        {
-                            "humann_nucleotide": "chocophlan_nfDEMO.tar.gz",
-                            "humann_protein": "uniref_nfDEMO.tar.gz",
-                            "humann_utility": "utility_nfDEMO.tar.gz"
-                        }
+                        [
+                            {
+                                "db_entity": "humann_nucleotide",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/chocophlan_nfDEMO.tar.gz"
+                            },
+                            {
+                                "db_entity": "humann_protein",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/uniref_nfDEMO.tar.gz"
+                            },
+                            {
+                                "db_entity": "humann_utility",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/utility_nfDEMO.tar.gz"
+                            }
+                        ]
                     ]
                 ],
-                "result": [
+                "db": [
+                    [
+                        {
+                            "tool": "humann_v3",
+                            "db_name": "demo_v3",
+                            "db_params": "",
+                            "db_entities": [
+                                "humann_nucleotide",
+                                "humann_protein",
+                                "humann_utility"
+                            ],
+                            "num_files": 3,
+                            "id": "humann_v3_demo_v3_"
+                        },
+                        [
+                            {
+                                "db_entity": "humann_nucleotide",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/chocophlan_nfDEMO.tar.gz"
+                            },
+                            {
+                                "db_entity": "humann_protein",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/uniref_nfDEMO.tar.gz"
+                            },
+                            {
+                                "db_entity": "humann_utility",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/utility_nfDEMO.tar.gz"
+                            }
+                        ]
+                    ]
+                ],
+                "reads": [
                     [
                         {
                             "id": "2612",
@@ -109,29 +226,12 @@
                         },
                         [
                             "ERX5474932_ERR5766176_merged.fastq.gz"
-                        ],
-                        {
-                            "tool": "humann_v3",
-                            "db_name": "demo_v3",
-                            "db_params": "",
-                            "db_entities": [
-                                "humann_nucleotide",
-                                "humann_protein",
-                                "humann_utility"
-                            ],
-                            "num_files": 3,
-                            "id": "humann_v3_demo_v3_"
-                        },
-                        {
-                            "humann_nucleotide": "chocophlan_nfDEMO.tar.gz",
-                            "humann_protein": "uniref_nfDEMO.tar.gz",
-                            "humann_utility": "utility_nfDEMO.tar.gz"
-                        }
+                        ]
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-04-16T17:09:03.744529",
+        "timestamp": "2026-04-17T09:24:10.31958",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -173,9 +273,26 @@
                             "single_end": false
                         },
                         [
-                            "ERX5474932_ERR5766176_1.fastq.gz",
-                            "ERX5474932_ERR5766176_2.fastq.gz"
-                        ],
+                            "ERX5474932_ERR5766176_r1.fastq.gz",
+                            "ERX5474932_ERR5766176_r2.fastq.gz"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "sample": "sample2",
+                            "run_accession": "abc",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false
+                        },
+                        [
+                            "sample2_r1.fastq.gz",
+                            "sample2_r2.fastq.gz"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
                         {
                             "tool": "rgi",
                             "db_name": "4.0.1",
@@ -186,12 +303,71 @@
                             "num_files": 1,
                             "id": "rgi_4.0.1_"
                         },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/c8c995d180b19d2c4e990b208b1e00af/broadstreet-v4.0.1.tar.bz2"
+                            }
+                        ]
+                    ],
+                    [
                         {
-                            "main": "broadstreet-v4.0.1.tar.bz2"
-                        }
+                            "tool": "rgi",
+                            "db_name": "4.0.1",
+                            "db_params": "",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "rgi_4.0.1_"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/c8c995d180b19d2c4e990b208b1e00af/broadstreet-v4.0.1.tar.bz2"
+                            }
+                        ]
                     ]
                 ],
-                "result": [
+                "db": [
+                    [
+                        {
+                            "tool": "rgi",
+                            "db_name": "4.0.1",
+                            "db_params": "",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "rgi_4.0.1_"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/c8c995d180b19d2c4e990b208b1e00af/broadstreet-v4.0.1.tar.bz2"
+                            }
+                        ]
+                    ],
+                    [
+                        {
+                            "tool": "rgi",
+                            "db_name": "4.0.1",
+                            "db_params": "",
+                            "db_entities": [
+                                "main"
+                            ],
+                            "num_files": 1,
+                            "id": "rgi_4.0.1_"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/c8c995d180b19d2c4e990b208b1e00af/broadstreet-v4.0.1.tar.bz2"
+                            }
+                        ]
+                    ]
+                ],
+                "reads": [
                     [
                         {
                             "id": "2612",
@@ -201,27 +377,27 @@
                             "single_end": false
                         },
                         [
-                            "ERX5474932_ERR5766176_1.fastq.gz",
-                            "ERX5474932_ERR5766176_2.fastq.gz"
-                        ],
+                            "ERX5474932_ERR5766176_r1.fastq.gz",
+                            "ERX5474932_ERR5766176_r2.fastq.gz"
+                        ]
+                    ],
+                    [
                         {
-                            "tool": "rgi",
-                            "db_name": "4.0.1",
-                            "db_params": "",
-                            "db_entities": [
-                                "main"
-                            ],
-                            "num_files": 1,
-                            "id": "rgi_4.0.1_"
+                            "id": "sample2",
+                            "sample": "sample2",
+                            "run_accession": "abc",
+                            "instrument_platform": "ILLUMINA",
+                            "single_end": false
                         },
-                        {
-                            "main": "broadstreet-v4.0.1.tar.bz2"
-                        }
+                        [
+                            "sample2_r1.fastq.gz",
+                            "sample2_r2.fastq.gz"
+                        ]
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-04-16T17:08:59.017557",
+        "timestamp": "2026-04-17T09:21:13.486377",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -264,8 +440,8 @@
                             "db_params": "",
                             "db_entities": [
                                 "humann_protein",
-                                "humann_utility",
                                 "humann_nucleotide",
+                                "humann_utility",
                                 "humann_metaphlan"
                             ],
                             "num_files": 4,
@@ -274,15 +450,20 @@
                         [
                             {
                                 "db_entity": "humann_protein",
-                                "db_params": "",
                                 "db_path": [
                                     "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
                                     "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
                                 ]
                             },
                             {
+                                "db_entity": "humann_nucleotide",
+                                "db_path": [
+                                    "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
+                                    "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
+                                ]
+                            },
+                            {
                                 "db_entity": "humann_utility",
-                                "db_params": "",
                                 "db_path": [
                                     "README.txt:md5,9d3db20d44df2404c41064a815d14e35",
                                     "map_eggnog_name.txt.gz:md5,b23ae8c34c86b1f160d66b1e218d1c8a",
@@ -306,16 +487,7 @@
                                 ]
                             },
                             {
-                                "db_entity": "humann_nucleotide",
-                                "db_params": "",
-                                "db_path": [
-                                    "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
-                                    "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
-                                ]
-                            },
-                            {
                                 "db_entity": "humann_metaphlan",
-                                "db_params": "",
                                 "db_path": [
                                     "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
                                     "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
@@ -336,8 +508,8 @@
                             "db_params": "",
                             "db_entities": [
                                 "humann_protein",
-                                "humann_utility",
                                 "humann_nucleotide",
+                                "humann_utility",
                                 "humann_metaphlan"
                             ],
                             "num_files": 4,
@@ -346,15 +518,20 @@
                         [
                             {
                                 "db_entity": "humann_protein",
-                                "db_params": "",
                                 "db_path": [
                                     "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
                                     "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
                                 ]
                             },
                             {
+                                "db_entity": "humann_nucleotide",
+                                "db_path": [
+                                    "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
+                                    "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
+                                ]
+                            },
+                            {
                                 "db_entity": "humann_utility",
-                                "db_params": "",
                                 "db_path": [
                                     "README.txt:md5,9d3db20d44df2404c41064a815d14e35",
                                     "map_eggnog_name.txt.gz:md5,b23ae8c34c86b1f160d66b1e218d1c8a",
@@ -378,16 +555,7 @@
                                 ]
                             },
                             {
-                                "db_entity": "humann_nucleotide",
-                                "db_params": "",
-                                "db_path": [
-                                    "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
-                                    "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
-                                ]
-                            },
-                            {
                                 "db_entity": "humann_metaphlan",
-                                "db_params": "",
                                 "db_path": [
                                     "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
                                     "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
@@ -410,8 +578,8 @@
                             "db_params": "",
                             "db_entities": [
                                 "humann_protein",
-                                "humann_utility",
                                 "humann_nucleotide",
+                                "humann_utility",
                                 "humann_metaphlan"
                             ],
                             "num_files": 4,
@@ -420,15 +588,20 @@
                         [
                             {
                                 "db_entity": "humann_protein",
-                                "db_params": "",
                                 "db_path": [
                                     "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
                                     "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
                                 ]
                             },
                             {
+                                "db_entity": "humann_nucleotide",
+                                "db_path": [
+                                    "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
+                                    "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
+                                ]
+                            },
+                            {
                                 "db_entity": "humann_utility",
-                                "db_params": "",
                                 "db_path": [
                                     "README.txt:md5,9d3db20d44df2404c41064a815d14e35",
                                     "map_eggnog_name.txt.gz:md5,b23ae8c34c86b1f160d66b1e218d1c8a",
@@ -452,16 +625,7 @@
                                 ]
                             },
                             {
-                                "db_entity": "humann_nucleotide",
-                                "db_params": "",
-                                "db_path": [
-                                    "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
-                                    "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
-                                ]
-                            },
-                            {
                                 "db_entity": "humann_metaphlan",
-                                "db_params": "",
                                 "db_path": [
                                     "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
                                     "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
@@ -482,8 +646,8 @@
                             "db_params": "",
                             "db_entities": [
                                 "humann_protein",
-                                "humann_utility",
                                 "humann_nucleotide",
+                                "humann_utility",
                                 "humann_metaphlan"
                             ],
                             "num_files": 4,
@@ -492,15 +656,20 @@
                         [
                             {
                                 "db_entity": "humann_protein",
-                                "db_params": "",
                                 "db_path": [
                                     "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
                                     "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
                                 ]
                             },
                             {
+                                "db_entity": "humann_nucleotide",
+                                "db_path": [
+                                    "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
+                                    "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
+                                ]
+                            },
+                            {
                                 "db_entity": "humann_utility",
-                                "db_params": "",
                                 "db_path": [
                                     "README.txt:md5,9d3db20d44df2404c41064a815d14e35",
                                     "map_eggnog_name.txt.gz:md5,b23ae8c34c86b1f160d66b1e218d1c8a",
@@ -524,16 +693,7 @@
                                 ]
                             },
                             {
-                                "db_entity": "humann_nucleotide",
-                                "db_params": "",
-                                "db_path": [
-                                    "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
-                                    "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
-                                ]
-                            },
-                            {
                                 "db_entity": "humann_metaphlan",
-                                "db_params": "",
                                 "db_path": [
                                     "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
                                     "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
@@ -576,7 +736,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T01:50:06.73623",
+        "timestamp": "2026-04-17T09:21:50.025374",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

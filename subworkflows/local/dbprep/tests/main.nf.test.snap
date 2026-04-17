@@ -12,7 +12,7 @@
                         [
                             {
                                 "db_entity": "",
-                                "db_path": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
+                                "db_path": "/nf-core/test-datasets/modules/data/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
                             }
                         ]
                     ]
@@ -27,14 +27,14 @@
                         [
                             {
                                 "db_entity": "",
-                                "db_path": "/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
+                                "db_path": "/nf-core/test-datasets/modules/data/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
                             }
                         ]
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-04-17T02:38:55.092138",
+        "timestamp": "2026-04-17T02:43:26.504671",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

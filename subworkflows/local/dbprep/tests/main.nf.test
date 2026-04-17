@@ -37,16 +37,16 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = Channel.of([
+                input[0] = Channel.of(
 		[
-		id: 'testfmh',
-		tool: 'fmhfunprofiler',
+		[id: 'testfmh',
+		    tool: 'fmhfunprofiler',
 		    db_name: 'fmhfunprofiler1000',
 		    db_entity: '',
 		    db_params: '11 1000'
 	    ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip')
-                ])
+                    file(params.modules_testdata_base_path + 'funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip')
+            ])
                 """
             }
         }
