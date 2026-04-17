@@ -31,14 +31,14 @@
                 "1": [
                     [
                         {
+                            "id": "fmhfunprofiler-fmhfunprofiler1000-",
                             "tool": "fmhfunprofiler",
                             "db_name": "fmhfunprofiler1000",
                             "db_params": "",
                             "db_entities": [
                                 "main"
                             ],
-                            "num_files": 1,
-                            "id": "fmhfunprofiler_fmhfunprofiler1000_"
+                            "num_files": 1
                         },
                         [
                             {
@@ -49,14 +49,14 @@
                     ],
                     [
                         {
+                            "id": "fmhfunprofiler-fmhfunprofiler1000-",
                             "tool": "fmhfunprofiler",
                             "db_name": "fmhfunprofiler1000",
                             "db_params": "",
                             "db_entities": [
                                 "main"
                             ],
-                            "num_files": 1,
-                            "id": "fmhfunprofiler_fmhfunprofiler1000_"
+                            "num_files": 1
                         },
                         [
                             {
@@ -69,14 +69,14 @@
                 "db": [
                     [
                         {
+                            "id": "fmhfunprofiler-fmhfunprofiler1000-",
                             "tool": "fmhfunprofiler",
                             "db_name": "fmhfunprofiler1000",
                             "db_params": "",
                             "db_entities": [
                                 "main"
                             ],
-                            "num_files": 1,
-                            "id": "fmhfunprofiler_fmhfunprofiler1000_"
+                            "num_files": 1
                         },
                         [
                             {
@@ -87,14 +87,14 @@
                     ],
                     [
                         {
+                            "id": "fmhfunprofiler-fmhfunprofiler1000-",
                             "tool": "fmhfunprofiler",
                             "db_name": "fmhfunprofiler1000",
                             "db_params": "",
                             "db_entities": [
                                 "main"
                             ],
-                            "num_files": 1,
-                            "id": "fmhfunprofiler_fmhfunprofiler1000_"
+                            "num_files": 1
                         },
                         [
                             {
@@ -132,7 +132,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T09:14:30.324007",
+        "timestamp": "2026-04-17T14:49:26.998733",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -158,6 +158,7 @@
                 "1": [
                     [
                         {
+                            "id": "humann-v3-demo-v3-",
                             "tool": "humann_v3",
                             "db_name": "demo_v3",
                             "db_params": "",
@@ -166,8 +167,7 @@
                                 "humann_protein",
                                 "humann_utility"
                             ],
-                            "num_files": 3,
-                            "id": "humann_v3_demo_v3_"
+                            "num_files": 3
                         },
                         [
                             {
@@ -188,6 +188,7 @@
                 "db": [
                     [
                         {
+                            "id": "humann-v3-demo-v3-",
                             "tool": "humann_v3",
                             "db_name": "demo_v3",
                             "db_params": "",
@@ -196,8 +197,7 @@
                                 "humann_protein",
                                 "humann_utility"
                             ],
-                            "num_files": 3,
-                            "id": "humann_v3_demo_v3_"
+                            "num_files": 3
                         },
                         [
                             {
@@ -231,7 +231,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T09:24:10.31958",
+        "timestamp": "2026-04-17T14:49:39.485832",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -294,14 +294,14 @@
                 "1": [
                     [
                         {
+                            "id": "rgi-4.0.1-",
                             "tool": "rgi",
                             "db_name": "4.0.1",
                             "db_params": "",
                             "db_entities": [
                                 "main"
                             ],
-                            "num_files": 1,
-                            "id": "rgi_4.0.1_"
+                            "num_files": 1
                         },
                         [
                             {
@@ -312,14 +312,14 @@
                     ],
                     [
                         {
+                            "id": "rgi-4.0.1-",
                             "tool": "rgi",
                             "db_name": "4.0.1",
                             "db_params": "",
                             "db_entities": [
                                 "main"
                             ],
-                            "num_files": 1,
-                            "id": "rgi_4.0.1_"
+                            "num_files": 1
                         },
                         [
                             {
@@ -332,14 +332,14 @@
                 "db": [
                     [
                         {
+                            "id": "rgi-4.0.1-",
                             "tool": "rgi",
                             "db_name": "4.0.1",
                             "db_params": "",
                             "db_entities": [
                                 "main"
                             ],
-                            "num_files": 1,
-                            "id": "rgi_4.0.1_"
+                            "num_files": 1
                         },
                         [
                             {
@@ -350,14 +350,14 @@
                     ],
                     [
                         {
+                            "id": "rgi-4.0.1-",
                             "tool": "rgi",
                             "db_name": "4.0.1",
                             "db_params": "",
                             "db_entities": [
                                 "main"
                             ],
-                            "num_files": 1,
-                            "id": "rgi_4.0.1_"
+                            "num_files": 1
                         },
                         [
                             {
@@ -397,7 +397,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T09:21:13.486377",
+        "timestamp": "2026-04-17T14:49:33.22072",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -435,17 +435,17 @@
                 "1": [
                     [
                         {
+                            "id": "humann-v3-demo-v3-",
                             "tool": "humann_v3",
                             "db_name": "demo_v3",
-                            "db_params": "",
+                            "db_params": "-",
                             "db_entities": [
                                 "humann_protein",
                                 "humann_nucleotide",
                                 "humann_utility",
                                 "humann_metaphlan"
                             ],
-                            "num_files": 4,
-                            "id": "humann_v3_demo_v3_"
+                            "num_files": 4
                         },
                         [
                             {
@@ -503,17 +503,17 @@
                     ],
                     [
                         {
+                            "id": "humann-v3-demo-v3-",
                             "tool": "humann_v3",
                             "db_name": "demo_v3",
-                            "db_params": "",
+                            "db_params": "-",
                             "db_entities": [
                                 "humann_protein",
                                 "humann_nucleotide",
                                 "humann_utility",
                                 "humann_metaphlan"
                             ],
-                            "num_files": 4,
-                            "id": "humann_v3_demo_v3_"
+                            "num_files": 4
                         },
                         [
                             {
@@ -573,17 +573,17 @@
                 "db": [
                     [
                         {
+                            "id": "humann-v3-demo-v3-",
                             "tool": "humann_v3",
                             "db_name": "demo_v3",
-                            "db_params": "",
+                            "db_params": "-",
                             "db_entities": [
                                 "humann_protein",
                                 "humann_nucleotide",
                                 "humann_utility",
                                 "humann_metaphlan"
                             ],
-                            "num_files": 4,
-                            "id": "humann_v3_demo_v3_"
+                            "num_files": 4
                         },
                         [
                             {
@@ -641,17 +641,17 @@
                     ],
                     [
                         {
+                            "id": "humann-v3-demo-v3-",
                             "tool": "humann_v3",
                             "db_name": "demo_v3",
-                            "db_params": "",
+                            "db_params": "-",
                             "db_entities": [
                                 "humann_protein",
                                 "humann_nucleotide",
                                 "humann_utility",
                                 "humann_metaphlan"
                             ],
-                            "num_files": 4,
-                            "id": "humann_v3_demo_v3_"
+                            "num_files": 4
                         },
                         [
                             {
@@ -736,7 +736,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T09:21:50.025374",
+        "timestamp": "2026-04-17T15:16:15.66578",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

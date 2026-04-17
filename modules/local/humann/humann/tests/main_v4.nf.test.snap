@@ -22,7 +22,7 @@
                 "test_mock_profile.txt:md5,762e6fe3aace26113c8e2f67200cb8c3"
             ]
         ],
-        "timestamp": "2026-04-14T17:58:39.080578",
+        "timestamp": "2026-04-17T15:05:37.147937",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

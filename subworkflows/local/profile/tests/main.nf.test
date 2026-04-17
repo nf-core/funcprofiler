@@ -97,8 +97,7 @@ nextflow_workflow {
 	}
         when {
 	    params {
-		run_humann_v3 = false
-		run_humann_v4 = false
+		run_humann_v3 = true
 		run_fmhfunprofiler = true
 	    }
             workflow {

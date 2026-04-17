@@ -27,6 +27,13 @@ include { GUNZIP                                        } from '../../../modules
 * @param ch_database A channel containing a key, the database meta, and the database file/folders itself
 * @return A multiMap'ed output channel with two sub channels, one with the profile and the other with the db
 */
+def sanitizeId(str) {
+    return str.toString()
+        .replaceAll(/_/, '-')        // underscore to hyphens
+        .replaceAll(/\s+/, '-')      // spaces to hyphens
+        .replaceAll(/[^\w\-.]/, '')  // remove special chars
+        .replaceAll(/-+/, '-')       // collapse multiple hyphens
+}
 def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
     /*
         COMBINE READS WITH DATABASES - GROUPED BY TOOL, VERSION, AND PARAMS
@@ -71,12 +78,12 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
 
         // Create consolidated metadata
         def meta_db_grouped = [
+            id: sanitizeId("${tool}--${db_name}--${db_params}"),
             tool: tool,
             db_name: db_name,
             db_params: db_params,
             db_entities: meta_db_list.collect { it.db_entity },
-            num_files: files.size(),
-            id: "${tool}_${db_name}_${db_params}".replaceAll(/\s+/, '_')
+            num_files: files.size()
         ]
 
         // Return files as list
@@ -113,7 +120,7 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
 
 def getDbPath(groupeddb, entity='main', asTuple=false){
     // this extracts the relevant
-    def dbpath  =groupeddb
+    def dbpath = groupeddb
         .map { meta_db, file_list ->
             def matching_files = file_list
 		.findAll { f -> f.db_entity == entity }
@@ -125,7 +132,6 @@ def getDbPath(groupeddb, entity='main', asTuple=false){
             if (matching_files.size() > 1) {
                 error("More than one entity '${entity}' file found in database ${meta_db.id}")
             }
-
             if (asTuple){
 		return [meta_db, matching_files[0]]
 	    } else {
@@ -164,6 +170,7 @@ workflow PROFILING {
     ch_input_for_humann_v3 = prepareInputs(reads_concat, databases, 'humann_v3', true)
     ch_input_for_humann_v4 = prepareInputs(reads_concat, databases, 'humann_v4', true)
     ch_input_for_mifaser = prepareInputs(reads_concat, databases, 'mifaser', true)
+
     if ( params.run_fmhfunprofiler ) {
 	 // this tool needs the db_params at runtime, so it takes a [[meta], path] tuple instead of just a path
         FMHFUNPROFILER (
