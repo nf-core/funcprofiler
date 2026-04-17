@@ -7,7 +7,7 @@ process HUMANN_HUMANN {
     tag "$meta.id"
     label 'process_high'
 
-    conda (params.enable_conda ? { getConda(getProcessName(task.process)) } : null)
+    conda {getConda(getProcessName(task.process))}
     container { getContainer(getProcessName(task.process)) }
 
     input:

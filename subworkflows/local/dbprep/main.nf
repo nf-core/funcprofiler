@@ -41,21 +41,20 @@ workflow DBPREP {
     ch_semifinal_dbs = ch_dbs_for_untar.skip
         .mix( ch_outputdb_from_untar  )
         .map { db_meta, db ->
-            def corrected_db_params = db_meta.db_params ? [ db_params: db_meta.db_params ] : [ db_params: '' ]
+            def corrected_db_params = db_meta.db_params ? [ db_params: db_meta.db_params ] : [ db_params: '-' ]
             [ db_meta + corrected_db_params, db ]
         }
 
     ch_grouped_dbs = ch_semifinal_dbs
 	.map { meta, path ->
-            [ [tool: meta.tool, db_name: meta.db_name], [meta.db_entity, meta.db_params, path]]
+            [ [tool: meta.tool, db_name: meta.db_name, params: meta.db_params], [meta.db_entity, path]]
 	}
 	.groupTuple()
 	.map { groupKey, groupTuples ->
             def grouped_dbs = groupTuples.collect { tuple ->
 		[
                     db_entity: tuple[0],
-                    db_params: tuple[1],
-                    db_path: tuple[2]
+                    db_path: tuple[1]
 		]
             }
             return [groupKey, grouped_dbs]

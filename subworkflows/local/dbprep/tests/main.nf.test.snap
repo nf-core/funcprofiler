@@ -6,12 +6,12 @@
                     [
                         {
                             "tool": "humann_v4",
-                            "db_name": "demo_v4"
+                            "db_name": "demo_v4",
+                            "params": "-"
                         },
                         [
                             {
                                 "db_entity": "humann_metaphlan",
-                                "db_params": "",
                                 "db_path": [
                                     "mpa_vOct22_CHOCOPhlAnSGB_202403.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
                                     "mpa_vOct22_CHOCOPhlAnSGB_202403.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
@@ -30,12 +30,12 @@
                     [
                         {
                             "tool": "humann_v4",
-                            "db_name": "demo_v4"
+                            "db_name": "demo_v4",
+                            "params": "-"
                         },
                         [
                             {
                                 "db_entity": "humann_metaphlan",
-                                "db_params": "",
                                 "db_path": [
                                     "mpa_vOct22_CHOCOPhlAnSGB_202403.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
                                     "mpa_vOct22_CHOCOPhlAnSGB_202403.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
@@ -52,7 +52,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-15T22:40:51.275207",
+        "timestamp": "2026-04-17T02:06:47.227638",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -65,12 +65,12 @@
                     [
                         {
                             "tool": "test",
-                            "db_name": "test_dontuntar"
+                            "db_name": "test_dontuntar",
+                            "params": "-"
                         },
                         [
                             {
                                 "db_entity": null,
-                                "db_params": "",
                                 "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
                             }
                         ]
@@ -80,12 +80,12 @@
                     [
                         {
                             "tool": "test",
-                            "db_name": "test_dontuntar"
+                            "db_name": "test_dontuntar",
+                            "params": "-"
                         },
                         [
                             {
                                 "db_entity": null,
-                                "db_params": "",
                                 "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
                             }
                         ]
@@ -93,7 +93,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-15T22:40:44.449439",
+        "timestamp": "2026-04-17T02:06:41.470267",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

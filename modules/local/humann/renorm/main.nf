@@ -3,7 +3,7 @@ process HUMANN_RENORM {
     tag "$meta.id"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::humann=3.0.0" : null)
+    conda "bioconda::humann=3.0.0"
     // We aren't setting this dynamically, we are just going to use the most up-to-date utility scripts for renomalizing
     container 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final_smaller-pt2'
 

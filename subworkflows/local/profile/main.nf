@@ -42,12 +42,13 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
           where each sample has entries for the specified tool
     */
     // Step 1: Filter databases to only the requested tool, then group by db_name and db_params
-def ch_dbs_grouped = databases
+    def ch_dbs_grouped = databases
     .flatMap { meta_db, file_list ->
         // Flatten: emit one tuple per file object
         file_list.collect { file_obj ->
             // Merge the file object's db_entity into the metadata
-            def meta_with_entity = meta_db + [db_entity: file_obj.db_entity]
+		def meta_with_entity = meta_db + [db_entity: file_obj.db_entity]
+		println(meta_with_entity)
             [meta_with_entity, file_obj]
         }
     }
@@ -193,9 +194,6 @@ workflow PROFILING {
 	//     }
 	//if (params.run_humann && !input.mpa_profile){
 	if (true){
-//	    databases.view()
-	    //ch_input_for_humann_v3.db.filter{meta, f -> f.entity == "humann_metaphlan"}.view()
-	    //getDbPath(ch_input_for_humann_v3.db, 'humann_metaphlan').view()
             MPAHUMANN3 (
 		ch_input_for_humann_v3.reads,
 		getDbPath(ch_input_for_humann_v3.db, 'humann_metaphlan'),false
@@ -326,5 +324,6 @@ workflow TEST_PREPAREINPUTS_WRAPPER {
     main:
     testresult = prepareInputs(reads, databases, tool_name, singleFqTool)
     emit:
-    result = testresult
+    reads = testresult.reads
+    db    = testresult.db
 }
