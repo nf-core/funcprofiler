@@ -43,7 +43,7 @@
                         [
                             {
                                 "db_entity": "main",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/a17165791b64815748a50c427338c5c0/KOs_sketched_scaled_1000_demo.sig.zip"
+                                "db_path": "./KOs_sketched_scaled_1000_demo.sig.zip"
                             }
                         ]
                     ],
@@ -61,7 +61,7 @@
                         [
                             {
                                 "db_entity": "main",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/a17165791b64815748a50c427338c5c0/KOs_sketched_scaled_1000_demo.sig.zip"
+                                "db_path": "./KOs_sketched_scaled_1000_demo.sig.zip"
                             }
                         ]
                     ]
@@ -81,7 +81,7 @@
                         [
                             {
                                 "db_entity": "main",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/a17165791b64815748a50c427338c5c0/KOs_sketched_scaled_1000_demo.sig.zip"
+                                "db_path": "./KOs_sketched_scaled_1000_demo.sig.zip"
                             }
                         ]
                     ],
@@ -99,7 +99,7 @@
                         [
                             {
                                 "db_entity": "main",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/a17165791b64815748a50c427338c5c0/KOs_sketched_scaled_1000_demo.sig.zip"
+                                "db_path": "./KOs_sketched_scaled_1000_demo.sig.zip"
                             }
                         ]
                     ]
@@ -132,7 +132,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T14:49:26.998733",
+        "timestamp": "2026-04-17T16:02:28.173477",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -172,15 +172,15 @@
                         [
                             {
                                 "db_entity": "humann_nucleotide",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/chocophlan_nfDEMO.tar.gz"
+                                "db_path": "chocophlan_nfDEMO.tar.gz"
                             },
                             {
                                 "db_entity": "humann_protein",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/uniref_nfDEMO.tar.gz"
+                                "db_path": "uniref_nfDEMO.tar.gz"
                             },
                             {
                                 "db_entity": "humann_utility",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/utility_nfDEMO.tar.gz"
+                                "db_path": "utility_nfDEMO.tar.gz"
                             }
                         ]
                     ]
@@ -202,15 +202,15 @@
                         [
                             {
                                 "db_entity": "humann_nucleotide",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/chocophlan_nfDEMO.tar.gz"
+                                "db_path": "chocophlan_nfDEMO.tar.gz"
                             },
                             {
                                 "db_entity": "humann_protein",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/uniref_nfDEMO.tar.gz"
+                                "db_path": "uniref_nfDEMO.tar.gz"
                             },
                             {
                                 "db_entity": "humann_utility",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/7b5b886080c7c3f04c8f87178f4d885/utility_nfDEMO.tar.gz"
+                                "db_path": "utility_nfDEMO.tar.gz"
                             }
                         ]
                     ]
@@ -231,7 +231,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T14:49:39.485832",
+        "timestamp": "2026-04-17T16:02:41.359093",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -306,7 +306,7 @@
                         [
                             {
                                 "db_entity": "main",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/c8c995d180b19d2c4e990b208b1e00af/broadstreet-v4.0.1.tar.bz2"
+                                "db_path": "broadstreet-v4.0.1.tar.bz2"
                             }
                         ]
                     ],
@@ -324,7 +324,7 @@
                         [
                             {
                                 "db_entity": "main",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/c8c995d180b19d2c4e990b208b1e00af/broadstreet-v4.0.1.tar.bz2"
+                                "db_path": "broadstreet-v4.0.1.tar.bz2"
                             }
                         ]
                     ]
@@ -344,7 +344,7 @@
                         [
                             {
                                 "db_entity": "main",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/c8c995d180b19d2c4e990b208b1e00af/broadstreet-v4.0.1.tar.bz2"
+                                "db_path": "broadstreet-v4.0.1.tar.bz2"
                             }
                         ]
                     ],
@@ -362,7 +362,7 @@
                         [
                             {
                                 "db_entity": "main",
-                                "db_path": "/Users/Watersn/GitHub/nf-core-funcprofiler/.nf-test/tests/c8c995d180b19d2c4e990b208b1e00af/broadstreet-v4.0.1.tar.bz2"
+                                "db_path": "broadstreet-v4.0.1.tar.bz2"
                             }
                         ]
                     ]
@@ -397,7 +397,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T14:49:33.22072",
+        "timestamp": "2026-04-17T16:02:34.255057",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

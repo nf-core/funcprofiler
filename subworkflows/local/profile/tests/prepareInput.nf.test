@@ -43,7 +43,7 @@ nextflow_workflow {
 		    params: '11 1000'
 	    ],
 		    [
-		[db_entity: 'main', db_path: file("./KOs_sketched_scaled_1000_demo.sig.zip")]
+		[db_entity: 'main', db_path: "./KOs_sketched_scaled_1000_demo.sig.zip"]
 	    ]
 	    ]])
 
@@ -92,7 +92,7 @@ nextflow_workflow {
 		    params: '11 1000'
 	    ],
 		    [
-		[db_entity: 'main', db_path: file("./KOs_sketched_scaled_1000_demo.sig.zip")]
+		[db_entity: 'main', db_path: "./KOs_sketched_scaled_1000_demo.sig.zip"]
 	    ]
 	    ]])
                 input[2] = 'fmhfunprofiler'
@@ -141,7 +141,7 @@ nextflow_workflow {
                         params: ''
                     ],
 		    [
-		[db_entity: 'main', db_path: file('broadstreet-v4.0.1.tar.bz2')]
+		[db_entity: 'main', db_path: 'broadstreet-v4.0.1.tar.bz2']
 	    ]
 	    ]])
                 input[2] = 'rgi'    // tool_name
@@ -180,9 +180,9 @@ nextflow_workflow {
                     db_params: ''
             ],
 		    [
-		[db_entity: 'humann_nucleotide', db_path: file('chocophlan_nfDEMO.tar.gz')],
-		[db_entity: 'humann_protein', db_path: file('uniref_nfDEMO.tar.gz')],
-		[db_entity: 'humann_utility', db_path: file('utility_nfDEMO.tar.gz')]
+		[db_entity: 'humann_nucleotide', db_path: 'chocophlan_nfDEMO.tar.gz'],
+		[db_entity: 'humann_protein', db_path: 'uniref_nfDEMO.tar.gz'],
+		[db_entity: 'humann_utility', db_path: 'utility_nfDEMO.tar.gz']
 	    ]
 	    ]])
 
