@@ -47,7 +47,8 @@ workflow DBPREP {
 
     ch_grouped_dbs = ch_semifinal_dbs
 	.map { meta, path ->
-            [ [tool: meta.tool, db_name: meta.db_name, params: meta.db_params], [meta.db_entity, path]]
+	    def entity = meta.db_entity ?: 'main'
+            [ [tool: meta.tool, db_name: meta.db_name, params: meta.db_params], [entity, path]]
 	}
 	.groupTuple()
 	.map { groupKey, groupTuples ->

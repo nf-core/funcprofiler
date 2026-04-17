@@ -60,6 +60,7 @@ include { CAT_FASTQ as MERGE_RUNS       } from '../modules/nf-core/cat/fastq/mai
 include { CONCAT_ALL                    } from '../subworkflows/local/concatall'
 include { PROFILING                     } from '../subworkflows/local/profile/main'
 include { DATAPREP                      } from '../subworkflows/local/dataprep/main'
+include { DBPREP                        } from '../subworkflows/local/dbprep/main'
 
 
 
@@ -77,16 +78,16 @@ workflow FUNCPROFILER {
 
 
     DATAPREP (
-	samplesheet,
+	samplesheet
     )
+
     DBPREP (
 	databases
     )
-
     PROFILING (
-	DATAPREP.reads,
-	DATAPREP.reads_concat
-	DBPREP.dbs
+	DATAPREP.out.reads,
+	DATAPREP.out.reads_concat,
+	DBPREP.out.dbs
     )
 
    softwareVersionsToYAML(ch_versions)
@@ -161,7 +162,6 @@ workflow FUNCPROFILER {
     emit:
     multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
 
-//    emit:multiqc_report = Channel.empty()  // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }

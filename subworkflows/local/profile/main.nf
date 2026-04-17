@@ -165,12 +165,12 @@ workflow PROFILING {
 
 
     if ( params.run_fmhfunprofiler ) {
-         FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, ch_input_for_fmhfunprofiler.db)
+         FMHFUNPROFILER ( ch_input_for_fmhfunprofiler.reads, getDbPath(ch_input_for_fmhfunprofiler.db, 'main'))
          ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
     }
     if ( params.run_mifaser ) {
         ch_input_for_mifaser =  prepareInputs(reads_concat, databases, 'mifaser', true)
-        MIFASER ( ch_input_for_mifaser.reads, ch_input_for_mifaser.db)
+        MIFASER ( ch_input_for_mifaser.reads, getDbPath(ch_input_for_mifaser.db, 'main'))
         ch_raw_profiles        = ch_raw_profiles.mix( MIFASER.out.ec_counts )
     }
 
@@ -221,28 +221,17 @@ workflow PROFILING {
         ch_raw_profiles = ch_raw_profiles.mix( RGI_BWT.out.tsv )
     }
     if ( params.run_eggnogmapper ) {
-        ch_input_for_eggnogmapper = ch_merged_input_for_profiling.eggnogmapper
-            .multiMap {
-                meta, reads, db_meta, db ->
-                def new_meta = meta + db_meta
-                def flat_reads = [reads].flatten()
-                if ( flat_reads.size() != 1 ) {
-                    error("eggnogmapper requires exactly one input FASTA, got ${flat_reads.size()} files for sample ${meta.id}")
-                }
-                fastq:    [ new_meta, flat_reads[0] ]
-                search_db: db.findAll { it.db_entity == "eggnogmapper_db" }.first().db_path
-                data_dir:  db.findAll { it.db_entity == "eggnogmapper_data_dir" }.first().db_path
-            }
 	SEQKIT_FQ2FA(ch_input_for_eggnogmapper.reads)
 	GUNZIP(SEQKIT_FQ2FA.out.fasta)
         EGGNOGMAPPER (
             GUNZIP.out.gunzip,
-	    getDbPath(ch_input_for_eggnogmapper.db, "eggnogmapper_db")
+	    getDbPath(ch_input_for_eggnogmapper.db, "eggnogmapper_db"),
 	    getDbPath(ch_input_for_eggnogmapper.db, "")
         )
         ch_raw_profiles = ch_raw_profiles.mix( EGGNOGMAPPER.out.annotations )
 
     }
+
 
     emit:
     profiles        = ch_raw_profiles    // channel: [ val(meta), [ reads ] ] - should be text files or biom
@@ -260,7 +249,6 @@ workflow TEST_PREPAREINPUTS_WRAPPER {
     singleFqTool
 
     main:
-    reads.view();5u51;132;56M
     testresult = prepareInputs(reads, databases, tool_name, singleFqTool)
     emit:
     reads = testresult.reads
