@@ -76,18 +76,25 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
         def db_name = group_key[1]
         def db_params = group_key[2]
 
-        // Create consolidated metadata
+        // Convert files list to Map keyed by db_entity for deterministic snapshots
+        // Map structure: entity_name -> db_path (entity is already in the key)
+        def files_map = [:]
+        [meta_db_list, files].transpose().each { meta_db, file ->
+            files_map[meta_db.db_entity] = file.db_path  // Store only the path
+        }
+
+        // Create consolidated metadata with db_entities as a Set
         def meta_db_grouped = [
             id: sanitizeId("${tool}--${db_name}--${db_params}"),
             tool: tool,
             db_name: db_name,
             db_params: db_params,
-            db_entities: meta_db_list.collect { it.db_entity },
-            num_files: files.size()
+            db_entities: files_map.keySet() as Set,  // Set of entity names
+            num_files: files_map.size()
         ]
 
-        // Return files as list
-        [meta_db_grouped, files]
+        // Return files as map
+        [meta_db_grouped, files_map]
 	}
     // Step 2: Combine reads with ALL grouped databases (cartesian product)
     // Each sample will get one entry per unique db_name+db_params combination for this tool
@@ -119,28 +126,24 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
 }
 
 def getDbPath(groupeddb, entity='main', asTuple=false){
-    // this extracts the relevant
+    // Extract the relevant database file path by entity key from the files map
     def dbpath = groupeddb
-        .map { meta_db, file_list ->
-            def matching_files = file_list
-		.findAll { f -> f.db_entity == entity }
-		.collect { f -> f.db_path }
-            if (matching_files.size() == 0) {
+        .map { meta_db, files_map ->
+            // files_map is now a Map[entity -> db_path], so direct lookup
+            if (!files_map.containsKey(entity)) {
                 error("No entity '${entity}' file found in database ${meta_db.id}")
             }
 
-            if (matching_files.size() > 1) {
-                error("More than one entity '${entity}' file found in database ${meta_db.id}")
-            }
+            def db_path = files_map[entity]  // Direct access to path
+
             if (asTuple){
-		return [meta_db, matching_files[0]]
-	    } else {
-		return matching_files[0]
-	    }
+                return [meta_db, db_path]
+            } else {
+                return db_path
+            }
         }
     return dbpath
 }
-
 
 workflow PROFILING {
     take:
