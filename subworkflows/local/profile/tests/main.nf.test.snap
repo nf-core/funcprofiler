@@ -11,37 +11,7 @@
                             "single_end": true,
                             "type": "short"
                         },
-                        "2612_genefamilies.tsv.gz:md5,3549f8fca67f5a8c3d18ff6bce7a8de4"
-                    ],
-                    [
-                        {
-                            "id": "2612",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "2612_pathabundance.tsv.gz:md5,9233c5e17653cc8faf8a9fb2df0d1ac0"
-                    ],
-                    [
-                        {
-                            "id": "2612",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "2612_pathcoverage.tsv.gz:md5,e3deba7f0539455b127591716f437fd6"
-                    ],
-                    [
-                        {
-                            "id": "2612",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "2612_profile.txt:md5,149ad7d60f551845bbe57537896594c7"
+                        "2612_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ],
                     [
                         {
@@ -51,37 +21,7 @@
                             "single_end": true,
                             "type": "short"
                         },
-                        "minigut_genefamilies.tsv.gz:md5,e34ade7e0670911b94474e293a0d78bb"
-                    ],
-                    [
-                        {
-                            "id": "minigut",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "minigut_pathabundance.tsv.gz:md5,2853ccd4a7f42d1891bd23a9cbe1dddb"
-                    ],
-                    [
-                        {
-                            "id": "minigut",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "minigut_pathcoverage.tsv.gz:md5,360493a3e2f6cfc5f705c25baadc6327"
-                    ],
-                    [
-                        {
-                            "id": "minigut",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "minigut_profile.txt:md5,fee11b34f04b177f425f643601295968"
+                        "minigut_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ]
                 ],
                 "1": [
@@ -102,37 +42,7 @@
                             "single_end": true,
                             "type": "short"
                         },
-                        "2612_genefamilies.tsv.gz:md5,3549f8fca67f5a8c3d18ff6bce7a8de4"
-                    ],
-                    [
-                        {
-                            "id": "2612",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "2612_pathabundance.tsv.gz:md5,9233c5e17653cc8faf8a9fb2df0d1ac0"
-                    ],
-                    [
-                        {
-                            "id": "2612",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "2612_pathcoverage.tsv.gz:md5,e3deba7f0539455b127591716f437fd6"
-                    ],
-                    [
-                        {
-                            "id": "2612",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "2612_profile.txt:md5,149ad7d60f551845bbe57537896594c7"
+                        "2612_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ],
                     [
                         {
@@ -142,37 +52,7 @@
                             "single_end": true,
                             "type": "short"
                         },
-                        "minigut_genefamilies.tsv.gz:md5,e34ade7e0670911b94474e293a0d78bb"
-                    ],
-                    [
-                        {
-                            "id": "minigut",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "minigut_pathabundance.tsv.gz:md5,2853ccd4a7f42d1891bd23a9cbe1dddb"
-                    ],
-                    [
-                        {
-                            "id": "minigut",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "minigut_pathcoverage.tsv.gz:md5,360493a3e2f6cfc5f705c25baadc6327"
-                    ],
-                    [
-                        {
-                            "id": "minigut",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
-                            "single_end": true,
-                            "type": "short"
-                        },
-                        "minigut_profile.txt:md5,fee11b34f04b177f425f643601295968"
+                        "minigut_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ]
                 ],
                 "versions": [
@@ -180,7 +60,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T01:23:20.253543",
+        "timestamp": "2026-04-17T12:50:51.743063",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

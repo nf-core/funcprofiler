@@ -7,11 +7,11 @@
                         {
                             "tool": "fmhfunprofiler",
                             "db_name": "fmhfunprofiler1000",
-                            "params": "11 1000"
+                            "db_params": "11 1000"
                         },
                         [
                             {
-                                "db_entity": "",
+                                "db_entity": "main",
                                 "db_path": "/nf-core/test-datasets/modules/data/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
                             }
                         ]
@@ -22,11 +22,11 @@
                         {
                             "tool": "fmhfunprofiler",
                             "db_name": "fmhfunprofiler1000",
-                            "params": "11 1000"
+                            "db_params": "11 1000"
                         },
                         [
                             {
-                                "db_entity": "",
+                                "db_entity": "main",
                                 "db_path": "/nf-core/test-datasets/modules/data/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
                             }
                         ]
@@ -34,7 +34,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T02:43:26.504671",
+        "timestamp": "2026-04-17T12:48:16.126351",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -48,11 +48,11 @@
                         {
                             "tool": "test",
                             "db_name": "test_dontuntar",
-                            "params": "-"
+                            "db_params": "-"
                         },
                         [
                             {
-                                "db_entity": null,
+                                "db_entity": "main",
                                 "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
                             }
                         ]
@@ -63,11 +63,11 @@
                         {
                             "tool": "test",
                             "db_name": "test_dontuntar",
-                            "params": "-"
+                            "db_params": "-"
                         },
                         [
                             {
-                                "db_entity": null,
+                                "db_entity": "main",
                                 "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
                             }
                         ]
@@ -75,7 +75,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T02:06:41.470267",
+        "timestamp": "2026-04-17T12:48:11.701929",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

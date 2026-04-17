@@ -31,11 +31,24 @@ nextflow_workflow {
                     """
 		}
             }
+
+
+
             run("DBPREP") {
 		script "subworkflows/local/dbprep/main.nf"
 		process {
                     """
 		    input[0] = Channel.of(
+                [
+                [
+                id: 'fmh',
+                    tool: 'fmhfunprofiler',
+                    db_name: 'demo_1000',
+                    db_entity: '',
+                    db_params: '11 1000'
+		],
+			file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip')
+            ],
                 [
                 [
                 id: 'humann_v3_demo_v3_humann_nucleotide',
@@ -84,7 +97,9 @@ nextflow_workflow {
 	}
         when {
 	    params {
-		run_humann_v3 = true
+		run_humann_v3 = false
+		run_humann_v4 = false
+		run_fmhfunprofiler = true
 	    }
             workflow {
                 """

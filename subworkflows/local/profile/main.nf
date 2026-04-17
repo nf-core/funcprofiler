@@ -111,7 +111,7 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
 
 }
 
-def getDbPath(groupeddb, entity='main'){
+def getDbPath(groupeddb, entity='main', asTuple=false){
     // this extracts the relevant
     def dbpath  =groupeddb
         .map { meta_db, file_list ->
@@ -126,11 +126,14 @@ def getDbPath(groupeddb, entity='main'){
                 error("More than one entity '${entity}' file found in database ${meta_db.id}")
             }
 
-            matching_files[0]
+            if (asTuple){
+		return [meta_db, matching_files[0]]
+	    } else {
+		return matching_files[0]
+	    }
         }
     return dbpath
 }
-
 
 
 workflow PROFILING {
@@ -153,7 +156,7 @@ workflow PROFILING {
     // channel element order in sync with each other
 
     // PAIRED-END READ TOOLS
-   rgi_inputs = prepareInputs(reads, databases, 'rgi', false)
+    rgi_inputs = prepareInputs(reads, databases, 'rgi', false)
 
     // CONCAT READ TOOLS
     ch_input_for_fmhfunprofiler = prepareInputs(reads_concat, databases, 'fmhfunprofiler', true)
@@ -161,17 +164,13 @@ workflow PROFILING {
     ch_input_for_humann_v3 = prepareInputs(reads_concat, databases, 'humann_v3', true)
     ch_input_for_humann_v4 = prepareInputs(reads_concat, databases, 'humann_v4', true)
     ch_input_for_mifaser = prepareInputs(reads_concat, databases, 'mifaser', true)
-
-
-
     if ( params.run_fmhfunprofiler ) {
+	 // this tool needs the db_params at runtime, so it takes a [[meta], path] tuple instead of just a path
         FMHFUNPROFILER (
 	    ch_input_for_fmhfunprofiler.reads,
-	    ch_input_for_fmhfunprofiler.db
-		.map { meta_db, file_list ->
-		    def matching_files = file_list
-			.findAll { f -> f.db_entity == entity })
-         ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
+	    getDbPath(ch_input_for_fmhfunprofiler.db, "main", true)
+	)
+        ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
     }
     if ( params.run_mifaser ) {
         ch_input_for_mifaser =  prepareInputs(reads_concat, databases, 'mifaser', true)
