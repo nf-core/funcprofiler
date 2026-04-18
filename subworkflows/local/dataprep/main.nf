@@ -90,22 +90,24 @@ workflow DATAPREP {
     ch_input_pre_concat = ch_reads_runmerged
 	.map {
             meta, reads ->
+            // Preserve a unique identifier even after removing run_accession
+            def unique_id = meta.id  // This should already be unique from earlier processing
             def meta_new = meta - meta.subMap('run_accession')
-	    meta_new["single_end"] = true // call them "single end" so CAT_FASTQ actually flattens R1 and R2 into single file
-            [ meta_new, reads ]
-        }
-        .groupTuple()
-        .map {
-            meta, reads  ->
-            [ meta, reads.flatten() ]
-        }
-        .branch {
-            _meta, reads  ->
+            meta_new["single_end"] = true  // call them "single end" so CAT_FASTQ actually flattens R1 and R2 into single file
+            [ unique_id, meta_new, reads ]  // Add explicit grouping key
+	}
+	.groupTuple(by: 0)  // Group by the unique_id (first element)
+	.map {
+            unique_id, meta_list, reads_list ->
+            [ meta_list[0], reads_list.flatten() ]  // Take first meta, flatten all reads
+	}
+	.branch {
                 // we can't concatenate files if there is not a second run, we branch
                 // here to separate them out, and mix back in after for efficiency
-                cat: reads.size() > 1
-                skip: true
-            }
+            _meta, reads  ->
+            cat: reads.size() > 1
+            skip: true
+	}
 
     ch_input_concat = CAT_FASTQ ( ch_input_pre_concat.cat ).reads
 	.map { meta, reads -> [ meta, [reads].flatten() ] }
