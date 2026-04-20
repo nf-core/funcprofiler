@@ -158,7 +158,7 @@ nextflow_workflow {
         when {
 	    params {
 		run_humann_v3 = true
-		run_fmhfunprofiler = falseddddddddddddddd
+		run_fmhfunprofiler = false
 	    }
             workflow {
                 """

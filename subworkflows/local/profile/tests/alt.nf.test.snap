@@ -17,14 +17,6 @@
                             "single_end": true,
                             "instrument_platform": "ILLUMINA"
                         },
-                        "sample_A_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
-                    ],
-                    [
-                        {
-                            "id": "sample_A",
-                            "single_end": true,
-                            "instrument_platform": "ILLUMINA"
-                        },
                         "sample_A_pathabundance.tsv.gz:md5,9c2e51c1fd7e15a61b6944bc7edaf193"
                     ],
                     [
@@ -50,14 +42,6 @@
                             "instrument_platform": "ILLUMINA"
                         },
                         "sample_C_genefamilies.tsv.gz:md5,5dffa1bf7720d99e59586472e15c5aa0"
-                    ],
-                    [
-                        {
-                            "id": "sample_C",
-                            "single_end": true,
-                            "instrument_platform": "ILLUMINA"
-                        },
-                        "sample_C_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ],
                     [
                         {
@@ -97,14 +81,6 @@
                             "single_end": true,
                             "instrument_platform": "ILLUMINA"
                         },
-                        "sample_G_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
-                    ],
-                    [
-                        {
-                            "id": "sample_G",
-                            "single_end": true,
-                            "instrument_platform": "ILLUMINA"
-                        },
                         "sample_G_pathabundance.tsv.gz:md5,2fdd7a523bc28237c06a4228dfbd9c05"
                     ],
                     [
@@ -130,14 +106,6 @@
                             "instrument_platform": "ILLUMINA"
                         },
                         "sample_T_genefamilies.tsv.gz:md5,ba6692c228b9eb985d9f3ab53bee64a7"
-                    ],
-                    [
-                        {
-                            "id": "sample_T",
-                            "single_end": true,
-                            "instrument_platform": "ILLUMINA"
-                        },
-                        "sample_T_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ],
                     [
                         {
@@ -188,14 +156,6 @@
                             "single_end": true,
                             "instrument_platform": "ILLUMINA"
                         },
-                        "sample_A_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
-                    ],
-                    [
-                        {
-                            "id": "sample_A",
-                            "single_end": true,
-                            "instrument_platform": "ILLUMINA"
-                        },
                         "sample_A_pathabundance.tsv.gz:md5,9c2e51c1fd7e15a61b6944bc7edaf193"
                     ],
                     [
@@ -221,14 +181,6 @@
                             "instrument_platform": "ILLUMINA"
                         },
                         "sample_C_genefamilies.tsv.gz:md5,5dffa1bf7720d99e59586472e15c5aa0"
-                    ],
-                    [
-                        {
-                            "id": "sample_C",
-                            "single_end": true,
-                            "instrument_platform": "ILLUMINA"
-                        },
-                        "sample_C_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ],
                     [
                         {
@@ -268,14 +220,6 @@
                             "single_end": true,
                             "instrument_platform": "ILLUMINA"
                         },
-                        "sample_G_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
-                    ],
-                    [
-                        {
-                            "id": "sample_G",
-                            "single_end": true,
-                            "instrument_platform": "ILLUMINA"
-                        },
                         "sample_G_pathabundance.tsv.gz:md5,2fdd7a523bc28237c06a4228dfbd9c05"
                     ],
                     [
@@ -308,14 +252,6 @@
                             "single_end": true,
                             "instrument_platform": "ILLUMINA"
                         },
-                        "sample_T_null.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
-                    ],
-                    [
-                        {
-                            "id": "sample_T",
-                            "single_end": true,
-                            "instrument_platform": "ILLUMINA"
-                        },
                         "sample_T_pathabundance.tsv.gz:md5,ff302966966fb597033100b302673929"
                     ],
                     [
@@ -340,7 +276,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-19T23:56:37.816292",
+        "timestamp": "2026-04-20T00:07:12.29718",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
