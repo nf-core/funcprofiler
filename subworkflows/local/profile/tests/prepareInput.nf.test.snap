@@ -368,10 +368,8 @@
                     [
                         {
                             "id": "2612",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
                             "single_end": true,
-                            "type": "short"
+                            "instrument_platform": "ILLUMINA"
                         },
                         [
                             "2612.merged.fastq.gz:md5,270bf4c4d9707c6afc970fe5622cc673"
@@ -380,10 +378,8 @@
                     [
                         {
                             "id": "minigut",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
                             "single_end": true,
-                            "type": "short"
+                            "instrument_platform": "ILLUMINA"
                         },
                         [
                             "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129"
@@ -622,10 +618,8 @@
                     [
                         {
                             "id": "2612",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
                             "single_end": true,
-                            "type": "short"
+                            "instrument_platform": "ILLUMINA"
                         },
                         [
                             "2612.merged.fastq.gz:md5,270bf4c4d9707c6afc970fe5622cc673"
@@ -634,10 +628,8 @@
                     [
                         {
                             "id": "minigut",
-                            "instrument_platform": "ILLUMINA",
-                            "is_fasta": false,
                             "single_end": true,
-                            "type": "short"
+                            "instrument_platform": "ILLUMINA"
                         },
                         [
                             "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129"
@@ -646,7 +638,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-17T22:36:09.911955",
+        "timestamp": "2026-04-20T00:36:17.231196",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
