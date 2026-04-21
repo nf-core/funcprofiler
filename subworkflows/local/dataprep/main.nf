@@ -71,13 +71,12 @@ workflow DATAPREP {
     // Step 3: Create concatenated single-file version for tools that need it
     ch_for_concat = ch_reads
         .map { meta, reads ->
-            // Mark as single_end for CAT_FASTQ to concatenate R1 and R2 into one file
             def meta_concat = meta.clone()
             meta_concat.single_end = true
-            [meta_concat, reads]
+            def sorted_reads = reads.sort { it.name }
+            [meta_concat, sorted_reads]
         }
         .branch { meta, reads ->
-            // Only need to concatenate if we have multiple files
             concat: reads.size() > 1
                 return [meta, reads]
             skip: true
