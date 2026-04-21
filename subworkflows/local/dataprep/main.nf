@@ -40,26 +40,22 @@ workflow DATAPREP {
     // Step 2: Group by meta.id and merge runs if needed
     ch_grouped = ch_validated
         .map { meta, reads ->
-            // Create grouping key and new meta without run_accession for grouping
             def group_key = meta.id
             [group_key, meta, reads]
         }
-        .groupTuple(by: 0)  // Group by meta.id
+        .groupTuple(by: 0)
         .map { group_key, meta_list, reads_list ->
-            // Take the first meta as template (they should all have same id)
-            def meta = meta_list[0]
-            // Remove run_accession since we're merging runs
-            meta = meta - meta.subMap('run_accession')
+            def sorted_pairs = [meta_list, reads_list]
+                .transpose()
+                .sort { it[0].run_accession }
 
-            // Flatten all reads into a single list
-            def all_reads = reads_list.flatten()
+            def meta = sorted_pairs[0][0]
+            meta = meta - meta.subMap('run_accession')
+            def all_reads = sorted_pairs.collect { it[1] }.flatten()
 
             [meta, all_reads]
         }
         .branch { meta, reads ->
-            // Branch based on whether merging is needed
-            // For paired-end: need merging if more than 2 files (more than 1 pair)
-            // For single-end: need merging if more than 1 file
             merge: (meta.single_end && reads.size() > 1) || (!meta.single_end && reads.size() > 2)
                 return [meta, reads]
             skip: true

@@ -282,21 +282,7 @@ nextflow_workflow {
 		}
 		then {
 				assert workflow.success
-				assert snapshot(
-					workflow.out.prepared_inputs
-						.collect { elements ->
-							elements.collect { el ->
-								if (el instanceof Map) {
-									return el
-								} else if (el instanceof List) {
-									return el.collect { file(it).name }.sort()
-								} else {
-									return file(el).name
-								}
-							}
-						}
-						.sort { it[0].id }
-				).match()
+				assert snapshot(workflow.out).match()
 			}
 	}
 }
