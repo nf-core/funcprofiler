@@ -70,14 +70,14 @@
                 "minigut_pathabundance.tsv.gz:md5,2853ccd4a7f42d1891bd23a9cbe1dddb",
                 "minigut_pathcoverage.tsv.gz:md5,360493a3e2f6cfc5f705c25baadc6327",
                 "minigut_regroup.tsv.gz:md5,473030fe0d893e77f7f4785384788025",
-                "ERR5766181_2_genefamilies.tsv.gz:md5,47b792307ff85327c142bf41a4d36163",
-                "ERR5766181_3_reactions.tsv.gz:md5,77c271bd3d74085c0104366e1da5ed6a",
+                "ERR5766181_2_genefamilies.tsv.gz:md5,e06cdce3482a861aed9dd635e112f6d0",
+                "ERR5766181_3_reactions.tsv.gz:md5,f914f7d77800fc2f304abefd0ca20c70",
                 "ERR5766181_4_pathabundance.tsv.gz:md5,21cf9eaa5ce45d47b8bc12b962a31b32",
-                "ERR5766181_regroup.tsv.gz:md5,f9d74c2356ef992b95583a5ccebdf931",
-                "minigut_2_genefamilies.tsv.gz:md5,9e23517f6ed27b4691ef3473ff5c79d8",
-                "minigut_3_reactions.tsv.gz:md5,afb074dd52b11b8e15bcfbd6face3929",
+                "ERR5766181_regroup.tsv.gz:md5,c6ee91e78d0a95dd8e114438b444dd1e",
+                "minigut_2_genefamilies.tsv.gz:md5,99d2fb4e7c736685b930ecd24ae87c58",
+                "minigut_3_reactions.tsv.gz:md5,6db332936557fb68af7734726d66398d",
                 "minigut_4_pathabundance.tsv.gz:md5,7ec488ad9fbce62b012a268818b47cbb",
-                "minigut_regroup.tsv.gz:md5,148c4b14ccf2b93ccbf015c1774a06cc",
+                "minigut_regroup.tsv.gz:md5,88069b74c090b20988b34c3e5079e9fe",
                 "ERR5766181_analysis.tsv:md5,877d5f56e8bea0f2990a0455c9ff3d48",
                 "ERR5766181_ec_count.tsv:md5,a5e0bb4958b6c6bb9180f8ab3fe110b8",
                 "ERR5766181_multi_ec.tsv:md5,6e1e2d9dd8f8e56aaee7acd29694180b",
@@ -91,7 +91,7 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-04-17T15:02:42.004457",
+        "timestamp": "2026-04-20T22:53:32.271045",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
