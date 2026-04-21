@@ -96,7 +96,7 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
         ]
 
         // Return files as map
-        [meta_db_grouped, files_map]
+            [meta_db_grouped, files_map.toSorted()]
 	}
     // Step 2: Combine reads with ALL grouped databases (cartesian product)
     // Each sample will get one entry per unique db_name+db_params combination for this tool

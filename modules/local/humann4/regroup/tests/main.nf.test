@@ -1,8 +1,8 @@
 nextflow_process {
 
-    name "Test Process HUMANN3_REGROUP"
+    name "Test Process HUMANN4_REGROUP"
     script "../main.nf"
-    process "HUMANN3_REGROUP"
+    process "HUMANN4_REGROUP"
     tag "modules"
     tag "modules_"
     tag "humann"

@@ -395,13 +395,27 @@
                             "db_params": "-",
                             "db_entities": [
                                 "humann_protein",
+                                "humann_metaphlan",
                                 "humann_utility",
-                                "humann_nucleotide",
-                                "humann_metaphlan"
+                                "humann_nucleotide"
                             ],
                             "num_files": 4
                         },
                         {
+                            "humann_metaphlan": [
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.pkl:md5,005453b7c66c85f3e01218653d09e266",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87"
+                            ],
+                            "humann_nucleotide": [
+                                "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
+                                "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
+                            ],
                             "humann_protein": [
                                 "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
                                 "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
@@ -426,20 +440,6 @@
                                 "map_pfam_uniref90.txt.gz:md5,5d03d39e5305a541b6017fd308e2154b",
                                 "map_uniref50_name.txt.bz2:md5,62ea0afa60ad7ad1ba7aa2af43ed7d23",
                                 "map_uniref90_name.txt.bz2:md5,988f3ce65a432bbe2c8fd3354cad99fa"
-                            ],
-                            "humann_nucleotide": [
-                                "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
-                                "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
-                            ],
-                            "humann_metaphlan": [
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.pkl:md5,005453b7c66c85f3e01218653d09e266",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87"
                             ]
                         }
                     ],
@@ -451,13 +451,27 @@
                             "db_params": "-",
                             "db_entities": [
                                 "humann_protein",
+                                "humann_metaphlan",
                                 "humann_utility",
-                                "humann_nucleotide",
-                                "humann_metaphlan"
+                                "humann_nucleotide"
                             ],
                             "num_files": 4
                         },
                         {
+                            "humann_metaphlan": [
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.pkl:md5,005453b7c66c85f3e01218653d09e266",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87"
+                            ],
+                            "humann_nucleotide": [
+                                "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
+                                "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
+                            ],
                             "humann_protein": [
                                 "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
                                 "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
@@ -482,20 +496,6 @@
                                 "map_pfam_uniref90.txt.gz:md5,5d03d39e5305a541b6017fd308e2154b",
                                 "map_uniref50_name.txt.bz2:md5,62ea0afa60ad7ad1ba7aa2af43ed7d23",
                                 "map_uniref90_name.txt.bz2:md5,988f3ce65a432bbe2c8fd3354cad99fa"
-                            ],
-                            "humann_nucleotide": [
-                                "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
-                                "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
-                            ],
-                            "humann_metaphlan": [
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.pkl:md5,005453b7c66c85f3e01218653d09e266",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87"
                             ]
                         }
                     ]
@@ -509,13 +509,27 @@
                             "db_params": "-",
                             "db_entities": [
                                 "humann_protein",
+                                "humann_metaphlan",
                                 "humann_utility",
-                                "humann_nucleotide",
-                                "humann_metaphlan"
+                                "humann_nucleotide"
                             ],
                             "num_files": 4
                         },
                         {
+                            "humann_metaphlan": [
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.pkl:md5,005453b7c66c85f3e01218653d09e266",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87"
+                            ],
+                            "humann_nucleotide": [
+                                "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
+                                "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
+                            ],
                             "humann_protein": [
                                 "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
                                 "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
@@ -540,20 +554,6 @@
                                 "map_pfam_uniref90.txt.gz:md5,5d03d39e5305a541b6017fd308e2154b",
                                 "map_uniref50_name.txt.bz2:md5,62ea0afa60ad7ad1ba7aa2af43ed7d23",
                                 "map_uniref90_name.txt.bz2:md5,988f3ce65a432bbe2c8fd3354cad99fa"
-                            ],
-                            "humann_nucleotide": [
-                                "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
-                                "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
-                            ],
-                            "humann_metaphlan": [
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.pkl:md5,005453b7c66c85f3e01218653d09e266",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87"
                             ]
                         }
                     ],
@@ -565,13 +565,27 @@
                             "db_params": "-",
                             "db_entities": [
                                 "humann_protein",
+                                "humann_metaphlan",
                                 "humann_utility",
-                                "humann_nucleotide",
-                                "humann_metaphlan"
+                                "humann_nucleotide"
                             ],
                             "num_files": 4
                         },
                         {
+                            "humann_metaphlan": [
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.pkl:md5,005453b7c66c85f3e01218653d09e266",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
+                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87"
+                            ],
+                            "humann_nucleotide": [
+                                "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
+                                "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
+                            ],
                             "humann_protein": [
                                 "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
                                 "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
@@ -596,20 +610,6 @@
                                 "map_pfam_uniref90.txt.gz:md5,5d03d39e5305a541b6017fd308e2154b",
                                 "map_uniref50_name.txt.bz2:md5,62ea0afa60ad7ad1ba7aa2af43ed7d23",
                                 "map_uniref90_name.txt.bz2:md5,988f3ce65a432bbe2c8fd3354cad99fa"
-                            ],
-                            "humann_nucleotide": [
-                                "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
-                                "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
-                            ],
-                            "humann_metaphlan": [
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.1.bt2l:md5,f560f1878d407cad746b40e19c137b2f",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.2.bt2l:md5,ada1fa4dbfa0bbd00fd9541458d0caab",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.3.bt2l:md5,1b5ec794c2f0c456ea60deb5898f4840",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.4.bt2l:md5,fe7bbac658aece93db332255910e3f4f",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.fna.bz2:md5,43dd63a3263c01105af26b701a9b5562",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.pkl:md5,005453b7c66c85f3e01218653d09e266",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.1.bt2l:md5,7b23ad55748937a1b21f8ed735fe0d73",
-                                "mpa_vJan21_TOY_CHOCOPhlAnSGB_202103.rev.2.bt2l:md5,acc38a28f2e590d5ce12a9defe4c8c87"
                             ]
                         }
                     ]
@@ -638,7 +638,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-04-20T00:36:17.231196",
+        "timestamp": "2026-04-20T22:24:52.0546",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
