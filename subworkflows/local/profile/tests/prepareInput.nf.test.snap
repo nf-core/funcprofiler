@@ -363,22 +363,14 @@
     },
     "prep multisampleinputs - grouped databases (humann_v3)": {
         "content": [
-            {
-                "0": [
-                    
-                ],
-                "1": [
-                    
-                ],
-                "db": [
-                    
-                ],
-                "reads": [
-                    
-                ]
-            }
+            [
+                
+            ],
+            [
+                
+            ]
         ],
-        "timestamp": "2026-04-21T11:12:59.097798286",
+        "timestamp": "2026-04-21T11:28:39.856463349",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
