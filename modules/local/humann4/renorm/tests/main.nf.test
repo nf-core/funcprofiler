@@ -2,12 +2,12 @@ nextflow_process {
 
     name "Test Process HUMANN_RENORM"
     script "../main.nf"
-    process "HUMANN_RENORM"
+    process "HUMANN4_RENORM"
     tag "modules"
     tag "modules_"
     tag "humann"
 
-    test("humann_renorm sarscov2 - tsv - stub") {
+    test("humann4_renorm sarscov2 - tsv - stub") {
 
         options "-stub"
 

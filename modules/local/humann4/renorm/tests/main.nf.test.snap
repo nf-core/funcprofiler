@@ -1,5 +1,5 @@
 {
-    "humann_renorm sarscov2 - tsv - stub": {
+    "humann4_renorm sarscov2 - tsv - stub": {
         "content": [
             {
                 "0": [
@@ -13,7 +13,7 @@
                 ],
                 "1": [
                     [
-                        "HUMANN_RENORM",
+                        "HUMANN4_RENORM",
                         "HUMAnN",
                         "4.0.0.alpha.1"
                     ]
@@ -29,14 +29,14 @@
                 ],
                 "versions_humann": [
                     [
-                        "HUMANN_RENORM",
+                        "HUMANN4_RENORM",
                         "HUMAnN",
                         "4.0.0.alpha.1"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-04-14T18:21:58.94801",
+        "timestamp": "2026-04-21T11:51:26.626171",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

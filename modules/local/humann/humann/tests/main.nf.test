@@ -6,7 +6,6 @@ nextflow_process {
     tag "modules"
     tag "modules_"
     tag "humann"
-//    config "./nextflow.config"
     setup{
         run("UNTAR") {
             script "modules/nf-core/untar/main.nf"
