@@ -389,10 +389,10 @@
                 [
                     {
                         "db_entities": [
-                            "humann_protein",
+                            "humann_metaphlan",
                             "humann_nucleotide",
-                            "humann_utility",
-                            "humann_metaphlan"
+                            "humann_protein",
+                            "humann_utility"
                         ],
                         "db_name": "demo_v3",
                         "db_params": "-",
@@ -445,10 +445,10 @@
                 [
                     {
                         "db_entities": [
-                            "humann_protein",
+                            "humann_metaphlan",
                             "humann_nucleotide",
-                            "humann_utility",
-                            "humann_metaphlan"
+                            "humann_protein",
+                            "humann_utility"
                         ],
                         "db_name": "demo_v3",
                         "db_params": "-",
@@ -500,7 +500,7 @@
                 ]
             ]
         ],
-        "timestamp": "2026-04-21T15:14:42.473059761",
+        "timestamp": "2026-04-21T15:40:17.124986782",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
