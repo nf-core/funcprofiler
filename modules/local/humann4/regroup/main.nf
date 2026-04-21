@@ -1,2 +1,2 @@
 // this is to make testing possible, as we chose the container based on what the process is aliased to
-include { HUMANN_HUMANN as HUMANN3 } from  './base'
+include { HUMANNREGROUP as HUMANN4_REGROUP } from './base'
