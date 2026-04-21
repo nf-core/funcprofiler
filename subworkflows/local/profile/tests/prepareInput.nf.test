@@ -283,8 +283,10 @@ nextflow_workflow {
 		then {
 				assert workflow.success
 				assert snapshot(
-					workflow.out.reads.collect().sort { it.toString() },
-					workflow.out.db.collect().sort { it.toString() }
+					workflow.out.reads
+						.sort { it[0].toString() },
+					workflow.out.db
+						.sort { it[0].toString() }
 				).match()
 			}
 	}
