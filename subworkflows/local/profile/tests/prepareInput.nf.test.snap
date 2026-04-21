@@ -388,17 +388,17 @@
             [
                 [
                     {
-                        "id": "humann-v3-demo-v3-",
-                        "tool": "humann_v3",
-                        "db_name": "demo_v3",
-                        "db_params": "-",
                         "db_entities": [
                             "humann_metaphlan",
                             "humann_nucleotide",
                             "humann_protein",
                             "humann_utility"
                         ],
-                        "num_files": 4
+                        "db_name": "demo_v3",
+                        "db_params": "-",
+                        "id": "humann-v3-demo-v3-",
+                        "num_files": 4,
+                        "tool": "humann_v3"
                     },
                     {
                         "humann_metaphlan": [
@@ -414,6 +414,10 @@
                         "humann_nucleotide": [
                             "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
                             "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
+                        ],
+                        "humann_protein": [
+                            "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
+                            "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
                         ],
                         "humann_utility": [
                             "README.txt:md5,9d3db20d44df2404c41064a815d14e35",
@@ -435,26 +439,22 @@
                             "map_pfam_uniref90.txt.gz:md5,5d03d39e5305a541b6017fd308e2154b",
                             "map_uniref50_name.txt.bz2:md5,62ea0afa60ad7ad1ba7aa2af43ed7d23",
                             "map_uniref90_name.txt.bz2:md5,988f3ce65a432bbe2c8fd3354cad99fa"
-                        ],
-                        "humann_protein": [
-                            "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
-                            "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
                         ]
                     }
                 ],
                 [
                     {
-                        "id": "humann-v3-demo-v3-",
-                        "tool": "humann_v3",
-                        "db_name": "demo_v3",
-                        "db_params": "-",
                         "db_entities": [
                             "humann_metaphlan",
                             "humann_nucleotide",
                             "humann_protein",
                             "humann_utility"
                         ],
-                        "num_files": 4
+                        "db_name": "demo_v3",
+                        "db_params": "-",
+                        "id": "humann-v3-demo-v3-",
+                        "num_files": 4,
+                        "tool": "humann_v3"
                     },
                     {
                         "humann_metaphlan": [
@@ -470,6 +470,10 @@
                         "humann_nucleotide": [
                             "g__Bacteroides.s__Bacteroides_dorei.centroids.v201901_v31.ffn.gz:md5,c23ab47a3f0a34abd20f0b1826482c6d",
                             "g__Bacteroides.s__Bacteroides_vulgatus.centroids.v201901_v31.ffn.gz:md5,61a2c5aa5ff04e400147974852e5bcc2"
+                        ],
+                        "humann_protein": [
+                            "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
+                            "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
                         ],
                         "humann_utility": [
                             "README.txt:md5,9d3db20d44df2404c41064a815d14e35",
@@ -491,16 +495,12 @@
                             "map_pfam_uniref90.txt.gz:md5,5d03d39e5305a541b6017fd308e2154b",
                             "map_uniref50_name.txt.bz2:md5,62ea0afa60ad7ad1ba7aa2af43ed7d23",
                             "map_uniref90_name.txt.bz2:md5,988f3ce65a432bbe2c8fd3354cad99fa"
-                        ],
-                        "humann_protein": [
-                            "uniref90_demo_prots_v201901b.dmnd:md5,1d2f8df48a349d72436425aafa29a6b1",
-                            "uniref90_demo_prots_v201901b.fna:md5,10699776b9428fdf673030dba1f818a7"
                         ]
                     }
                 ]
             ]
         ],
-        "timestamp": "2026-04-21T12:21:34.570335121",
+        "timestamp": "2026-04-21T12:35:23.730052928",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

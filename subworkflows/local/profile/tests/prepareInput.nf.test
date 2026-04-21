@@ -287,6 +287,15 @@ nextflow_workflow {
 						.sort { it[0].toString() },
 					workflow.out.db
 						.sort { it[0].toString() }
+						.collect { item ->
+							item.collect { element ->
+								if (element instanceof Map) {
+									// Sort map by keys to ensure deterministic order
+									return element.sort()
+								}
+								return element
+							}
+			}
 				).match()
 			}
 	}
