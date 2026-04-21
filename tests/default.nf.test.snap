@@ -1,7 +1,7 @@
 {
     "-profile test": {
         "content": [
-            28,
+            18,
             [
                 "cat",
                 "cat/ERR5766181.merged.fastq.gz",
@@ -19,15 +19,6 @@
                 "humann3/minigut_pathabundance.tsv.gz",
                 "humann3/minigut_pathcoverage.tsv.gz",
                 "humann3/minigut_regroup.tsv.gz",
-                "humann4",
-                "humann4/ERR5766181_2_genefamilies.tsv.gz",
-                "humann4/ERR5766181_3_reactions.tsv.gz",
-                "humann4/ERR5766181_4_pathabundance.tsv.gz",
-                "humann4/ERR5766181_regroup.tsv.gz",
-                "humann4/minigut_2_genefamilies.tsv.gz",
-                "humann4/minigut_3_reactions.tsv.gz",
-                "humann4/minigut_4_pathabundance.tsv.gz",
-                "humann4/minigut_regroup.tsv.gz",
                 "mifaser",
                 "mifaser/ERR5766181_analysis.tsv",
                 "mifaser/ERR5766181_ec_count.tsv",
@@ -40,11 +31,6 @@
                 "mpahumann3/ERR5766181_profile.txt",
                 "mpahumann3/minigut.bowtie2out.txt",
                 "mpahumann3/minigut_profile.txt",
-                "mpahumann4",
-                "mpahumann4/ERR5766181.bowtie2out.txt",
-                "mpahumann4/ERR5766181_profile.txt",
-                "mpahumann4/minigut.bowtie2out.txt",
-                "mpahumann4/minigut_profile.txt",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
@@ -70,14 +56,6 @@
                 "minigut_pathabundance.tsv.gz:md5,2853ccd4a7f42d1891bd23a9cbe1dddb",
                 "minigut_pathcoverage.tsv.gz:md5,360493a3e2f6cfc5f705c25baadc6327",
                 "minigut_regroup.tsv.gz:md5,473030fe0d893e77f7f4785384788025",
-                "ERR5766181_2_genefamilies.tsv.gz:md5,e06cdce3482a861aed9dd635e112f6d0",
-                "ERR5766181_3_reactions.tsv.gz:md5,f914f7d77800fc2f304abefd0ca20c70",
-                "ERR5766181_4_pathabundance.tsv.gz:md5,21cf9eaa5ce45d47b8bc12b962a31b32",
-                "ERR5766181_regroup.tsv.gz:md5,c6ee91e78d0a95dd8e114438b444dd1e",
-                "minigut_2_genefamilies.tsv.gz:md5,99d2fb4e7c736685b930ecd24ae87c58",
-                "minigut_3_reactions.tsv.gz:md5,6db332936557fb68af7734726d66398d",
-                "minigut_4_pathabundance.tsv.gz:md5,7ec488ad9fbce62b012a268818b47cbb",
-                "minigut_regroup.tsv.gz:md5,88069b74c090b20988b34c3e5079e9fe",
                 "ERR5766181_analysis.tsv:md5,877d5f56e8bea0f2990a0455c9ff3d48",
                 "ERR5766181_ec_count.tsv:md5,a5e0bb4958b6c6bb9180f8ab3fe110b8",
                 "ERR5766181_multi_ec.tsv:md5,6e1e2d9dd8f8e56aaee7acd29694180b",
@@ -86,12 +64,10 @@
                 "minigut_multi_ec.tsv:md5,915713718d7b6fabc3fbc3a1286999e0",
                 "ERR5766181_profile.txt:md5,fba1d7b083ccc627be64cf067a457598",
                 "minigut_profile.txt:md5,fee11b34f04b177f425f643601295968",
-                "ERR5766181_profile.txt:md5,ba0a9014d2c2ddb4169ee4952bbc9d83",
-                "minigut_profile.txt:md5,1525c5faa1a9e2614a8245f3412e16e4",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-04-20T22:53:32.271045",
+        "timestamp": "2026-04-21T11:33:31.164737",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
