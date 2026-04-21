@@ -282,7 +282,22 @@ nextflow_workflow {
         }
         then {
             assert workflow.success
-            assert snapshot(workflow.out.reads).match()
+            assert snapshot(
+                                        workflow.out.reads
+                                                .sort { it[0].toString() },
+                                        workflow.out.db
+                                                .sort { it[0].toString() }
+                                                .collect { item ->
+                                                        item.collect { element ->
+                                                                if (element instanceof Map) {
+                                                                        // Sort map by keys to ensure deterministic order
+                                                                        return element.sort()
+                                                                }
+                                                                return element
+                                                        }
+                        }
+                                ).match()
+                        
         }
     }
 }
