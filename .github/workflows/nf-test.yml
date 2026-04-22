@@ -90,6 +90,8 @@ jobs:
       - runner=4cpu-linux-x64
     env:
       CONTAINER_CACHE_KEY: ${{ needs.nf-test-changes.outputs.container_cache_key }}
+      # ── Bump this to invalidate a bad cache ──
+      CACHE_VERSION: "v2"
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
@@ -98,7 +100,6 @@ jobs:
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
-      # ── Determine which Nextflow version to use ──
       - name: Set Nextflow version
         id: nf-version
         shell: bash
@@ -146,20 +147,39 @@ jobs:
           fi
 
       # ══════════════════════════════════════════════
-      # DOCKER: Use nextflow config to discover, then pull & save
+      # DOCKER
       # ══════════════════════════════════════════════
+
+      # Step 1: Try to restore existing cache
       - name: Restore Docker image cache
         if: matrix.profile == 'docker'
         id: docker-cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: /tmp/docker-image-cache
-          key: docker-containers-v1-${{ env.CONTAINER_CACHE_KEY }}
+          key: docker-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
           restore-keys: |
-            docker-containers-v1-
+            docker-containers-${{ env.CACHE_VERSION }}-
+
+      # Step 2: Validate the restored cache isn't empty
+      - name: Validate Docker cache
+        if: matrix.profile == 'docker'
+        id: docker-cache-valid
+        run: |
+          if [ -d /tmp/docker-image-cache ] && ls /tmp/docker-image-cache/*.tar 1>/dev/null 2>&1; then
+            FILE_COUNT=$(ls -1 /tmp/docker-image-cache/*.tar | wc -l)
+            TOTAL_SIZE=$(du -sh /tmp/docker-image-cache/ | cut -f1)
+            echo "✅ Cache has $FILE_COUNT images ($TOTAL_SIZE)"
+            echo "valid=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "⚠️ Cache is empty or missing — will re-download"
+            echo "valid=false" >> "$GITHUB_OUTPUT"
+            # Clean up empty directory so actions/cache can save fresh
+            rm -rf /tmp/docker-image-cache
+          fi
 
       - name: Discover Docker containers via Nextflow config
-        if: matrix.profile == 'docker' && steps.docker-cache.outputs.cache-hit != 'true'
+        if: matrix.profile == 'docker' && steps.docker-cache-valid.outputs.valid != 'true'
         run: |
           echo "🔍 Resolving containers from Nextflow config (docker profile)..."
 
@@ -187,7 +207,7 @@ jobs:
           cat /tmp/docker_images.txt
 
       - name: Pull and save Docker images
-        if: matrix.profile == 'docker' && steps.docker-cache.outputs.cache-hit != 'true'
+        if: matrix.profile == 'docker' && steps.docker-cache-valid.outputs.valid != 'true'
         run: |
           mkdir -p /tmp/docker-image-cache
 
@@ -235,15 +255,24 @@ jobs:
           echo "═══════════════════════════════════════"
           ls -lh /tmp/docker-image-cache/
 
-      - name: Debug Docker cache
+      # Step 3: Only save cache if we actually have images
+      - name: Save Docker image cache
+        if: matrix.profile == 'docker' && steps.docker-cache-valid.outputs.valid != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: /tmp/docker-image-cache
+          key: docker-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
+
+      - name: Debug Docker cache final state
         if: matrix.profile == 'docker'
         run: |
-          echo "Docker cache key: docker-containers-v1-${{ env.CONTAINER_CACHE_KEY }}"
-          echo "Cache hit: ${{ steps.docker-cache.outputs.cache-hit }}"
+          echo "Cache key: docker-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Cache was valid: ${{ steps.docker-cache-valid.outputs.valid }}"
+          echo "Final cache contents:"
           ls -lh /tmp/docker-image-cache/ 2>/dev/null || echo "  (empty/missing)"
 
       # ══════════════════════════════════════════════
-      # SINGULARITY: Use nf-core download with NF >= 25.04.4
+      # SINGULARITY
       # ══════════════════════════════════════════════
       - name: Setup Apptainer
         if: matrix.profile == 'singularity'
@@ -255,18 +284,37 @@ jobs:
         if: matrix.profile == 'singularity'
         run: mkdir -p ${{ env.NXF_SINGULARITY_CACHEDIR }}
 
+      # Step 1: Try to restore existing cache
       - name: Restore Singularity image cache
         if: matrix.profile == 'singularity'
         id: singularity-cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.NXF_SINGULARITY_CACHEDIR }}
-          key: singularity-containers-v1-${{ env.CONTAINER_CACHE_KEY }}
+          key: singularity-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
           restore-keys: |
-            singularity-containers-v1-
+            singularity-containers-${{ env.CACHE_VERSION }}-
+
+      # Step 2: Validate the restored cache
+      - name: Validate Singularity cache
+        if: matrix.profile == 'singularity'
+        id: singularity-cache-valid
+        run: |
+          if [ -d "${{ env.NXF_SINGULARITY_CACHEDIR }}" ] && \
+             ls ${{ env.NXF_SINGULARITY_CACHEDIR }}/*.img 1>/dev/null 2>&1; then
+            FILE_COUNT=$(ls -1 ${{ env.NXF_SINGULARITY_CACHEDIR }}/*.img | wc -l)
+            TOTAL_SIZE=$(du -sh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ | cut -f1)
+            echo "✅ Cache has $FILE_COUNT images ($TOTAL_SIZE)"
+            echo "valid=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "⚠️ Cache is empty or missing — will re-download"
+            echo "valid=false" >> "$GITHUB_OUTPUT"
+            rm -rf ${{ env.NXF_SINGULARITY_CACHEDIR }}
+            mkdir -p ${{ env.NXF_SINGULARITY_CACHEDIR }}
+          fi
 
       - name: Download Singularity containers via nf-core
-        if: matrix.profile == 'singularity' && steps.singularity-cache.outputs.cache-hit != 'true'
+        if: matrix.profile == 'singularity' && steps.singularity-cache-valid.outputs.valid != 'true'
         env:
           NXF_SINGULARITY_CACHEDIR: ${{ env.NXF_SINGULARITY_CACHEDIR }}
         run: |
@@ -293,11 +341,38 @@ jobs:
           echo "Total: $(du -sh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ | cut -f1)"
           echo "Count: $(ls -1 ${{ env.NXF_SINGULARITY_CACHEDIR }}/ | wc -l) images"
 
-      - name: Debug Singularity cache
+      # Step 3: Validate download produced images before saving
+      - name: Validate Singularity download
+        if: matrix.profile == 'singularity' && steps.singularity-cache-valid.outputs.valid != 'true'
+        id: singularity-download-valid
+        run: |
+          if ls ${{ env.NXF_SINGULARITY_CACHEDIR }}/*.img 1>/dev/null 2>&1; then
+            COUNT=$(ls -1 ${{ env.NXF_SINGULARITY_CACHEDIR }}/*.img | wc -l)
+            echo "✅ Download produced $COUNT images — safe to cache"
+            echo "valid=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "❌ Download produced no .img files — will NOT save empty cache"
+            echo "valid=false" >> "$GITHUB_OUTPUT"
+            echo ""
+            echo "Cache dir contents:"
+            ls -lah ${{ env.NXF_SINGULARITY_CACHEDIR }}/ 2>/dev/null || echo "  (empty)"
+          fi
+
+      # Step 4: Only save if we have actual images
+      - name: Save Singularity image cache
+        if: matrix.profile == 'singularity' && steps.singularity-cache-valid.outputs.valid != 'true' && steps.singularity-download-valid.outputs.valid == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.NXF_SINGULARITY_CACHEDIR }}
+          key: singularity-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
+
+      - name: Debug Singularity cache final state
         if: matrix.profile == 'singularity'
         run: |
-          echo "Singularity cache key: singularity-containers-v1-${{ env.CONTAINER_CACHE_KEY }}"
-          echo "Cache hit: ${{ steps.singularity-cache.outputs.cache-hit }}"
+          echo "Cache key: singularity-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Cache was valid: ${{ steps.singularity-cache-valid.outputs.valid }}"
+          echo "Download was valid: ${{ steps.singularity-download-valid.outputs.valid }}"
+          echo "Final cache contents:"
           ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ 2>/dev/null || echo "  (empty/missing)"
 
       - name: Upload download logs
@@ -335,38 +410,36 @@ jobs:
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
-      # ── Use the SAME cache key from the shared output ──
       CONTAINER_CACHE_KEY: ${{ needs.nf-test-changes.outputs.container_cache_key }}
+      CACHE_VERSION: "v2"
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
 
-      # ── Debug: print the cache key to confirm it matches ──
       - name: Debug cache key
         run: |
           echo "Container cache key: ${{ env.CONTAINER_CACHE_KEY }}"
-          echo "Docker restore key:  docker-containers-v1-${{ env.CONTAINER_CACHE_KEY }}"
-          echo "Singularity restore: singularity-containers-v1-${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Cache version: ${{ env.CACHE_VERSION }}"
+          echo "Docker key:      docker-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Singularity key: singularity-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}"
 
-      # ── Restore & load Docker images ──
       - name: Restore Docker image cache
         if: matrix.profile == 'docker'
         id: docker-restore
         uses: actions/cache/restore@v4
         with:
           path: /tmp/docker-image-cache
-          key: docker-containers-v1-${{ env.CONTAINER_CACHE_KEY }}
+          key: docker-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
           restore-keys: |
-            docker-containers-v1-
+            docker-containers-${{ env.CACHE_VERSION }}-
 
       - name: Debug Docker restore
         if: matrix.profile == 'docker'
         run: |
-          echo "Cache restore hit: ${{ steps.docker-restore.outputs.cache-hit }}"
-          echo "Cache restore key matched: ${{ steps.docker-restore.outputs.cache-matched-key }}"
-          echo "Contents of /tmp/docker-image-cache/:"
-          ls -lh /tmp/docker-image-cache/ 2>/dev/null || echo "  Directory does not exist"
+          echo "Cache hit: ${{ steps.docker-restore.outputs.cache-hit }}"
+          echo "Matched key: ${{ steps.docker-restore.outputs.cache-matched-key }}"
+          ls -lh /tmp/docker-image-cache/ 2>/dev/null || echo "Directory does not exist"
 
       - name: Load Docker images from cache
         if: matrix.profile == 'docker'
@@ -382,36 +455,24 @@ jobs:
             docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
           else
             echo "⚠️ No Docker cache found — Nextflow will pull images at runtime"
-            echo ""
-            echo "Debug info:"
-            echo "  Cache key used: docker-containers-v1-${{ env.CONTAINER_CACHE_KEY }}"
-            echo "  /tmp contents:"
-            ls -la /tmp/ | grep docker || echo "  No docker dirs in /tmp"
           fi
 
-      # ── Restore Singularity images ──
       - name: Restore Singularity image cache
         if: matrix.profile == 'singularity'
         id: singularity-restore
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.NXF_SINGULARITY_CACHEDIR }}
-          key: singularity-containers-v1-${{ env.CONTAINER_CACHE_KEY }}
+          key: singularity-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
           restore-keys: |
-            singularity-containers-v1-
+            singularity-containers-${{ env.CACHE_VERSION }}-
 
       - name: Debug Singularity restore
         if: matrix.profile == 'singularity'
         run: |
-          echo "Cache restore hit: ${{ steps.singularity-restore.outputs.cache-hit }}"
-          echo "Cache restore key matched: ${{ steps.singularity-restore.outputs.cache-matched-key }}"
-          echo "NXF_SINGULARITY_CACHEDIR: ${{ env.NXF_SINGULARITY_CACHEDIR }}"
-          echo "Contents of cache dir:"
-          ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ 2>/dev/null || echo "  Directory does not exist"
-          echo ""
-          echo "Workspace: ${{ github.workspace }}"
-          echo "Full path check:"
-          ls -la ${{ github.workspace }}/.singularity/ 2>/dev/null || echo "  .singularity dir does not exist"
+          echo "Cache hit: ${{ steps.singularity-restore.outputs.cache-hit }}"
+          echo "Matched key: ${{ steps.singularity-restore.outputs.cache-matched-key }}"
+          ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ 2>/dev/null || echo "Directory does not exist"
 
       - name: Verify Singularity cache
         if: matrix.profile == 'singularity'
@@ -420,7 +481,6 @@ jobs:
           if ls ${{ env.NXF_SINGULARITY_CACHEDIR }}/* 1>/dev/null 2>&1; then
             echo "✅ Cached Singularity images:"
             ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/
-            echo "Total: $(du -sh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ | cut -f1)"
           else
             echo "⚠️ No Singularity cache found — Nextflow will pull images at runtime"
           fi
