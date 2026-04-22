@@ -15,7 +15,7 @@
                     [
                         "HUMANN_RENORM",
                         "HUMAnN",
-                        "4.0.0.alpha.1"
+                        "3.6.1"
                     ]
                 ],
                 "renorm": [
@@ -31,12 +31,12 @@
                     [
                         "HUMANN_RENORM",
                         "HUMAnN",
-                        "4.0.0.alpha.1"
+                        "3.6.1"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-04-21T10:13:20.883368",
+        "timestamp": "2026-04-22T12:34:05.426069",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

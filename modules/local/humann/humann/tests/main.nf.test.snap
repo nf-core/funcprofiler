@@ -28,17 +28,9 @@
                     "test_pathcoverage.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                 ]
             ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test_reactions.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
-                ]
-            ]
+            null
         ],
-        "timestamp": "2026-03-27T17:07:44.923199",
+        "timestamp": "2026-04-22T12:33:30.030991",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -73,13 +65,11 @@
                     "test_pathcoverage.tsv.gz:md5,17c91a2581f34b55179aa4c79c242b1c"
                 ]
             ],
-            [
-                
-            ]
+            null
         ],
-        "timestamp": "2026-02-26T16:15:51.510722226",
+        "timestamp": "2026-04-22T12:33:15.294349",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     }
