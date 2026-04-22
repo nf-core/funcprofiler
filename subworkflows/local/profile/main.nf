@@ -195,13 +195,16 @@ workflow PROFILING {
 	    ch_input_for_humann_v3.reads,
 	    getDbPath(ch_input_for_humann_v3.db, 'humann_metaphlan'),false
 	)
-        HUMANN3 (
-	    ch_input_for_humann_v3.reads,
-	    MPAHUMANN3.out.profile,
-	    getDbPath(ch_input_for_humann_v3.db, 'humann_nucleotide'),
-	    getDbPath(ch_input_for_humann_v3.db, 'humann_protein'),
-	    getDbPath(ch_input_for_humann_v3.db, 'humann_utility'),
-	)
+       // JOIN the original reads with the profile output
+        ch_humann3_input = ch_input_for_humann_v3.reads
+            .join(MPAHUMANN3.out.profile, by: 0)  // Join on meta map
+        HUMANN3(
+            ch_humann3_input.map { meta, reads, profile -> [meta, reads] },  // Extract reads
+            ch_humann3_input.map { meta, reads, profile -> [meta, profile] }, // Extract profile
+            getDbPath(ch_input_for_humann_v3.db, 'humann_nucleotide'),
+            getDbPath(ch_input_for_humann_v3.db, 'humann_protein'),
+            getDbPath(ch_input_for_humann_v3.db, 'humann_utility'),
+        )
 	HUMANN3_REGROUP(HUMANN3.out.genefamilies, "uniref90_level4ec", getDbPath(ch_input_for_humann_v3.db, 'humann_utility'))
         ch_raw_profiles    = ch_raw_profiles.mix( MPAHUMANN3.out.profile )
         ch_raw_profiles        = ch_raw_profiles.mix( HUMANN3.out.pathabundance )
@@ -213,14 +216,16 @@ workflow PROFILING {
 	    ch_input_for_humann_v4.reads,
 	    getDbPath(ch_input_for_humann_v4.db, 'humann_metaphlan'),false
 	)
-        HUMANN4 (
-	    ch_input_for_humann_v4.reads,
-	    MPAHUMANN4.out.profile,
-	    getDbPath(ch_input_for_humann_v4.db, 'humann_nucleotide'),
-	    getDbPath(ch_input_for_humann_v4.db, 'humann_protein'),
-	    getDbPath(ch_input_for_humann_v4.db, 'humann_utility'),
+        ch_humann4_input = ch_input_for_humann_v4.reads
+            .join(MPAHUMANN4.out.profile, by: 0)  // Join on meta map
 
-	)
+        HUMANN4(
+            ch_humann4_input.map { meta, reads, profile -> [meta, reads] },  // Extract reads
+            ch_humann4_input.map { meta, reads, profile -> [meta, profile] }, // Extract profile
+            getDbPath(ch_input_for_humann_v4.db, 'humann_nucleotide'),
+            getDbPath(ch_input_for_humann_v4.db, 'humann_protein'),
+            getDbPath(ch_input_for_humann_v4.db, 'humann_utility'),
+        )
 	HUMANN4_REGROUP(HUMANN4.out.genefamilies, "uniclust90_level4ec", getDbPath(ch_input_for_humann_v4.db, 'humann_utility'))
 	ch_raw_profiles        = ch_raw_profiles.mix( HUMANN4.out.pathabundance )
 	    .mix( HUMANN4.out.genefamilies )
