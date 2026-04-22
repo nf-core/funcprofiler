@@ -3,7 +3,8 @@ process HUMANN3_REGROUP {
     label 'process_low'
 
     conda 'bioconda::humann=3.6.1'
-    container 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1_smaller-pt2',
+    container 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1_smaller-pt2'
+
     input:
     tuple val(meta), path(input)
     val groups
