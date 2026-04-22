@@ -1,14 +1,10 @@
-include { getConda; getContainer; getExt; getProcessName } from '../utils'
 // Taken 98% from https://github.com/nf-core/modules/pull/1089/files
-
-
-
 process HUMANN4 {
     tag "$meta.id"
     label 'process_high'
 
-    conda {getConda(getProcessName(task.process))}
-    container { getContainer(getProcessName(task.process)) }
+    conda 'bioconda::humann=4.0.0.alpha.1-final'
+    container 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final_smaller-pt2'
 
     input:
     tuple val(meta), path(input)
@@ -20,8 +16,7 @@ process HUMANN4 {
     output:
     tuple val(meta), path("*_genefamilies.tsv.gz") , emit: genefamilies
     tuple val(meta), path("*_pathabundance.tsv.gz"), emit: pathabundance
-    tuple val(meta), path("*_pathcoverage.tsv.gz") , emit: pathcoverage, optional:true
-    tuple val(meta), path("*_reactions.tsv.gz")    , emit: reactions, optional:true
+    tuple val(meta), path("*_reactions.tsv.gz")    , emit: reactions
     tuple val(meta), path("*.log")                 , emit: log
     tuple val("${task.process}"), val('HUMAnN'), eval("humann --version 2>&1 | sed 's/humann v//'"), emit: versions_humann, topic: versions
     tuple val("${task.process}"), val('MetaPHLan'), eval("metaphlan --version 2>&1 | sed 's/metaphlan v//'"), emit: versions_metaphlan, topic: versions
@@ -29,10 +24,7 @@ process HUMANN4 {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    if (getExt(getProcessName(task.process)) == null){
-	throw new IllegalArgumentException("this process must be aliased to either HUMANN3 or HUMANN4 to ensure the right parameters and containers are used; detected ${getProcessName(task.process)}")
-    }
-    def nuc_ext = getExt(getProcessName(task.process))
+    def nuc_ext = '*.fna.gz'
     // TODO: I never got this to successfully run
     //  def pangenome_string = "--metaphlan-options \"-t rel_ab --bowtie2db ./${pangenome_db} --index ${pangenome_db_index_name} \""
     def pangenome_string = "--taxonomic-profile ${profile}"
@@ -68,7 +60,7 @@ process HUMANN4 {
     """
     echo $args
 
-    for suf in genefamilies.tsv.gz pathabundance.tsv.gz pathcoverage.tsv.gz reactions.tsv.gz
+    for suf in genefamilies.tsv.gz pathabundance.tsv.gz  reactions.tsv.gz
     do
         echo stub | gzip >  ${prefix}_\$suf
     done

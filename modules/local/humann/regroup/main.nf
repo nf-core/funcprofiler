@@ -1,17 +1,9 @@
-include { getConda; getContainer; getExt; getProcessName } from '../utils'
-def getProcessNamePrefix(task_process) {
-    return task_process.tokenize(':')[-1].tokenize('_')[0]
-}
 process HUMANN3_REGROUP {
     tag "$meta.id"
     label 'process_low'
 
-    conda { getConda(getProcessNamePrefix(task.process)) }
-    //if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container)	{
-    //    container { "docker://" + getContainer(getProcessNamePrefix(task.process)) }
-    //} else {
-    container { getContainer(getProcessNamePrefix(task.process)) }
-    //}
+    conda 'bioconda::humann=3.6.1'
+    container 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1_smaller-pt2',
     input:
     tuple val(meta), path(input)
     val groups
