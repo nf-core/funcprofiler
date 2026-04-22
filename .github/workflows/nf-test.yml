@@ -32,6 +32,7 @@ jobs:
     outputs:
       shard: ${{ steps.set-shards.outputs.shard }}
       total_shards: ${{ steps.set-shards.outputs.total_shards }}
+      container_cache_key: ${{ steps.container-key.outputs.key }}
     steps:
       - name: Clean Workspace # Purge the workspace in case it's running on a self-hosted runner
         run: |
@@ -51,10 +52,25 @@ jobs:
         with:
           max_shards: 15
 
-      - name: debug
+      # ── Compute a DETERMINISTIC cache key once, share via output ──
+      - name: Compute container cache key
+        id: container-key
         run: |
-          echo ${{ steps.set-shards.outputs.shard }}
-          echo ${{ steps.set-shards.outputs.total_shards }}
+          # Use git to get a deterministic hash of container-defining files
+          # This is reproducible across runners regardless of filesystem ordering
+          KEY=$(git log -1 --format=%H -- '*.nf' '*.config' 'modules/' 'subworkflows/' 'workflows/' 'conf/')
+          # Fallback: if no commits touch those paths, use the HEAD commit
+          if [ -z "$KEY" ]; then
+            KEY=$(git rev-parse HEAD)
+          fi
+          echo "key=${KEY}" >> "$GITHUB_OUTPUT"
+          echo "Container cache key: ${KEY}"
+
+      - name: Debug
+        run: |
+          echo "Shards: ${{ steps.set-shards.outputs.shard }}"
+          echo "Total:  ${{ steps.set-shards.outputs.total_shards }}"
+          echo "Cache key: ${{ steps.container-key.outputs.key }}"
 
   cache-containers:
     name: "Download & cache containers"
@@ -63,6 +79,8 @@ jobs:
     runs-on:
       - runs-on=${{ github.run_id }}-cache-containers
       - runner=4cpu-linux-x64
+    env:
+      CONTAINER_CACHE_KEY: ${{ needs.nf-test-changes.outputs.container_cache_key }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
@@ -86,15 +104,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install git+https://github.com/nf-core/tools.git@dev
 
-      - name: Generate container cache key
-        id: cache-key
-        run: |
-          HASH=$(find . \( -name "*.nf" -o -name "*.config" \) \
-            -not -path "./.git/*" \
-            -exec cat {} + | sha256sum | cut -d' ' -f1 | head -c 16)
-          echo "hash=$HASH" >> "$GITHUB_OUTPUT"
-          echo "Cache key hash: $HASH"
-
       - name: Get repo properties
         id: repo
         run: |
@@ -111,7 +120,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/docker-image-cache
-          key: docker-containers-v1-${{ steps.cache-key.outputs.hash }}
+          key: docker-containers-v1-${{ env.CONTAINER_CACHE_KEY }}
           restore-keys: |
             docker-containers-v1-
 
@@ -136,17 +145,15 @@ jobs:
           echo "📦 Docker images pulled by nf-core download:"
           docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
 
-          # Save all images that were pulled to tarballs for caching
           echo ""
-          echo "💾 Saving Docker images to cache..."
+          echo "💾 Saving Docker images to tarballs for caching..."
           docker images --format "{{.Repository}}:{{.Tag}}" | \
             grep -v '<none>' | \
             while IFS= read -r IMAGE; do
               FILENAME=$(echo "$IMAGE" | tr '/:@' '---').tar
               FILEPATH="/tmp/docker-image-cache/${FILENAME}"
-
               if [ ! -f "$FILEPATH" ]; then
-                echo "  Saving: $IMAGE"
+                echo "  Saving: $IMAGE → $(basename $FILEPATH)"
                 docker save "$IMAGE" -o "$FILEPATH"
               fi
             done
@@ -156,17 +163,12 @@ jobs:
           ls -lh /tmp/docker-image-cache/
           echo "Total cache size: $(du -sh /tmp/docker-image-cache/ | cut -f1)"
 
-      - name: Verify Docker cache
-        if: steps.docker-cache.outputs.cache-hit == 'true'
+      - name: Debug Docker cache
         run: |
-          echo "✅ Docker cache hit — verifying images load correctly..."
-          for tar in /tmp/docker-image-cache/*.tar; do
-            [ -f "$tar" ] || continue
-            echo "  Loading: $(basename $tar)"
-            docker load -i "$tar"
-          done
-          echo ""
-          docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+          echo "Docker cache key: docker-containers-v1-${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Cache hit: ${{ steps.docker-cache.outputs.cache-hit }}"
+          echo "Cache contents:"
+          ls -lh /tmp/docker-image-cache/ 2>/dev/null || echo "  (empty)"
 
       - name: Check if singularity caching needed
         id: need-singularity
@@ -183,13 +185,19 @@ jobs:
         with:
           apptainer-version: 1.3.4
 
+      - name: Create Singularity cache directory
+        if: steps.need-singularity.outputs.needed == 'true'
+        run: |
+          mkdir -p ${{ env.NXF_SINGULARITY_CACHEDIR }}
+          echo "Singularity cache dir: ${{ env.NXF_SINGULARITY_CACHEDIR }}"
+
       - name: Restore Singularity image cache
         if: steps.need-singularity.outputs.needed == 'true'
         id: singularity-cache
         uses: actions/cache@v4
         with:
           path: ${{ env.NXF_SINGULARITY_CACHEDIR }}
-          key: singularity-containers-v1-${{ steps.cache-key.outputs.hash }}
+          key: singularity-containers-v1-${{ env.CONTAINER_CACHE_KEY }}
           restore-keys: |
             singularity-containers-v1-
 
@@ -198,8 +206,6 @@ jobs:
         env:
           NXF_SINGULARITY_CACHEDIR: ${{ env.NXF_SINGULARITY_CACHEDIR }}
         run: |
-          mkdir -p ${{ env.NXF_SINGULARITY_CACHEDIR }}
-
           echo "📥 Downloading pipeline with Singularity containers..."
           nf-core pipelines download ${{ steps.repo.outputs.lowercase }} \
             --revision ${{ steps.repo.outputs.revision }} \
@@ -219,11 +225,15 @@ jobs:
           echo "Total: $(du -sh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ | cut -f1)"
           echo "Count: $(ls -1 ${{ env.NXF_SINGULARITY_CACHEDIR }}/ | wc -l) images"
 
-      - name: Verify Singularity cache
+      # Debug: confirm what key was used
+      - name: Debug Singularity cache
         if: steps.need-singularity.outputs.needed == 'true'
         run: |
-          echo "📦 Singularity cache:"
-          ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ 2>/dev/null || echo "Empty"
+          echo "Singularity cache key: singularity-containers-v1-${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Cache hit: ${{ steps.singularity-cache.outputs.cache-hit }}"
+          echo "Cache dir: ${{ env.NXF_SINGULARITY_CACHEDIR }}"
+          echo "Cache contents:"
+          ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ 2>/dev/null || echo "  (empty)"
 
       - name: Upload download logs
         if: always()
@@ -257,29 +267,38 @@ jobs:
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
+      # ── Use the SAME cache key from the shared output ──
+      CONTAINER_CACHE_KEY: ${{ needs.nf-test-changes.outputs.container_cache_key }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
 
-      # ── Recompute cache key (must match cache-containers job) ──
-      - name: Generate container cache key
-        id: cache-key
+      # ── Debug: print the cache key to confirm it matches ──
+      - name: Debug cache key
         run: |
-          HASH=$(find . \( -name "*.nf" -o -name "*.config" \) \
-            -not -path "./.git/*" \
-            -exec cat {} + | sha256sum | cut -d' ' -f1 | head -c 16)
-          echo "hash=$HASH" >> "$GITHUB_OUTPUT"
+          echo "Container cache key: ${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Docker restore key:  docker-containers-v1-${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Singularity restore: singularity-containers-v1-${{ env.CONTAINER_CACHE_KEY }}"
 
       # ── Restore & load Docker images ──
       - name: Restore Docker image cache
         if: matrix.profile == 'docker'
+        id: docker-restore
         uses: actions/cache/restore@v4
         with:
           path: /tmp/docker-image-cache
-          key: docker-containers-v1-${{ steps.cache-key.outputs.hash }}
+          key: docker-containers-v1-${{ env.CONTAINER_CACHE_KEY }}
           restore-keys: |
             docker-containers-v1-
+
+      - name: Debug Docker restore
+        if: matrix.profile == 'docker'
+        run: |
+          echo "Cache restore hit: ${{ steps.docker-restore.outputs.cache-hit }}"
+          echo "Cache restore key matched: ${{ steps.docker-restore.outputs.cache-matched-key }}"
+          echo "Contents of /tmp/docker-image-cache/:"
+          ls -lh /tmp/docker-image-cache/ 2>/dev/null || echo "  Directory does not exist"
 
       - name: Load Docker images from cache
         if: matrix.profile == 'docker'
@@ -287,7 +306,7 @@ jobs:
           if [ -d /tmp/docker-image-cache ] && ls /tmp/docker-image-cache/*.tar 1>/dev/null 2>&1; then
             echo "📦 Loading cached Docker images..."
             for tar in /tmp/docker-image-cache/*.tar; do
-              echo "  Loading: $(basename $tar)"
+              echo "  Loading: $(basename $tar) ($(du -h "$tar" | cut -f1))"
               docker load -i "$tar"
             done
             echo ""
@@ -295,17 +314,36 @@ jobs:
             docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
           else
             echo "⚠️ No Docker cache found — Nextflow will pull images at runtime"
+            echo ""
+            echo "Debug info:"
+            echo "  Cache key used: docker-containers-v1-${{ env.CONTAINER_CACHE_KEY }}"
+            echo "  /tmp contents:"
+            ls -la /tmp/ | grep docker || echo "  No docker dirs in /tmp"
           fi
 
       # ── Restore Singularity images ──
       - name: Restore Singularity image cache
         if: matrix.profile == 'singularity'
+        id: singularity-restore
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.NXF_SINGULARITY_CACHEDIR }}
-          key: singularity-containers-v1-${{ steps.cache-key.outputs.hash }}
+          key: singularity-containers-v1-${{ env.CONTAINER_CACHE_KEY }}
           restore-keys: |
             singularity-containers-v1-
+
+      - name: Debug Singularity restore
+        if: matrix.profile == 'singularity'
+        run: |
+          echo "Cache restore hit: ${{ steps.singularity-restore.outputs.cache-hit }}"
+          echo "Cache restore key matched: ${{ steps.singularity-restore.outputs.cache-matched-key }}"
+          echo "NXF_SINGULARITY_CACHEDIR: ${{ env.NXF_SINGULARITY_CACHEDIR }}"
+          echo "Contents of cache dir:"
+          ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ 2>/dev/null || echo "  Directory does not exist"
+          echo ""
+          echo "Workspace: ${{ github.workspace }}"
+          echo "Full path check:"
+          ls -la ${{ github.workspace }}/.singularity/ 2>/dev/null || echo "  .singularity dir does not exist"
 
       - name: Verify Singularity cache
         if: matrix.profile == 'singularity'
@@ -314,6 +352,7 @@ jobs:
           if ls ${{ env.NXF_SINGULARITY_CACHEDIR }}/* 1>/dev/null 2>&1; then
             echo "✅ Cached Singularity images:"
             ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/
+            echo "Total: $(du -sh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ | cut -f1)"
           else
             echo "⚠️ No Singularity cache found — Nextflow will pull images at runtime"
           fi
@@ -344,7 +383,6 @@ jobs:
         run: |
           if [[ "${{ steps.run_nf_test.outcome }}" == "failure" ]]; then
             echo "::error::Test with ${{ matrix.NXF_VER }} failed"
-            # Add to workflow summary
             echo "## ❌ Test failed: ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | Shard ${{ matrix.shard }}/${{ env.TOTAL_SHARDS }}" >> $GITHUB_STEP_SUMMARY
             if [[ "${{ matrix.NXF_VER }}" == "latest-everything" ]]; then
               echo "::warning::Test with latest-everything failed but will not cause workflow failure. Please check if the error is expected or if it needs fixing."
