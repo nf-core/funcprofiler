@@ -11,7 +11,6 @@ on:
     types: [published]
   workflow_dispatch:
 
-# Cancel if a newer run is started
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -33,6 +32,7 @@ jobs:
     outputs:
       shard: ${{ steps.set-shards.outputs.shard }}
       total_shards: ${{ steps.set-shards.outputs.total_shards }}
+      container_cache_key: ${{ steps.container-key.outputs.key }}
     steps:
       - name: Clean Workspace # Purge the workspace in case it's running on a self-hosted runner
         run: |
@@ -52,14 +52,343 @@ jobs:
         with:
           max_shards: 15
 
-      - name: debug
+      # ── Compute a DETERMINISTIC cache key once, share via output ──
+      - name: Compute container cache key
+        id: container-key
         run: |
-          echo ${{ steps.set-shards.outputs.shard }}
-          echo ${{ steps.set-shards.outputs.total_shards }}
+          # Use git to get a deterministic hash of container-defining files
+          # This is reproducible across runners regardless of filesystem ordering
+          KEY=$(git log -1 --format=%H -- '*.nf' '*.config' 'modules/' 'subworkflows/' 'workflows/' 'conf/')
+          # Fallback: if no commits touch those paths, use the HEAD commit
+          if [ -z "$KEY" ]; then
+            KEY=$(git rev-parse HEAD)
+          fi
+          echo "key=${KEY}" >> "$GITHUB_OUTPUT"
+          echo "Container cache key: ${KEY}"
+
+      - name: Debug
+        run: |
+          echo "Shards: ${{ steps.set-shards.outputs.shard }}"
+          echo "Total:  ${{ steps.set-shards.outputs.total_shards }}"
+          echo "Cache key: ${{ steps.container-key.outputs.key }}"
+
+  cache-containers:
+    name: "Cache ${{ matrix.profile }} containers"
+    needs: [nf-test-changes]
+    if: ${{ needs.nf-test-changes.outputs.total_shards != '0' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [docker, singularity]
+        isMain:
+          - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
+        exclude:
+          - isMain: false
+            profile: "singularity"
+    runs-on:
+      - runs-on=${{ github.run_id }}-cache-containers-${{ matrix.profile }}
+      - runner=4cpu-linux-x64
+    env:
+      CONTAINER_CACHE_KEY: ${{ needs.nf-test-changes.outputs.container_cache_key }}
+      # ── Bump this to invalidate a bad cache ──
+      CACHE_VERSION: "v2"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Disk space cleanup
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+
+      - name: Set Nextflow version
+        id: nf-version
+        shell: bash
+        run: |
+          if [ "${{ matrix.profile }}" == "singularity" ]; then
+            echo "version=25.04.4" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=24.10.5" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Nextflow
+        uses: nf-core/setup-nextflow@v2
+        with:
+          version: "${{ steps.nf-version.outputs.version }}"
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.13"
+
+      - name: Install nf-core tools
+        run: |
+          python -m pip install --upgrade pip
+          if [ "${{ matrix.profile }}" == "singularity" ]; then
+            pip install git+https://github.com/nf-core/tools.git@dev
+          else
+            pip install nf-core==3.3.2
+          fi
+
+      - name: Verify versions
+        run: |
+          echo "Profile:  ${{ matrix.profile }}"
+          echo "Nextflow: $(nextflow -version 2>&1 | head -1)"
+          echo "nf-core:  $(nf-core --version 2>&1)"
+
+      - name: Get repo properties
+        id: repo
+        run: |
+          echo "lowercase=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          echo "title=$(basename ${GITHUB_REPOSITORY,,})" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "revision=${{ github.head_ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "revision=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ══════════════════════════════════════════════
+      # DOCKER
+      # ══════════════════════════════════════════════
+
+      # Step 1: Try to restore existing cache
+      - name: Restore Docker image cache
+        if: matrix.profile == 'docker'
+        id: docker-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: /tmp/docker-image-cache
+          key: docker-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
+          restore-keys: |
+            docker-containers-${{ env.CACHE_VERSION }}-
+
+      # Step 2: Validate the restored cache isn't empty
+      - name: Validate Docker cache
+        if: matrix.profile == 'docker'
+        id: docker-cache-valid
+        run: |
+          if [ -d /tmp/docker-image-cache ] && ls /tmp/docker-image-cache/*.tar 1>/dev/null 2>&1; then
+            FILE_COUNT=$(ls -1 /tmp/docker-image-cache/*.tar | wc -l)
+            TOTAL_SIZE=$(du -sh /tmp/docker-image-cache/ | cut -f1)
+            echo "✅ Cache has $FILE_COUNT images ($TOTAL_SIZE)"
+            echo "valid=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "⚠️ Cache is empty or missing — will re-download"
+            echo "valid=false" >> "$GITHUB_OUTPUT"
+            # Clean up empty directory so actions/cache can save fresh
+            rm -rf /tmp/docker-image-cache
+          fi
+
+      - name: Discover Docker containers via Nextflow config
+        if: matrix.profile == 'docker' && steps.docker-cache-valid.outputs.valid != 'true'
+        run: |
+          echo "🔍 Resolving containers from Nextflow config (docker profile)..."
+
+          nextflow config -flat -profile docker . 2>/dev/null > /tmp/nf_config_flat.txt || true
+
+          echo "::group::Full flattened config (container lines)"
+          grep -i container /tmp/nf_config_flat.txt || echo "  (none found)"
+          echo "::endgroup::"
+
+          grep -oP "^process\..*?\.container\s*=\s*'\K[^']+" /tmp/nf_config_flat.txt | \
+            sort -u > /tmp/docker_images.txt || true
+
+          grep -oP "^process\.container\s*=\s*'\K[^']+" /tmp/nf_config_flat.txt | \
+            sort -u >> /tmp/docker_images.txt || true
+
+          sort -u /tmp/docker_images.txt | \
+            grep -v '^\s*$' | \
+            grep -v '\$' | \
+            grep -v '^null$' > /tmp/docker_images_clean.txt || true
+
+          mv /tmp/docker_images_clean.txt /tmp/docker_images.txt
+
+          echo ""
+          echo "📦 Discovered $(wc -l < /tmp/docker_images.txt) Docker container images:"
+          cat /tmp/docker_images.txt
+
+      - name: Pull and save Docker images
+        if: matrix.profile == 'docker' && steps.docker-cache-valid.outputs.valid != 'true'
+        run: |
+          mkdir -p /tmp/docker-image-cache
+
+          if [ ! -f /tmp/docker_images.txt ] || [ ! -s /tmp/docker_images.txt ]; then
+            echo "⚠️ No Docker images discovered — nothing to cache"
+            exit 0
+          fi
+
+          TOTAL=$(wc -l < /tmp/docker_images.txt)
+          CURRENT=0
+          FAILED=0
+          SUCCEEDED=0
+
+          while IFS= read -r IMAGE; do
+            [ -z "$IMAGE" ] && continue
+            CURRENT=$((CURRENT + 1))
+
+            [[ "$IMAGE" == https://* ]] && { echo "[$CURRENT/$TOTAL] ⏭️  Skipping singularity URL: $IMAGE"; continue; }
+
+            CLEAN="${IMAGE#docker://}"
+            FILENAME=$(echo "$CLEAN" | tr '/:@' '---').tar
+            FILEPATH="/tmp/docker-image-cache/${FILENAME}"
+
+            if [ -f "$FILEPATH" ]; then
+              echo "[$CURRENT/$TOTAL] ✅ Already saved: $CLEAN"
+              SUCCEEDED=$((SUCCEEDED + 1))
+              continue
+            fi
+
+            echo "[$CURRENT/$TOTAL] ⬇️  Pulling: $CLEAN"
+            if docker pull "$CLEAN" 2>&1; then
+              docker save "$CLEAN" -o "$FILEPATH"
+              echo "[$CURRENT/$TOTAL] 💾 Saved: $(du -h "$FILEPATH" | cut -f1)"
+              SUCCEEDED=$((SUCCEEDED + 1))
+            else
+              echo "[$CURRENT/$TOTAL] ⚠️  Failed to pull: $CLEAN"
+              FAILED=$((FAILED + 1))
+            fi
+          done < /tmp/docker_images.txt
+
+          echo ""
+          echo "═══════════════════════════════════════"
+          echo "📊 Docker pull summary: $SUCCEEDED succeeded, $FAILED failed, $TOTAL total"
+          echo "📦 Cache size: $(du -sh /tmp/docker-image-cache/ | cut -f1)"
+          echo "═══════════════════════════════════════"
+          ls -lh /tmp/docker-image-cache/
+
+      # Step 3: Only save cache if we actually have images
+      - name: Save Docker image cache
+        if: matrix.profile == 'docker' && steps.docker-cache-valid.outputs.valid != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: /tmp/docker-image-cache
+          key: docker-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
+
+      - name: Debug Docker cache final state
+        if: matrix.profile == 'docker'
+        run: |
+          echo "Cache key: docker-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Cache was valid: ${{ steps.docker-cache-valid.outputs.valid }}"
+          echo "Final cache contents:"
+          ls -lh /tmp/docker-image-cache/ 2>/dev/null || echo "  (empty/missing)"
+
+      # ══════════════════════════════════════════════
+      # SINGULARITY
+      # ══════════════════════════════════════════════
+      - name: Setup Apptainer
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-apptainer@4bb22c52d4f63406c49e94c804632975787312b3 # v2.0.0
+        with:
+          apptainer-version: 1.3.4
+
+      - name: Create Singularity cache directory
+        if: matrix.profile == 'singularity'
+        run: mkdir -p ${{ env.NXF_SINGULARITY_CACHEDIR }}
+
+      # Step 1: Try to restore existing cache
+      - name: Restore Singularity image cache
+        if: matrix.profile == 'singularity'
+        id: singularity-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.NXF_SINGULARITY_CACHEDIR }}
+          key: singularity-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
+          restore-keys: |
+            singularity-containers-${{ env.CACHE_VERSION }}-
+
+      # Step 2: Validate the restored cache
+      - name: Validate Singularity cache
+        if: matrix.profile == 'singularity'
+        id: singularity-cache-valid
+        run: |
+          if [ -d "${{ env.NXF_SINGULARITY_CACHEDIR }}" ] && \
+             ls ${{ env.NXF_SINGULARITY_CACHEDIR }}/*.img 1>/dev/null 2>&1; then
+            FILE_COUNT=$(ls -1 ${{ env.NXF_SINGULARITY_CACHEDIR }}/*.img | wc -l)
+            TOTAL_SIZE=$(du -sh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ | cut -f1)
+            echo "✅ Cache has $FILE_COUNT images ($TOTAL_SIZE)"
+            echo "valid=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "⚠️ Cache is empty or missing — will re-download"
+            echo "valid=false" >> "$GITHUB_OUTPUT"
+            rm -rf ${{ env.NXF_SINGULARITY_CACHEDIR }}
+            mkdir -p ${{ env.NXF_SINGULARITY_CACHEDIR }}
+          fi
+
+      - name: Download Singularity containers via nf-core
+        if: matrix.profile == 'singularity' && steps.singularity-cache-valid.outputs.valid != 'true'
+        env:
+          NXF_SINGULARITY_CACHEDIR: ${{ env.NXF_SINGULARITY_CACHEDIR }}
+        run: |
+          echo "📥 Downloading pipeline with Singularity containers..."
+          echo "   Nextflow: $(nextflow -version 2>&1 | head -1)"
+          echo "   nf-core:  $(nf-core --version 2>&1)"
+          echo ""
+
+          nf-core pipelines download ${{ steps.repo.outputs.lowercase }} \
+            --revision ${{ steps.repo.outputs.revision }} \
+            --outdir ./nf-download-singularity \
+            --compress "none" \
+            --container-system 'singularity' \
+            --container-library "quay.io" \
+            -l "docker.io" \
+            -l "community.wave.seqera.io/library/" \
+            --container-cache-utilisation 'amend' \
+            --download-configuration 'yes' \
+            2>&1 | tee /tmp/nf-core-download-singularity.log
+
+          echo ""
+          echo "📦 Singularity cache contents:"
+          ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/
+          echo "Total: $(du -sh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ | cut -f1)"
+          echo "Count: $(ls -1 ${{ env.NXF_SINGULARITY_CACHEDIR }}/ | wc -l) images"
+
+      # Step 3: Validate download produced images before saving
+      - name: Validate Singularity download
+        if: matrix.profile == 'singularity' && steps.singularity-cache-valid.outputs.valid != 'true'
+        id: singularity-download-valid
+        run: |
+          if ls ${{ env.NXF_SINGULARITY_CACHEDIR }}/*.img 1>/dev/null 2>&1; then
+            COUNT=$(ls -1 ${{ env.NXF_SINGULARITY_CACHEDIR }}/*.img | wc -l)
+            echo "✅ Download produced $COUNT images — safe to cache"
+            echo "valid=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "❌ Download produced no .img files — will NOT save empty cache"
+            echo "valid=false" >> "$GITHUB_OUTPUT"
+            echo ""
+            echo "Cache dir contents:"
+            ls -lah ${{ env.NXF_SINGULARITY_CACHEDIR }}/ 2>/dev/null || echo "  (empty)"
+          fi
+
+      # Step 4: Only save if we have actual images
+      - name: Save Singularity image cache
+        if: matrix.profile == 'singularity' && steps.singularity-cache-valid.outputs.valid != 'true' && steps.singularity-download-valid.outputs.valid == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.NXF_SINGULARITY_CACHEDIR }}
+          key: singularity-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
+
+      - name: Debug Singularity cache final state
+        if: matrix.profile == 'singularity'
+        run: |
+          echo "Cache key: singularity-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Cache was valid: ${{ steps.singularity-cache-valid.outputs.valid }}"
+          echo "Download was valid: ${{ steps.singularity-download-valid.outputs.valid }}"
+          echo "Final cache contents:"
+          ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ 2>/dev/null || echo "  (empty/missing)"
+
+      - name: Upload download logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: container-download-logs-${{ matrix.profile }}
+          path: |
+            /tmp/nf-core-download-*.log
+            /tmp/nf_config_flat.txt
+            /tmp/docker_images.txt
+          retention-days: 2
 
   nf-test:
     name: "${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes.outputs.total_shards }}"
-    needs: [nf-test-changes]
+    needs: [nf-test-changes, cache-containers]
     if: ${{ needs.nf-test-changes.outputs.total_shards != '0' }}
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test
@@ -71,7 +400,6 @@ jobs:
         profile: [docker, singularity]
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
-        # Exclude conda and singularity on dev
         exclude:
           - isMain: false
             profile: "conda"
@@ -82,11 +410,80 @@ jobs:
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
-
+      CONTAINER_CACHE_KEY: ${{ needs.nf-test-changes.outputs.container_cache_key }}
+      CACHE_VERSION: "v2"
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
+
+      - name: Debug cache key
+        run: |
+          echo "Container cache key: ${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Cache version: ${{ env.CACHE_VERSION }}"
+          echo "Docker key:      docker-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}"
+          echo "Singularity key: singularity-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}"
+
+      - name: Restore Docker image cache
+        if: matrix.profile == 'docker'
+        id: docker-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: /tmp/docker-image-cache
+          key: docker-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
+          restore-keys: |
+            docker-containers-${{ env.CACHE_VERSION }}-
+
+      - name: Debug Docker restore
+        if: matrix.profile == 'docker'
+        run: |
+          echo "Cache hit: ${{ steps.docker-restore.outputs.cache-hit }}"
+          echo "Matched key: ${{ steps.docker-restore.outputs.cache-matched-key }}"
+          ls -lh /tmp/docker-image-cache/ 2>/dev/null || echo "Directory does not exist"
+
+      - name: Load Docker images from cache
+        if: matrix.profile == 'docker'
+        run: |
+          if [ -d /tmp/docker-image-cache ] && ls /tmp/docker-image-cache/*.tar 1>/dev/null 2>&1; then
+            echo "📦 Loading cached Docker images..."
+            for tar in /tmp/docker-image-cache/*.tar; do
+              echo "  Loading: $(basename $tar) ($(du -h "$tar" | cut -f1))"
+              docker load -i "$tar"
+            done
+            echo ""
+            echo "✅ Available Docker images:"
+            docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+          else
+            echo "⚠️ No Docker cache found — Nextflow will pull images at runtime"
+          fi
+
+      - name: Restore Singularity image cache
+        if: matrix.profile == 'singularity'
+        id: singularity-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.NXF_SINGULARITY_CACHEDIR }}
+          key: singularity-containers-${{ env.CACHE_VERSION }}-${{ env.CONTAINER_CACHE_KEY }}
+          restore-keys: |
+            singularity-containers-${{ env.CACHE_VERSION }}-
+
+      - name: Debug Singularity restore
+        if: matrix.profile == 'singularity'
+        run: |
+          echo "Cache hit: ${{ steps.singularity-restore.outputs.cache-hit }}"
+          echo "Matched key: ${{ steps.singularity-restore.outputs.cache-matched-key }}"
+          ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/ 2>/dev/null || echo "Directory does not exist"
+
+      - name: Verify Singularity cache
+        if: matrix.profile == 'singularity'
+        run: |
+          mkdir -p ${{ env.NXF_SINGULARITY_CACHEDIR }}
+          if ls ${{ env.NXF_SINGULARITY_CACHEDIR }}/* 1>/dev/null 2>&1; then
+            echo "✅ Cached Singularity images:"
+            ls -lh ${{ env.NXF_SINGULARITY_CACHEDIR }}/
+          else
+            echo "⚠️ No Singularity cache found — Nextflow will pull images at runtime"
+          fi
 
       - name: Run nf-test
         id: run_nf_test
@@ -114,7 +511,6 @@ jobs:
         run: |
           if [[ "${{ steps.run_nf_test.outcome }}" == "failure" ]]; then
             echo "::error::Test with ${{ matrix.NXF_VER }} failed"
-            # Add to workflow summary
             echo "## ❌ Test failed: ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | Shard ${{ matrix.shard }}/${{ env.TOTAL_SHARDS }}" >> $GITHUB_STEP_SUMMARY
             if [[ "${{ matrix.NXF_VER }}" == "latest-everything" ]]; then
               echo "::warning::Test with latest-everything failed but will not cause workflow failure. Please check if the error is expected or if it needs fixing."
@@ -134,11 +530,9 @@ jobs:
       - name: One or more tests failed (excluding latest-everything)
         if: ${{ contains(needs.*.result, 'failure') }}
         run: exit 1
-
       - name: One or more tests cancelled
         if: ${{ contains(needs.*.result, 'cancelled') }}
         run: exit 1
-
       - name: All tests ok
         if: ${{ contains(needs.*.result, 'success') }}
         run: exit 0
@@ -146,7 +540,7 @@ jobs:
       - name: debug-print
         if: always()
         run: |
-          echo "::group::DEBUG: `needs` Contents"
+          echo "::group::DEBUG: needs Contents"
           echo "DEBUG: toJSON(needs) = ${{ toJSON(needs) }}"
           echo "DEBUG: toJSON(needs.*.result) = ${{ toJSON(needs.*.result) }}"
           echo "::endgroup::"
