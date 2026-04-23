@@ -7,5 +7,10 @@ multiqc/multiqc_data/multiqc_sources.txt
 multiqc/multiqc_data/multiqc_software_versions.txt
 multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
 multiqc/multiqc_report.html
+multiqc/multiqc_data/llms-full.txt
+multiqc/multiqc_data/multiqc.parquet
 fastqc/*_fastqc.{html,zip}
 pipeline_info/*.{html,json,txt,yml}
+**/*.log
+**/*.biom
+**/*bowtie2out.txt

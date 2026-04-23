@@ -1,0 +1,177 @@
+nextflow_workflow {
+
+    name "Test profile "
+    script "../main.nf"
+    workflow "PROFILING"
+
+    tag "subworkflows"
+    tag "subworkflows/profile"
+
+
+    setup {
+        // Create synthetic FASTQ files with distinct nucleotides
+        def createFastq = { nucleotide, numReads = 150, readLength = 100 ->
+            def lines = []
+            (1..numReads).each { i ->
+                lines << "@READ_${i}"
+                lines << nucleotide * readLength
+                lines << "+"
+                lines << "I" * readLength
+            }
+            return lines.join('\n') + '\n'
+        }
+
+        // Create output directory using absolute path from outputDir
+        def testDir = new File(outputDir, 'test_data/fastq')
+        testDir.mkdirs()
+
+        // Define test files
+        def files = [
+            [sample: 'sample_A', run: 'run1', read: 'R1', nuc: 'A'],
+            [sample: 'sample_A', run: 'run1', read: 'R2', nuc: 'A'],
+            [sample: 'sample_A', run: 'run2', read: 'R1', nuc: 'A'],
+            [sample: 'sample_A', run: 'run2', read: 'R2', nuc: 'A'],
+            [sample: 'sample_T', run: 'run1', read: 'R1', nuc: 'T'],
+            [sample: 'sample_T', run: 'run1', read: 'R2', nuc: 'T'],
+            [sample: 'sample_T', run: 'run2', read: 'R1', nuc: 'T'],
+            [sample: 'sample_T', run: 'run2', read: 'R2', nuc: 'T'],
+            [sample: 'sample_C', run: 'run1', read: 'R1', nuc: 'C'],
+            [sample: 'sample_C', run: 'run1', read: 'R2', nuc: 'C'],
+            [sample: 'sample_G', run: 'run1', read: 'R1', nuc: 'G'],
+            [sample: 'sample_G', run: 'run1', read: 'R2', nuc: 'G']
+        ]
+
+        // Create all FASTQ files
+        files.each { spec ->
+            def filename = "${spec.sample}_${spec.run}_${spec.read}.fastq.gz"
+            def outfile = new File(testDir, filename)
+            def content = createFastq(spec.nuc)
+
+            // Write gzipped content
+            def gzipStream = new java.util.zip.GZIPOutputStream(new FileOutputStream(outfile))
+            gzipStream.write(content.bytes)
+            gzipStream.close()
+        }
+    }
+    test("run synthetic samples from sanity check ") {
+
+	setup {
+            run("DATAPREP") {
+		script "subworkflows/local/dataprep/main.nf"
+		process {
+                    """
+
+                    input[0] = Channel.fromList([
+                    // Sample A - two runs, all As
+                    [[id: "sample_A"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_A_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_A_run1_R2.fastq.gz"), ""],
+			[[id: "sample_A"], "run2", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_A_run2_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_A_run2_R2.fastq.gz"), ""],
+
+			// Sample T - two runs, all Ts
+			[[id: "sample_T"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_T_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_T_run1_R2.fastq.gz"), ""],
+			[[id: "sample_T"], "run2", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_T_run2_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_T_run2_R2.fastq.gz"), ""],
+
+			// Sample C - one run, all Cs
+			[[id: "sample_C"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_C_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_C_run1_R2.fastq.gz"), ""],
+
+			// Sample G - one run, all Gs
+			[[id: "sample_G"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_G_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_G_run1_R2.fastq.gz"), ""]
+                ])
+                    """
+		}
+            }
+
+
+
+            run("DBPREP") {
+		script "subworkflows/local/dbprep/main.nf"
+		process {
+                    """
+		    input[0] = Channel.of(
+                [
+                [
+                id: 'fmh',
+                    tool: 'fmhfunprofiler',
+                    db_name: 'demo_1000',
+                    db_entity: '',
+                    db_params: '11 1000'
+		],
+			file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip')
+            ],
+                [
+                [
+                id: 'humann_v3_demo_v3_humann_nucleotide',
+                    tool: 'humann_v3',
+                    db_name: 'demo_v3',
+                    db_entity: 'humann_nucleotide',
+                    db_params: ''
+            ],
+                    file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz')
+            ],
+		    [
+                [
+                id: 'humann_v3_demo_v3_humann_protein',
+                    tool: 'humann_v3',
+                    db_name: 'demo_v3',
+                    db_entity: 'humann_protein',
+                    db_params: ''
+            ],
+		    file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz')
+            ],
+                    [
+                [
+                id: 'humann_v3_demo_v3_humann_metaphlan',
+                    tool: 'humann_v3',
+                    db_name: 'demo_v3',
+                    db_entity: 'humann_metaphlan',
+                    db_params: ''
+            ],
+		    file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/delete_me/metaphlan4_database.tar.gz')
+            ],
+                    [
+                [
+                id: 'humann_v3_demo_v3_humann_utility',
+                    tool: 'humann_v3',
+                    db_name: 'demo_v3',
+                    db_entity: 'humann_utility',
+                    db_params: ''
+            ],
+		    file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz')
+            ]
+
+            )
+                    """
+		}
+            }
+	}
+        when {
+	    params {
+		run_humann_v3 = true
+		run_fmhfunprofiler = false
+	    }
+            workflow {
+                """
+                input[0] = DATAPREP.out.reads
+                input[1] = DATAPREP.out.reads_concat
+                input[2] = DBPREP.out.dbs
+
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+    }
+}

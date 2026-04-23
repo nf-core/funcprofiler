@@ -1,0 +1,92 @@
+{
+    "fmhfunprofiler - fastq - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "db_name": "demo"
+                        },
+                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,82ff17528f0b59f02d8c72fd4beef144"
+                    ]
+                ],
+                "1": [
+                    [
+                        "FMHFUNPROFILER",
+                        "fmh-funprofiler",
+                        "ghcr.io/vdblab/fmhfunprofiler:20250930a"
+                    ]
+                ],
+                "ko": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "db_name": "demo"
+                        },
+                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,82ff17528f0b59f02d8c72fd4beef144"
+                    ]
+                ],
+                "versions_fmhfunprofiler": [
+                    [
+                        "FMHFUNPROFILER",
+                        "fmh-funprofiler",
+                        "ghcr.io/vdblab/fmhfunprofiler:20250930a"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-17T11:41:27.510937",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "fmhfunprofiler - fastq": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "db_name": "demo"
+                        },
+                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
+                    ]
+                ],
+                "1": [
+                    [
+                        "FMHFUNPROFILER",
+                        "fmh-funprofiler",
+                        "ghcr.io/vdblab/fmhfunprofiler:20250930a"
+                    ]
+                ],
+                "ko": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true,
+                            "db_name": "demo"
+                        },
+                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
+                    ]
+                ],
+                "versions_fmhfunprofiler": [
+                    [
+                        "FMHFUNPROFILER",
+                        "fmh-funprofiler",
+                        "ghcr.io/vdblab/fmhfunprofiler:20250930a"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-17T11:42:44.492003",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

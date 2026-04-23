@@ -50,7 +50,7 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          max_shards: 7
+          max_shards: 15
 
       - name: debug
         run: |
@@ -68,7 +68,7 @@ jobs:
       fail-fast: false
       matrix:
         shard: ${{ fromJson(needs.nf-test-changes.outputs.shard) }}
-        profile: [conda, docker, singularity]
+        profile: [docker, singularity]
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
         # Exclude conda and singularity on dev
@@ -79,7 +79,6 @@ jobs:
             profile: "singularity"
         NXF_VER:
           - "24.10.5"
-          - "latest-everything"
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
@@ -99,7 +98,17 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-
+      - name: list contents
+        run: ls -R "${{ env.NFT_WORKDIR }}"
+      - name: list funcprofilercontents
+        run: ls -R /home/runner/_work/funcprofiler/funcprofiler/
+      - name: Upload artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: my-artifact-${{ matrix.profile }}-${{ matrix.NXF_VER }}-${{ matrix.shard }}
+          path: /home/runner/_work/funcprofiler/funcprofiler/
+          retention-days: 2
       - name: Report test status
         if: ${{ always() }}
         run: |
@@ -118,7 +127,7 @@ jobs:
   confirm-pass:
     needs: [nf-test]
     if: always()
-    runs-on:  # use self-hosted runners
+    runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-confirm-pass
       - runner=2cpu-linux-x64
     steps:

@@ -1,0 +1,167 @@
+{
+    "untar test db": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "tool": "fmhfunprofiler",
+                            "db_name": "fmhfunprofiler1000",
+                            "db_params": "11 1000"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/nf-core/test-datasets/modules/data/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
+                            }
+                        ]
+                    ]
+                ],
+                "dbs": [
+                    [
+                        {
+                            "tool": "fmhfunprofiler",
+                            "db_name": "fmhfunprofiler1000",
+                            "db_params": "11 1000"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/nf-core/test-datasets/modules/data/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip"
+                            }
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-17T14:42:38.677532",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "leave untarred alone": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "tool": "test",
+                            "db_name": "test_dontuntar",
+                            "db_params": "-"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
+                            }
+                        ]
+                    ]
+                ],
+                "dbs": [
+                    [
+                        {
+                            "tool": "test",
+                            "db_name": "test_dontuntar",
+                            "db_params": "-"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": "/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam"
+                            }
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-17T14:42:33.150258",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "untar and card postprocess test db": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "tool": "rgi",
+                            "db_name": "cardtest",
+                            "db_params": "-"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": [
+                                    "CARD-Download-README.txt:md5,b57364cc1a5fab0541e13a01fabe5dea",
+                                    "PMID.tsv:md5,e3ce79c4b5dcf0a9e3117ed683f96e54",
+                                    "aro_categories.tsv:md5,6f9c4b0410b9e2b3cf5867a2a3f1db07",
+                                    "aro_categories_index.tsv:md5,d5fbc673c0de6601b07c8016b3909f8e",
+                                    "aro_index.tsv:md5,0f183c7869876fa32c8f86aade0df7b5",
+                                    "card.json:md5,72156d00155f69e637664bfb5d3b5395",
+                                    "card_database_v4.0.1.fasta:md5,5ead0b239c312ebb068a3b5aa9676b2d",
+                                    "card_database_v4.0.1_all.fasta:md5,f389ce15fac30e9ab394ca8a49f6451f",
+                                    "nucleotide_fasta_protein_homolog_model.fasta:md5,696d1aa4f04bd08fc4bdeea33ab9db43",
+                                    "nucleotide_fasta_protein_knockout_model.fasta:md5,d8224ce019ad69a041d83ccf7877b4e0",
+                                    "nucleotide_fasta_protein_overexpression_model.fasta:md5,80a1e7957c79d311446e06c6dd49db8e",
+                                    "nucleotide_fasta_protein_variant_model.fasta:md5,7450e559045c9d1d8f13c73054c64f4c",
+                                    "nucleotide_fasta_rRNA_gene_variant_model.fasta:md5,bd53f46d630f652c9f6b7584c2126e1f",
+                                    "protein_fasta_protein_homolog_model.fasta:md5,36ea300133fd7c5a45de2fee4c5050bf",
+                                    "protein_fasta_protein_knockout_model.fasta:md5,f16667df70d1a5f910d3ae45f5250c3d",
+                                    "protein_fasta_protein_overexpression_model.fasta:md5,723e8762be5c96aed8c379a6499cecee",
+                                    "protein_fasta_protein_variant_model.fasta:md5,8c02d8fc84c9a90953f8534355244019",
+                                    "shortname_antibiotics.tsv:md5,9a4ba742fd8a3a49c7f50744001a4129",
+                                    "shortname_pathogens.tsv:md5,5211712be4f4c3306cbe4052cafae1d7",
+                                    "snps.txt:md5,529d4fdb74c8940c0930ec1a7a6d4980"
+                                ]
+                            }
+                        ]
+                    ]
+                ],
+                "dbs": [
+                    [
+                        {
+                            "tool": "rgi",
+                            "db_name": "cardtest",
+                            "db_params": "-"
+                        },
+                        [
+                            {
+                                "db_entity": "main",
+                                "db_path": [
+                                    "CARD-Download-README.txt:md5,b57364cc1a5fab0541e13a01fabe5dea",
+                                    "PMID.tsv:md5,e3ce79c4b5dcf0a9e3117ed683f96e54",
+                                    "aro_categories.tsv:md5,6f9c4b0410b9e2b3cf5867a2a3f1db07",
+                                    "aro_categories_index.tsv:md5,d5fbc673c0de6601b07c8016b3909f8e",
+                                    "aro_index.tsv:md5,0f183c7869876fa32c8f86aade0df7b5",
+                                    "card.json:md5,72156d00155f69e637664bfb5d3b5395",
+                                    "card_database_v4.0.1.fasta:md5,5ead0b239c312ebb068a3b5aa9676b2d",
+                                    "card_database_v4.0.1_all.fasta:md5,f389ce15fac30e9ab394ca8a49f6451f",
+                                    "nucleotide_fasta_protein_homolog_model.fasta:md5,696d1aa4f04bd08fc4bdeea33ab9db43",
+                                    "nucleotide_fasta_protein_knockout_model.fasta:md5,d8224ce019ad69a041d83ccf7877b4e0",
+                                    "nucleotide_fasta_protein_overexpression_model.fasta:md5,80a1e7957c79d311446e06c6dd49db8e",
+                                    "nucleotide_fasta_protein_variant_model.fasta:md5,7450e559045c9d1d8f13c73054c64f4c",
+                                    "nucleotide_fasta_rRNA_gene_variant_model.fasta:md5,bd53f46d630f652c9f6b7584c2126e1f",
+                                    "protein_fasta_protein_homolog_model.fasta:md5,36ea300133fd7c5a45de2fee4c5050bf",
+                                    "protein_fasta_protein_knockout_model.fasta:md5,f16667df70d1a5f910d3ae45f5250c3d",
+                                    "protein_fasta_protein_overexpression_model.fasta:md5,723e8762be5c96aed8c379a6499cecee",
+                                    "protein_fasta_protein_variant_model.fasta:md5,8c02d8fc84c9a90953f8534355244019",
+                                    "shortname_antibiotics.tsv:md5,9a4ba742fd8a3a49c7f50744001a4129",
+                                    "shortname_pathogens.tsv:md5,5211712be4f4c3306cbe4052cafae1d7",
+                                    "snps.txt:md5,529d4fdb74c8940c0930ec1a7a6d4980"
+                                ]
+                            }
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-23T14:59:18.808914",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

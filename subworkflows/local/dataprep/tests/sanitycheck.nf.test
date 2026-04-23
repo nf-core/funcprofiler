@@ -1,0 +1,392 @@
+nextflow_workflow {
+
+    name "Test DATAPREP - Verify No Sample Mixing"
+    script "../main.nf"
+    workflow "DATAPREP"
+
+    tag "subworkflows"
+    tag "subworkflows/dataprep"
+    tag "dataprep"
+
+    setup {
+        // Create synthetic FASTQ files with distinct nucleotides
+        def createFastq = { nucleotide, numReads = 50, readLength = 10 ->
+            def lines = []
+            (1..numReads).each { i ->
+                lines << "@READ_${i}"
+                lines << nucleotide * readLength
+                lines << "+"
+                lines << "I" * readLength
+            }
+            return lines.join('\n') + '\n'
+        }
+
+        // Create output directory using absolute path from outputDir
+        def testDir = new File(outputDir, 'test_data/fastq')
+        testDir.mkdirs()
+
+        // Define test files
+        def files = [
+            [sample: 'sample_A', run: 'run1', read: 'R1', nuc: 'A'],
+            [sample: 'sample_A', run: 'run1', read: 'R2', nuc: 'A'],
+            [sample: 'sample_A', run: 'run2', read: 'R1', nuc: 'A'],
+            [sample: 'sample_A', run: 'run2', read: 'R2', nuc: 'A'],
+            [sample: 'sample_T', run: 'run1', read: 'R1', nuc: 'T'],
+            [sample: 'sample_T', run: 'run1', read: 'R2', nuc: 'T'],
+            [sample: 'sample_T', run: 'run2', read: 'R1', nuc: 'T'],
+            [sample: 'sample_T', run: 'run2', read: 'R2', nuc: 'T'],
+            [sample: 'sample_C', run: 'run1', read: 'R1', nuc: 'C'],
+            [sample: 'sample_C', run: 'run1', read: 'R2', nuc: 'C'],
+            [sample: 'sample_G', run: 'run1', read: 'R1', nuc: 'G'],
+            [sample: 'sample_G', run: 'run1', read: 'R2', nuc: 'G']
+        ]
+
+        // Create all FASTQ files
+        files.each { spec ->
+            def filename = "${spec.sample}_${spec.run}_${spec.read}.fastq.gz"
+            def outfile = new File(testDir, filename)
+            def content = createFastq(spec.nuc)
+
+            // Write gzipped content
+            def gzipStream = new java.util.zip.GZIPOutputStream(new FileOutputStream(outfile))
+            gzipStream.write(content.bytes)
+            gzipStream.close()
+        }
+    }
+
+    test("Verify run merging doesn't mix samples - nucleotide check") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.fromList([
+                    // Sample A - two runs, all As
+                    [[id: "sample_A"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_A_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_A_run1_R2.fastq.gz"), ""],
+                    [[id: "sample_A"], "run2", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_A_run2_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_A_run2_R2.fastq.gz"), ""],
+
+                    // Sample T - two runs, all Ts
+                    [[id: "sample_T"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_T_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_T_run1_R2.fastq.gz"), ""],
+                    [[id: "sample_T"], "run2", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_T_run2_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_T_run2_R2.fastq.gz"), ""],
+
+                    // Sample C - one run, all Cs
+                    [[id: "sample_C"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_C_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_C_run1_R2.fastq.gz"), ""],
+
+                    // Sample G - one run, all Gs
+                    [[id: "sample_G"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_G_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_G_run1_R2.fastq.gz"), ""]
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            // Helper function to extract sequences from gzipped FASTQ
+            def extractSequences = { fastqFile ->
+                def sequences = new StringBuilder()
+                def gzipStream = new java.util.zip.GZIPInputStream(new FileInputStream(fastqFile.toString()))
+                def reader = new BufferedReader(new InputStreamReader(gzipStream))
+
+                def lineNum = 0
+                reader.eachLine { line ->
+                    // FASTQ format: sequence is every 4n+1 line (0-indexed: lines 1, 5, 9, ...)
+                    if (lineNum % 4 == 1) {
+                        sequences.append(line)
+                    }
+                    lineNum++
+                }
+
+                reader.close()
+                return sequences.toString()
+            }
+
+            // Should have 4 samples after merging: A, T, C, G
+            def concat_items = workflow.out.reads_concat.toList()
+            assert concat_items.size() == 4, "Expected 4 samples, got ${concat_items.size()}"
+
+            def paired_items = workflow.out.reads.toList()
+            assert paired_items.size() == 4, "Expected 4 samples in paired output, got ${paired_items.size()}"
+
+            // Verify each concatenated sample has exactly 1 file
+            concat_items.each { meta, reads ->
+                def fileList = reads instanceof List ? reads : [reads]
+                assert fileList.size() == 1,
+                    "Expected exactly 1 concatenated file for ${meta.id}, got ${fileList.size()}"
+            }
+
+            // Verify each paired sample has exactly 2 files
+            paired_items.each { meta, reads ->
+                def fileList = reads instanceof List ? reads : [reads]
+                assert fileList.size() == 2,
+                    "Expected exactly 2 files for ${meta.id}, got ${fileList.size()}"
+            }
+
+            // CRITICAL TEST: Verify no sample mixing by checking nucleotide content
+            concat_items.each { meta, reads ->
+                def fileList = reads instanceof List ? reads : [reads]
+                def concat_file = fileList[0]
+
+                // Read gzipped FASTQ and extract sequences
+                def sequences = extractSequences(concat_file)
+
+                // Verify nucleotide composition based on sample ID
+                switch(meta.id) {
+                    case "sample_A":
+                        assert !sequences.contains('T'), "Sample A contains Ts - possible mixing with sample T!"
+                        assert !sequences.contains('C'), "Sample A contains Cs - possible mixing with sample C!"
+                        assert !sequences.contains('G'), "Sample A contains Gs - possible mixing with sample G!"
+                        assert sequences.contains('A'), "Sample A should contain As!"
+                        assert sequences.replaceAll('A', '').replaceAll('\n', '') == '',
+                            "Sample A contains nucleotides other than A!"
+                        println "✓ Sample A verified: contains only As (${sequences.length()} nucleotides checked)"
+                        break
+
+                    case "sample_T":
+                        assert !sequences.contains('A'), "Sample T contains As - possible mixing with sample A!"
+                        assert !sequences.contains('C'), "Sample T contains Cs - possible mixing with sample C!"
+                        assert !sequences.contains('G'), "Sample T contains Gs - possible mixing with sample G!"
+                        assert sequences.contains('T'), "Sample T should contain Ts!"
+                        assert sequences.replaceAll('T', '').replaceAll('\n', '') == '',
+                            "Sample T contains nucleotides other than T!"
+                        println "✓ Sample T verified: contains only Ts (${sequences.length()} nucleotides checked)"
+                        break
+
+                    case "sample_C":
+                        assert !sequences.contains('A'), "Sample C contains As - possible mixing with sample A!"
+                        assert !sequences.contains('T'), "Sample C contains Ts - possible mixing with sample T!"
+                        assert !sequences.contains('G'), "Sample C contains Gs - possible mixing with sample G!"
+                        assert sequences.contains('C'), "Sample C should contain Cs!"
+                        assert sequences.replaceAll('C', '').replaceAll('\n', '') == '',
+                            "Sample C contains nucleotides other than C!"
+                        println "✓ Sample C verified: contains only Cs (${sequences.length()} nucleotides checked)"
+                        break
+
+                    case "sample_G":
+                        assert !sequences.contains('A'), "Sample G contains As - possible mixing with sample A!"
+                        assert !sequences.contains('T'), "Sample G contains Ts - possible mixing with sample T!"
+                        assert !sequences.contains('C'), "Sample G contains Cs - possible mixing with sample C!"
+                        assert sequences.contains('G'), "Sample G should contain Gs!"
+                        assert sequences.replaceAll('G', '').replaceAll('\n', '') == '',
+                            "Sample G contains nucleotides other than G!"
+                        println "✓ Sample G verified: contains only Gs (${sequences.length()} nucleotides checked)"
+                        break
+                }
+            }
+
+            println "✓✓✓ All samples verified - no mixing detected! ✓✓✓"
+        }
+    }
+
+    test("Verify paired-end files maintain R1/R2 separation") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.fromList([
+                    // Sample with A in R1, T in R2 - run1
+                    [[id: "mixed_AT"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_A_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_T_run1_R2.fastq.gz"), ""],
+                    // Sample with A in R1, T in R2 - run2
+                    [[id: "mixed_AT"], "run2", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_A_run2_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_T_run2_R2.fastq.gz"), ""]
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            // Helper function to extract sequences from gzipped FASTQ
+            def extractSequences = { fastqFile ->
+                def sequences = new StringBuilder()
+                def gzipStream = new java.util.zip.GZIPInputStream(new FileInputStream(fastqFile.toString()))
+                def reader = new BufferedReader(new InputStreamReader(gzipStream))
+
+                def lineNum = 0
+                reader.eachLine { line ->
+                    // FASTQ format: sequence is every 4n+1 line (0-indexed: lines 1, 5, 9, ...)
+                    if (lineNum % 4 == 1) {
+                        sequences.append(line)
+                    }
+                    lineNum++
+                }
+
+                reader.close()
+                return sequences.toString()
+            }
+
+            def paired_items = workflow.out.reads.toList()
+            assert paired_items.size() == 1, "Expected 1 merged sample"
+
+            paired_items.each { meta, reads ->
+                def fileList = reads instanceof List ? reads : [reads]
+                assert fileList.size() == 2, "Expected R1 and R2 files"
+
+                // Verify R1 contains only As (not Ts from R2)
+                def r1_sequences = extractSequences(fileList[0].toString())
+                assert r1_sequences.contains('A'), "R1 should contain As"
+                assert !r1_sequences.contains('T'), "R1 contains Ts - R2 data was mixed into R1!"
+                assert r1_sequences.replaceAll('A', '').replaceAll('\n', '') == '',
+                    "R1 contains nucleotides other than A!"
+
+                // Verify R2 contains only Ts (not As from R1)
+                def r2_sequences = extractSequences(fileList[1].toString())
+                assert r2_sequences.contains('T'), "R2 should contain Ts"
+                assert !r2_sequences.contains('A'), "R2 contains As - R1 data was mixed into R2!"
+                assert r2_sequences.replaceAll('T', '').replaceAll('\n', '') == '',
+                    "R2 contains nucleotides other than T!"
+
+                println "✓ R1 and R2 verified: no cross-contamination between forward and reverse reads"
+            }
+        }
+    }
+    test("Verify run merging doesn't mix samples - full workflow") {
+	setup
+        when {
+            workflow {
+                """
+                input[0] = Channel.fromList([
+                    // Sample A - two runs, all As
+                    [[id: "sample_A"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_A_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_A_run1_R2.fastq.gz"), ""],
+                    [[id: "sample_A"], "run2", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_A_run2_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_A_run2_R2.fastq.gz"), ""],
+
+                    // Sample T - two runs, all Ts
+                    [[id: "sample_T"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_T_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_T_run1_R2.fastq.gz"), ""],
+                    [[id: "sample_T"], "run2", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_T_run2_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_T_run2_R2.fastq.gz"), ""],
+
+                    // Sample C - one run, all Cs
+                    [[id: "sample_C"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_C_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_C_run1_R2.fastq.gz"), ""],
+
+                    // Sample G - one run, all Gs
+                    [[id: "sample_G"], "run1", "ILLUMINA",
+                        file("$outputDir/test_data/fastq/sample_G_run1_R1.fastq.gz"),
+                        file("$outputDir/test_data/fastq/sample_G_run1_R2.fastq.gz"), ""]
+                ])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            // Helper function to extract sequences from gzipped FASTQ
+            def extractSequences = { fastqFile ->
+                def sequences = new StringBuilder()
+                def gzipStream = new java.util.zip.GZIPInputStream(new FileInputStream(fastqFile.toString()))
+                def reader = new BufferedReader(new InputStreamReader(gzipStream))
+
+                def lineNum = 0
+                reader.eachLine { line ->
+                    // FASTQ format: sequence is every 4n+1 line (0-indexed: lines 1, 5, 9, ...)
+                    if (lineNum % 4 == 1) {
+                        sequences.append(line)
+                    }
+                    lineNum++
+                }
+
+                reader.close()
+                return sequences.toString()
+            }
+
+            // Should have 4 samples after merging: A, T, C, G
+            def concat_items = workflow.out.reads_concat.toList()
+            assert concat_items.size() == 4, "Expected 4 samples, got ${concat_items.size()}"
+
+            def paired_items = workflow.out.reads.toList()
+            assert paired_items.size() == 4, "Expected 4 samples in paired output, got ${paired_items.size()}"
+
+            // Verify each concatenated sample has exactly 1 file
+            concat_items.each { meta, reads ->
+                def fileList = reads instanceof List ? reads : [reads]
+                assert fileList.size() == 1,
+                    "Expected exactly 1 concatenated file for ${meta.id}, got ${fileList.size()}"
+            }
+
+            // Verify each paired sample has exactly 2 files
+            paired_items.each { meta, reads ->
+                def fileList = reads instanceof List ? reads : [reads]
+                assert fileList.size() == 2,
+                    "Expected exactly 2 files for ${meta.id}, got ${fileList.size()}"
+            }
+
+            // CRITICAL TEST: Verify no sample mixing by checking nucleotide content
+            concat_items.each { meta, reads ->
+                def fileList = reads instanceof List ? reads : [reads]
+                def concat_file = fileList[0]
+
+                // Read gzipped FASTQ and extract sequences
+                def sequences = extractSequences(concat_file)
+
+                // Verify nucleotide composition based on sample ID
+                switch(meta.id) {
+                    case "sample_A":
+                        assert !sequences.contains('T'), "Sample A contains Ts - possible mixing with sample T!"
+                        assert !sequences.contains('C'), "Sample A contains Cs - possible mixing with sample C!"
+                        assert !sequences.contains('G'), "Sample A contains Gs - possible mixing with sample G!"
+                        assert sequences.contains('A'), "Sample A should contain As!"
+                        assert sequences.replaceAll('A', '').replaceAll('\n', '') == '',
+                            "Sample A contains nucleotides other than A!"
+                        println "✓ Sample A verified: contains only As (${sequences.length()} nucleotides checked)"
+                        break
+
+                    case "sample_T":
+                        assert !sequences.contains('A'), "Sample T contains As - possible mixing with sample A!"
+                        assert !sequences.contains('C'), "Sample T contains Cs - possible mixing with sample C!"
+                        assert !sequences.contains('G'), "Sample T contains Gs - possible mixing with sample G!"
+                        assert sequences.contains('T'), "Sample T should contain Ts!"
+                        assert sequences.replaceAll('T', '').replaceAll('\n', '') == '',
+                            "Sample T contains nucleotides other than T!"
+                        println "✓ Sample T verified: contains only Ts (${sequences.length()} nucleotides checked)"
+                        break
+
+                    case "sample_C":
+                        assert !sequences.contains('A'), "Sample C contains As - possible mixing with sample A!"
+                        assert !sequences.contains('T'), "Sample C contains Ts - possible mixing with sample T!"
+                        assert !sequences.contains('G'), "Sample C contains Gs - possible mixing with sample G!"
+                        assert sequences.contains('C'), "Sample C should contain Cs!"
+                        assert sequences.replaceAll('C', '').replaceAll('\n', '') == '',
+                            "Sample C contains nucleotides other than C!"
+                        println "✓ Sample C verified: contains only Cs (${sequences.length()} nucleotides checked)"
+                        break
+
+                    case "sample_G":
+                        assert !sequences.contains('A'), "Sample G contains As - possible mixing with sample A!"
+                        assert !sequences.contains('T'), "Sample G contains Ts - possible mixing with sample T!"
+                        assert !sequences.contains('C'), "Sample G contains Cs - possible mixing with sample C!"
+                        assert sequences.contains('G'), "Sample G should contain Gs!"
+                        assert sequences.replaceAll('G', '').replaceAll('\n', '') == '',
+                            "Sample G contains nucleotides other than G!"
+                        println "✓ Sample G verified: contains only Gs (${sequences.length()} nucleotides checked)"
+                        break
+                }
+            }
+
+            println "✓✓✓ All samples verified - no mixing detected! ✓✓✓"
+        }
+    }
+}
