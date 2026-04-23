@@ -167,7 +167,7 @@ workflow PROFILING {
     // channel element order in sync with each other
 
     // PAIRED-END READ TOOLS
-    rgi_inputs = prepareInputs(reads, databases, 'rgi', false)
+    ch_input_for_rgi = prepareInputs(reads, databases, 'rgi', false)
 
     // CONCAT READ TOOLS
     ch_input_for_fmhfunprofiler = prepareInputs(reads_concat, databases, 'fmhfunprofiler', true)

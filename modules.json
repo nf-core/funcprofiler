@@ -15,6 +15,11 @@
                         "git_sha": "8d52ac1b6f035f46c005a27b3510873c2a67ea41",
                         "installed_by": ["modules"]
                     },
+                    "diamond/makedb": {
+                        "branch": "master",
+                        "git_sha": "1b534ad2336876dbe82e9fea2773334cb624b426",
+                        "installed_by": ["modules"]
+                    },
                     "eggnogmapper": {
                         "branch": "master",
                         "git_sha": "e11b95631ff49d1e2530b0e493289e7579ee259b",
@@ -35,6 +40,11 @@
                         "git_sha": "fe0ec4b67b1abd71ff9b5ece41fd5a4d8abadad5",
                         "installed_by": ["modules"]
                     },
+                    "mmseqs/createdb": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "cb9f4bec379866ca560f7f79d9a9a06bea8c9b51",
@@ -42,7 +52,12 @@
                     },
                     "rgi/bwt": {
                         "branch": "master",
-                        "git_sha": "d6ba7c11771e7d7b65136b4ecd11fbea49261cbb",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "rgi/cardannotation": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "seqkit/fq2fa": {

@@ -1,0 +1,125 @@
+{
+    "Should build a DIAMOND db file from a fasta file with taxonomic information": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dmnd:md5,1839d400a3f352eb84e4902f56333d0b"
+                    ]
+                ],
+                "1": [
+                    [
+                        "DIAMOND_MAKEDB",
+                        "diamond",
+                        "2.1.24"
+                    ]
+                ],
+                "db": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dmnd:md5,1839d400a3f352eb84e4902f56333d0b"
+                    ]
+                ],
+                "versions_diamond": [
+                    [
+                        "DIAMOND_MAKEDB",
+                        "diamond",
+                        "2.1.24"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-22T16:11:25.078943234",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "Should build a DIAMOND db file from a fasta file without taxonomic information": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dmnd:md5,8f801d5d88c186e7971be6158ec7a5e5"
+                    ]
+                ],
+                "1": [
+                    [
+                        "DIAMOND_MAKEDB",
+                        "diamond",
+                        "2.1.24"
+                    ]
+                ],
+                "db": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dmnd:md5,8f801d5d88c186e7971be6158ec7a5e5"
+                    ]
+                ],
+                "versions_diamond": [
+                    [
+                        "DIAMOND_MAKEDB",
+                        "diamond",
+                        "2.1.24"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-22T16:11:12.302655161",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "Should build a DIAMOND db file from a zipped fasta file without taxonomic information": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dmnd:md5,8f801d5d88c186e7971be6158ec7a5e5"
+                    ]
+                ],
+                "1": [
+                    [
+                        "DIAMOND_MAKEDB",
+                        "diamond",
+                        "2.1.24"
+                    ]
+                ],
+                "db": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.dmnd:md5,8f801d5d88c186e7971be6158ec7a5e5"
+                    ]
+                ],
+                "versions_diamond": [
+                    [
+                        "DIAMOND_MAKEDB",
+                        "diamond",
+                        "2.1.24"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-22T16:11:18.469516353",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

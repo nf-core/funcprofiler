@@ -55,7 +55,33 @@ nextflow_workflow {
             assertAll(
                 { assert snapshot(
                     workflow.out
-                    //TODO nf-core: Add all required assertions to verify the test output.
+                ).match() }
+            )
+        }
+    }
+    test("untar and card postprocess test db") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+		[
+		[id: 'test',
+		    tool: 'rgi',
+		    db_name: 'cardtest',
+		    db_entity: '',
+		    db_params: ''
+	    ],
+                    file(params.modules_testdata_base_path + 'genomics/prokaryotes/metagenome/rgi/card-data.tar.bz2')
+            ])
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.out
                 ).match() }
             )
         }
