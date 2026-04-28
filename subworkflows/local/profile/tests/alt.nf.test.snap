@@ -1,0 +1,285 @@
+{
+    "run synthetic samples from sanity check ": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "sample_A",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_A_genefamilies.tsv.gz:md5,75af325ad70b705ef4c784190f070f3d"
+                    ],
+                    [
+                        {
+                            "id": "sample_A",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_A_pathabundance.tsv.gz:md5,9c2e51c1fd7e15a61b6944bc7edaf193"
+                    ],
+                    [
+                        {
+                            "id": "sample_A",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_A_pathcoverage.tsv.gz:md5,fae15dd14d38b0a7e4a98536692a77fc"
+                    ],
+                    [
+                        {
+                            "id": "sample_A",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_A_profile.txt:md5,c980f3a1cfcb8db11e94633cae77083e"
+                    ],
+                    [
+                        {
+                            "id": "sample_C",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_C_genefamilies.tsv.gz:md5,5dffa1bf7720d99e59586472e15c5aa0"
+                    ],
+                    [
+                        {
+                            "id": "sample_C",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_C_pathabundance.tsv.gz:md5,7dfa94a9962081f464c774fee8cd6c45"
+                    ],
+                    [
+                        {
+                            "id": "sample_C",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_C_pathcoverage.tsv.gz:md5,5301bb52828e1c21d2a67ecce827c855"
+                    ],
+                    [
+                        {
+                            "id": "sample_C",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_C_profile.txt:md5,419936804cbcee9cc4b52724298d5802"
+                    ],
+                    [
+                        {
+                            "id": "sample_G",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_G_genefamilies.tsv.gz:md5,75b8451d28f74cce203f06ce42e98433"
+                    ],
+                    [
+                        {
+                            "id": "sample_G",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_G_pathabundance.tsv.gz:md5,2fdd7a523bc28237c06a4228dfbd9c05"
+                    ],
+                    [
+                        {
+                            "id": "sample_G",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_G_pathcoverage.tsv.gz:md5,a8d90fd3a9390b59751c4200ada8d795"
+                    ],
+                    [
+                        {
+                            "id": "sample_G",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_G_profile.txt:md5,2650d71c9d280ba926a4a11246085278"
+                    ],
+                    [
+                        {
+                            "id": "sample_T",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_T_genefamilies.tsv.gz:md5,ba6692c228b9eb985d9f3ab53bee64a7"
+                    ],
+                    [
+                        {
+                            "id": "sample_T",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_T_pathabundance.tsv.gz:md5,ff302966966fb597033100b302673929"
+                    ],
+                    [
+                        {
+                            "id": "sample_T",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_T_pathcoverage.tsv.gz:md5,eaeef8a7aec5c731cf8c2645692421e4"
+                    ],
+                    [
+                        {
+                            "id": "sample_T",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_T_profile.txt:md5,ad575e3cc426d0d364e4d04c453a604f"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "mqc": [
+                    
+                ],
+                "profiles": [
+                    [
+                        {
+                            "id": "sample_A",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_A_genefamilies.tsv.gz:md5,75af325ad70b705ef4c784190f070f3d"
+                    ],
+                    [
+                        {
+                            "id": "sample_A",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_A_pathabundance.tsv.gz:md5,9c2e51c1fd7e15a61b6944bc7edaf193"
+                    ],
+                    [
+                        {
+                            "id": "sample_A",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_A_pathcoverage.tsv.gz:md5,fae15dd14d38b0a7e4a98536692a77fc"
+                    ],
+                    [
+                        {
+                            "id": "sample_A",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_A_profile.txt:md5,c980f3a1cfcb8db11e94633cae77083e"
+                    ],
+                    [
+                        {
+                            "id": "sample_C",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_C_genefamilies.tsv.gz:md5,5dffa1bf7720d99e59586472e15c5aa0"
+                    ],
+                    [
+                        {
+                            "id": "sample_C",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_C_pathabundance.tsv.gz:md5,7dfa94a9962081f464c774fee8cd6c45"
+                    ],
+                    [
+                        {
+                            "id": "sample_C",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_C_pathcoverage.tsv.gz:md5,5301bb52828e1c21d2a67ecce827c855"
+                    ],
+                    [
+                        {
+                            "id": "sample_C",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_C_profile.txt:md5,419936804cbcee9cc4b52724298d5802"
+                    ],
+                    [
+                        {
+                            "id": "sample_G",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_G_genefamilies.tsv.gz:md5,75b8451d28f74cce203f06ce42e98433"
+                    ],
+                    [
+                        {
+                            "id": "sample_G",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_G_pathabundance.tsv.gz:md5,2fdd7a523bc28237c06a4228dfbd9c05"
+                    ],
+                    [
+                        {
+                            "id": "sample_G",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_G_pathcoverage.tsv.gz:md5,a8d90fd3a9390b59751c4200ada8d795"
+                    ],
+                    [
+                        {
+                            "id": "sample_G",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_G_profile.txt:md5,2650d71c9d280ba926a4a11246085278"
+                    ],
+                    [
+                        {
+                            "id": "sample_T",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_T_genefamilies.tsv.gz:md5,ba6692c228b9eb985d9f3ab53bee64a7"
+                    ],
+                    [
+                        {
+                            "id": "sample_T",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_T_pathabundance.tsv.gz:md5,ff302966966fb597033100b302673929"
+                    ],
+                    [
+                        {
+                            "id": "sample_T",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_T_pathcoverage.tsv.gz:md5,eaeef8a7aec5c731cf8c2645692421e4"
+                    ],
+                    [
+                        {
+                            "id": "sample_T",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        "sample_T_profile.txt:md5,ad575e3cc426d0d364e4d04c453a604f"
+                    ]
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "timestamp": "2026-04-20T00:07:12.29718",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

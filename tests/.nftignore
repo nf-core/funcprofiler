@@ -14,9 +14,3 @@ pipeline_info/*.{html,json,txt,yml}
 **/*.log
 **/*.biom
 **/*bowtie2out.txt
-**/*_regroup.tsv.gz
-**/*_reactions.tsv.gz
-**/*_genefamilies.tsv.gz
-**/*_analysis.tsv
-**/*_ec_count.tsv
-**/*_multi_ec.tsv

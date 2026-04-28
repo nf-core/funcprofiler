@@ -1,0 +1,105 @@
+{
+    "paired-end runmerged": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "2612",
+                            "single_end": false,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        [
+                            "2612_1.merged.fastq.gz:md5,e38f6e7ad98fc7b848b4967bde945d13",
+                            "2612_2.merged.fastq.gz:md5,5f40e29533a8f88521954301b836dbd8"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "minigut",
+                            "single_end": false,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        [
+                            "/nf-core/test-datasets/mag/test_data/test_minigut_R1.fastq.gz",
+                            "/nf-core/test-datasets/mag/test_data/test_minigut_R2.fastq.gz"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "2612",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        [
+                            "2612.merged.fastq.gz:md5,270bf4c4d9707c6afc970fe5622cc673"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "minigut",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        [
+                            "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129"
+                        ]
+                    ]
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "2612",
+                            "single_end": false,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        [
+                            "2612_1.merged.fastq.gz:md5,e38f6e7ad98fc7b848b4967bde945d13",
+                            "2612_2.merged.fastq.gz:md5,5f40e29533a8f88521954301b836dbd8"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "minigut",
+                            "single_end": false,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        [
+                            "/nf-core/test-datasets/mag/test_data/test_minigut_R1.fastq.gz",
+                            "/nf-core/test-datasets/mag/test_data/test_minigut_R2.fastq.gz"
+                        ]
+                    ]
+                ],
+                "reads_concat": [
+                    [
+                        {
+                            "id": "2612",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        [
+                            "2612.merged.fastq.gz:md5,270bf4c4d9707c6afc970fe5622cc673"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "minigut",
+                            "single_end": true,
+                            "instrument_platform": "ILLUMINA"
+                        },
+                        [
+                            "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129"
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-04-18T00:05:15.049339",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

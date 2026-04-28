@@ -1,0 +1,75 @@
+// TODO nf-core: Once you have added the required tests, please run the following command to build this file:
+// nf-core subworkflows test dataprep
+nextflow_workflow {
+
+    name "Test Subworkflow DATAPREP"
+    script "../main.nf"
+    workflow "DATAPREP"
+
+    tag "subworkflows"
+    tag "subworkflows_"
+    tag "subworkflows/dataprep"
+    // TODO nf-core: Add tags for all modules used within this subworkflow. Example:
+    tag "samtools"
+    tag "samtools/sort"
+    tag "samtools/index"
+
+
+    // TODO nf-core: Change the test name preferably indicating the test-data and file-format used
+    test("paired-end runmerged") {
+
+        when {
+            // params {
+	    // 	pipelines_testdata_base_path = '/Users/Watersn/GitHub/nf-core-funcprofiler'
+            // }
+            workflow {
+                """
+		input[0] = Channel.fromList(
+		[
+		[["id": "2612"],"ERR5766176",'ILLUMINA',
+		    file(params.pipelines_testdata_base_path + 'taxprofiler/data/fastq/ERX5474932_ERR5766176_1.fastq.gz'),
+		    file(params.pipelines_testdata_base_path + 'taxprofiler/data/fastq/ERX5474932_ERR5766176_2.fastq.gz'),''],
+		    [["id": "2612"], "ERR5766176_B","ILLUMINA",
+		    file(params.pipelines_testdata_base_path + 'taxprofiler/data/fastq/ERX5474932_ERR5766176_B_1.fastq.gz'),
+		    file(params.pipelines_testdata_base_path + 'taxprofiler/data/fastq/ERX5474932_ERR5766176_B_2.fastq.gz'),''],
+
+		    [['id':'minigut'],'1','ILLUMINA',
+		    file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R1.fastq.gz'),
+		    file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R2.fastq.gz'),'']
+	    ]
+	    )
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            def items = workflow.out.reads_concat.toList()
+	    assert items.size() == 2, "run merging appears to have failed"
+
+            items.each { meta, reads ->
+		// Check exactly 1 file per sample for concat channel
+		def fileList = reads instanceof List ? reads : [reads]
+		assert fileList.size() == 1,
+                    "Expected exactly 1 fastq file for ${meta.id}, got ${fileList}"
+
+	    }
+
+	    def pe_items = workflow.out.reads.toList()
+
+            pe_items.each { meta, reads ->
+		// Check exactly 1 file per sample for concat channel
+		def fileList = reads instanceof List ? reads : [reads]
+		assert fileList.size() == 2,
+                    "Expected exactly 2 fastq files for  ${meta.id}, got ${fileList}"
+
+	    }
+
+            assertAll(
+                { assert snapshot(
+                    workflow.out
+                    //TODO nf-core: Add all required assertions to verify the test output.
+                ).match() }
+            )
+        }
+    }
+}
