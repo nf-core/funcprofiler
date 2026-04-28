@@ -52,7 +52,7 @@ def DatabaseSheet() {
                         db_entity: 'humann_nucleotide',
                         db_params: ''
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz')
                 ],
                 // humann_v3 - uniref_nfDEMO.tar.gz
                 [
@@ -63,7 +63,7 @@ def DatabaseSheet() {
                         db_entity: 'humann_protein',
                         db_params: ''
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz')
                 ],
                 // humann_v3 - metaphlan4_database.tar.gz
                 [
@@ -96,7 +96,7 @@ def DatabaseSheet() {
                         db_entity: '',
                         db_params: '11 1000'
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip')
                 ],
                 // rgi
                 [
@@ -107,7 +107,7 @@ def DatabaseSheet() {
                         db_entity: '',
                         db_params: ''
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/rgi/broadstreet-v4.0.1.tar.bz2')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/rgi/broadstreet-v4.0.1.tar.bz2')
                 ],
                 // humann_v4 - chocophlan_nfDEMO.tar.gz
                 [
@@ -118,7 +118,7 @@ def DatabaseSheet() {
                         db_entity: 'humann_nucleotide',
                         db_params: ''
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v4/chocophlan_nfDEMO.tar.gz')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v4/chocophlan_nfDEMO.tar.gz')
                 ],
                 // humann_v4 - uniref_nfDEMO.tar.gz
                 [
@@ -129,7 +129,7 @@ def DatabaseSheet() {
                         db_entity: 'humann_protein',
                         db_params: ''
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v4/uniref_nfDEMO.tar.gz')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v4/uniref_nfDEMO.tar.gz')
                 ],
                 // humann_v4 - utility_nfDEMO.tar.gz
                 [
@@ -140,7 +140,7 @@ def DatabaseSheet() {
                         db_entity: 'humann_utility',
                         db_params: ''
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v4/utility_nfDEMO.tar.gz')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/humann/v4/utility_nfDEMO.tar.gz')
                 ],
                 // humann_v4 - metaphlan_demo_for_humann4.tar.gz
                 [
@@ -151,7 +151,7 @@ def DatabaseSheet() {
                         db_entity: 'humann_metaphlan',
                         db_params: ''
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/metaphlan/metaphlan_demo_for_humann4.tar.gz')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/metaphlan/metaphlan_demo_for_humann4.tar.gz')
                 ],
                 // mifaser
                 [
@@ -162,7 +162,7 @@ def DatabaseSheet() {
                         db_entity: '',
                         db_params: ''
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/mifaser/GS-24-all.tar.gz')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/mifaser/GS-24-all.tar.gz')
                 ],
                 // eggnogmapper - proteome.dmnd
                 [
@@ -173,7 +173,7 @@ def DatabaseSheet() {
                         db_entity: 'eggnogmapper_db',
                         db_params: ''
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/eggnog-mapper/proteome.dmnd')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/eggnog-mapper/proteome.dmnd')
                 ],
                 // eggnogmapper - eggnog.db
                 [
@@ -195,7 +195,7 @@ def DatabaseSheet() {
                         db_entity: 'eggnogmapper_db',
                         db_params: ''
                     ],
-                    file('https://github.com/nickp60/test-datasets/raw/refs/heads/funcprofiler/data/database/eggnog-mapper/proteome.dmnd')
+                    file('https://github.com/nf-core/test-datasets/raw/refs/heads/funcprofiler/data/database/eggnog-mapper/proteome.dmnd')
 	]
     ]
 
