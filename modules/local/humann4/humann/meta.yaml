@@ -1,4 +1,4 @@
-name: humann3
+name: humann4
 description: Functional analysis of metagenome or metatranscrtiptome data
 keywords:
   - function
@@ -8,9 +8,9 @@ keywords:
   - community
 tools:
   - humann:
-      description: "HUMAnN: The HMP Unified Metabolic Analysis Network, version 3"
+      description: "HUMAnN: The HMP Unified Metabolic Analysis Network, version 4"
       homepage: http://huttenhower.sph.harvard.edu/humann
-      documentation: https://github.com/biobakery/biobakery/wiki/humann3
+      documentation: https://github.com/biobakery/biobakery/wiki/humann4
       tool_dev_url: https://github.com/biobakery/humann
       doi: "10.7554/eLife.65088"
       licence: ["MIT"]
@@ -57,11 +57,11 @@ output:
       type: file
       description: Compressed tab separated text file
       pattern: "*.{tsv.gz}"
-  - pathcoverage:
+  - reactions:
       type: file
       description: Compressed tab separated text file
       pattern: "*.{tsv.gz}"
 
 authors:
   - "@d4straub"
-  - "nickp60"
+  - "@nickp60"

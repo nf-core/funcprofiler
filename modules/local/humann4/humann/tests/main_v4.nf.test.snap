@@ -18,11 +18,11 @@
                 "test_2_genefamilies.tsv.gz:md5,34f174a6d642d21bb14af35a6fe9dd69",
                 "test_3_reactions.tsv.gz:md5,c026112aa2b41eb63e3752db315b2515",
                 "test_4_pathabundance.tsv.gz:md5,825a3b76f509e1de6d27d10af6ef885a",
-                "test_profile.txt:md5,0dac5843d397e7042bf088cf65217f92",
-                "test_mock_profile.txt:md5,c155a9c471a135a1dbd6e9e075f3315c"
+                "test_profile.txt:md5,7b46009a97182106fa03e1d0e27351d7",
+                "test_mock_profile.txt:md5,762e6fe3aace26113c8e2f67200cb8c3"
             ]
         ],
-        "timestamp": "2026-04-09T14:08:41.72622",
+        "timestamp": "2026-04-17T15:05:37.147937",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -48,15 +48,7 @@
                     "test_pathabundance.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                 ]
             ],
-            [
-                [
-                    {
-                        "id": "test",
-                        "single_end": true
-                    },
-                    "test_pathcoverage.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
-                ]
-            ],
+            null,
             [
                 [
                     {
@@ -67,7 +59,7 @@
                 ]
             ]
         ],
-        "timestamp": "2026-03-27T17:08:36.431456",
+        "timestamp": "2026-04-22T12:35:28.940285",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

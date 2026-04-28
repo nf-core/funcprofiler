@@ -1,10 +1,9 @@
-
-process HUMANN_RENORM {
+process HUMANN4_RENORM {
     tag "$meta.id"
     label 'process_low'
 
-    conda 'bioconda::humann=3.6.1'
-    container 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1_smaller-pt2'
+    conda 'bioconda::humann=4.0.0.alpha.1-final'
+    container 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final_smaller-pt2'
 
     input:
     tuple val(meta), path(input)
