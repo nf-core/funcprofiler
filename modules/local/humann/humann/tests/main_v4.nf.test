@@ -139,7 +139,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.pathabundance, process.out.pathcoverage, process.out.reactions).match() }
+                { assert snapshot(process.out.genefamilies, process.out.pathabundance, process.out.pathcoverage, process.out.reactions).match() }
             )
         }
 
