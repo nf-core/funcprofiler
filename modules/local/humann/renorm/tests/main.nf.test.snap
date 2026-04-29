@@ -12,11 +12,7 @@
                     ]
                 ],
                 "1": [
-                    [
-                        "HUMANN_RENORM",
-                        "HUMAnN",
-                        "3.6.1"
-                    ]
+                    "versions.yml:md5,49268c7cedcecc2522d8395efca5725b"
                 ],
                 "renorm": [
                     [
@@ -27,16 +23,12 @@
                         "test_renorm.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                     ]
                 ],
-                "versions_humann": [
-                    [
-                        "HUMANN_RENORM",
-                        "HUMAnN",
-                        "3.6.1"
-                    ]
+                "versions": [
+                    "versions.yml:md5,49268c7cedcecc2522d8395efca5725b"
                 ]
             }
         ],
-        "timestamp": "2026-04-22T12:34:05.426069",
+        "timestamp": "2026-04-29T12:56:39.430969229",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

@@ -1,42 +1,50 @@
-
 process HUMANN_RENORM {
     tag "$meta.id"
     label 'process_low'
 
-    conda 'bioconda::humann=3.6.1'
-    container 'ghcr.io/vdblab/biobakery-profiler:4.0.5--3.6.1_smaller-pt2'
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/humann:3.9--py312hdfd78af_0' :
+        'biocontainers/humann:3.9--py312hdfd78af_0' }"
 
     input:
     tuple val(meta), path(input)
 
     output:
     tuple val(meta), path("*_renorm.tsv.gz"), emit: renorm
-    tuple val("${task.process}"), val('HUMAnN'), eval("humann --version 2>&1 | sed 's/humann v//'"), emit: versions_humann, topic: versions
+    path "versions.yml"                     , emit: versions
 
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    if [[ $input == *.gz ]]; then
-        gunzip -c $input > input.tsv
+    if [[ ${input} == *.gz ]]; then
+        gunzip -c ${input} > input.tsv
     else
-        mv $input input.tsv
+        cp ${input} input.tsv
     fi
 
     humann_renorm_table \\
         --input input.tsv \\
         --output ${prefix}_renorm.tsv \\
-        $args
+        ${args}
 
     gzip -n ${prefix}_renorm.tsv
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        humann: \$(humann --version 2>&1 | sed 's/humann v//')
+    END_VERSIONS
     """
 
     stub:
-    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     echo "stub" | gzip > ${prefix}_renorm.tsv.gz
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        humann: "3.9"
+    END_VERSIONS
     """
 }
