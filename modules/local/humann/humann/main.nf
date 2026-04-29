@@ -9,7 +9,7 @@ process HUMANN3 {
         'biocontainers/humann:3.9--py312hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(reads)
+    tuple val(meta), path(input)
     tuple val(meta2), path(profile)
     path nucleotide_db
     path protein_db
@@ -25,13 +25,14 @@ process HUMANN3 {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def nuc_ext = '*.ffn.gz'
     def profile_arg = profile ? "--taxonomic-profile ${profile}" : ""
     """
     PROTS_DB=\$(find -L "${protein_db}" -name "*.dmnd" -exec dirname {} \\; | head -1)
-    NUCS_DB=\$(find -L "${nucleotide_db}" -name "*.ffn.gz" -exec dirname {} \\; | head -1)
+    NUCS_DB=\$(find -L "${nucleotide_db}" -name "${nuc_ext}" -exec dirname {} \\; | head -1)
 
     humann \\
-        --input ${reads} \\
+        --input ${input} \\
         --output . \\
         --output-basename ${prefix} \\
         --nucleotide-database \${NUCS_DB} \\
@@ -51,8 +52,11 @@ process HUMANN3 {
     """
 
     stub:
+    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
+    echo $args
+
     for suf in genefamilies.tsv.gz pathabundance.tsv.gz pathcoverage.tsv.gz; do
         echo stub | gzip > ${prefix}_\${suf}
     done
