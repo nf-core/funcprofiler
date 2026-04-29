@@ -12,7 +12,7 @@ process HUMANN_RENORM {
 
     output:
     tuple val(meta), path("*_renorm.tsv.gz"), emit: renorm
-    tuple val("${task.process}"), val('HUMAnN'), eval("humann --version 2>&1 | sed 's/humann v//'"), emit: versions_humann, topic: versions
+    tuple val("${task.process}"), val('humann'), eval("humann --version 2>/dev/null | sed 's/humann v//'"), emit: versions_humann, topic: versions
 
     script:
     def args = task.ext.args ?: ''

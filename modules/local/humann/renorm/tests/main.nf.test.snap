@@ -14,8 +14,8 @@
                 "1": [
                     [
                         "HUMANN_RENORM",
-                        "HUMAnN",
-                        "/usr/local/lib/python3.12/site-packages/humann/utilities.py:144: SyntaxWarning: invalid escape sequence '\\*'\n  if re.search(\"\\*|[A-Za-z=.]+\",data[config.sam_read_index]):\n/usr/local/lib/python3.12/site-packages/humann/utilities.py:163: SyntaxWarning: invalid escape sequence '\\-'\n  if re.search(\"^[0-9E\\-.]+$\",data[config.gene_table_value_index]):\n/usr/local/lib/python3.12/site-packages/humann/search/prescreen.py:246: SyntaxWarning: invalid escape sequence '\\.'\n  if ( re.search(species.lower()+\"\\.\", species_file.lower()) or re.search(species.lower()+\"_group\\.\", species_file.lower()) ) and not new_database_file in species_file_list:\n/usr/local/lib/python3.12/site-packages/humann/search/prescreen.py:246: SyntaxWarning: invalid escape sequence '\\.'\n  if ( re.search(species.lower()+\"\\.\", species_file.lower()) or re.search(species.lower()+\"_group\\.\", species_file.lower()) ) and not new_database_file in species_file_list:\n/usr/local/lib/python3.12/site-packages/humann/search/nucleotide.py:163: SyntaxWarning: invalid escape sequence '\\d'\n  match_numbers=re.compile(\"\\d+\")\n/usr/local/lib/python3.12/site-packages/humann/search/nucleotide.py:164: SyntaxWarning: invalid escape sequence '\\D'\n  match_non_numbers=re.compile(\"\\D+\")\n3.9"
+                        "humann",
+                        "3.9"
                     ]
                 ],
                 "renorm": [
@@ -30,13 +30,13 @@
                 "versions_humann": [
                     [
                         "HUMANN_RENORM",
-                        "HUMAnN",
-                        "/usr/local/lib/python3.12/site-packages/humann/utilities.py:144: SyntaxWarning: invalid escape sequence '\\*'\n  if re.search(\"\\*|[A-Za-z=.]+\",data[config.sam_read_index]):\n/usr/local/lib/python3.12/site-packages/humann/utilities.py:163: SyntaxWarning: invalid escape sequence '\\-'\n  if re.search(\"^[0-9E\\-.]+$\",data[config.gene_table_value_index]):\n/usr/local/lib/python3.12/site-packages/humann/search/prescreen.py:246: SyntaxWarning: invalid escape sequence '\\.'\n  if ( re.search(species.lower()+\"\\.\", species_file.lower()) or re.search(species.lower()+\"_group\\.\", species_file.lower()) ) and not new_database_file in species_file_list:\n/usr/local/lib/python3.12/site-packages/humann/search/prescreen.py:246: SyntaxWarning: invalid escape sequence '\\.'\n  if ( re.search(species.lower()+\"\\.\", species_file.lower()) or re.search(species.lower()+\"_group\\.\", species_file.lower()) ) and not new_database_file in species_file_list:\n/usr/local/lib/python3.12/site-packages/humann/search/nucleotide.py:163: SyntaxWarning: invalid escape sequence '\\d'\n  match_numbers=re.compile(\"\\d+\")\n/usr/local/lib/python3.12/site-packages/humann/search/nucleotide.py:164: SyntaxWarning: invalid escape sequence '\\D'\n  match_non_numbers=re.compile(\"\\D+\")\n3.9"
+                        "humann",
+                        "3.9"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-04-29T15:02:13.674174765",
+        "timestamp": "2026-04-29T15:54:25.303270687",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

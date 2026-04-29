@@ -20,7 +20,7 @@ process HUMANN3 {
     tuple val(meta), path("*_pathabundance.tsv.gz"), emit: pathabundance
     tuple val(meta), path("*_pathcoverage.tsv.gz") , emit: pathcoverage
     tuple val(meta), path("*.log")                 , emit: log
-    tuple val("${task.process}"), val('HUMAnN'), eval("humann --version 2>&1 | sed 's/humann v//'"), emit: versions_humann, topic: versions
+    tuple val("${task.process}"), val('humann'), eval("humann --version 2>/dev/null | sed 's/humann v//'"), emit: versions_humann, topic: versions
     tuple val("${task.process}"), val('MetaPHLan'), eval("metaphlan --version 2>&1 | sed 's/metaphlan v//'"), emit: versions_metaphlan, topic: versions
 
     script:
