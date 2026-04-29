@@ -5,7 +5,7 @@
                 [
                     {
                         "id": "test",
-                        "single_end": false,
+                        "single_end": true,
                         "run_accession": "abc"
                     },
                     "test_genefamilies.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
@@ -15,7 +15,7 @@
                 [
                     {
                         "id": "test",
-                        "single_end": false,
+                        "single_end": true,
                         "run_accession": "abc"
                     },
                     "test_pathabundance.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
@@ -25,7 +25,7 @@
                 [
                     {
                         "id": "test",
-                        "single_end": false,
+                        "single_end": true,
                         "run_accession": "abc"
                     },
                     "test_pathcoverage.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
@@ -33,7 +33,7 @@
             ],
             null
         ],
-        "timestamp": "2026-04-29T12:48:49.458067221",
+        "timestamp": "2026-04-29T15:01:22.985906608",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -45,7 +45,7 @@
                 [
                     {
                         "id": "test",
-                        "single_end": false,
+                        "single_end": true,
                         "run_accession": "abc"
                     },
                     "test_genefamilies.tsv.gz:md5,b9777e24dd24e1257eb6906aba5463f5"
@@ -55,7 +55,7 @@
                 [
                     {
                         "id": "test",
-                        "single_end": false,
+                        "single_end": true,
                         "run_accession": "abc"
                     },
                     "test_pathabundance.tsv.gz:md5,65f73f474bdb2a7c8b278766ca789a3c"
@@ -65,7 +65,7 @@
                 [
                     {
                         "id": "test",
-                        "single_end": false,
+                        "single_end": true,
                         "run_accession": "abc"
                     },
                     "test_pathcoverage.tsv.gz:md5,17c91a2581f34b55179aa4c79c242b1c"
@@ -73,7 +73,7 @@
             ],
             null
         ],
-        "timestamp": "2026-04-29T12:48:29.935764976",
+        "timestamp": "2026-04-29T15:00:45.763028796",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

@@ -20,7 +20,8 @@ process HUMANN3 {
     tuple val(meta), path("*_pathabundance.tsv.gz"), emit: pathabundance
     tuple val(meta), path("*_pathcoverage.tsv.gz") , emit: pathcoverage
     tuple val(meta), path("*.log")                 , emit: log
-    path "versions.yml"                            , emit: versions
+    tuple val("${task.process}"), val('HUMAnN'), eval("humann --version 2>&1 | sed 's/humann v//'"), emit: versions_humann, topic: versions
+    tuple val("${task.process}"), val('MetaPHLan'), eval("metaphlan --version 2>&1 | sed 's/metaphlan v//'"), emit: versions_metaphlan, topic: versions
 
     script:
     def args = task.ext.args ?: ''
@@ -43,12 +44,6 @@ process HUMANN3 {
         ${args}
 
     gzip -n *.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        humann: \$(humann --version 2>&1 | sed 's/humann v//')
-        metaphlan: \$(metaphlan --version 2>&1 | sed 's/MetaPhlAn version //')
-    END_VERSIONS
     """
 
     stub:
@@ -61,11 +56,5 @@ process HUMANN3 {
         echo stub | gzip > ${prefix}_\${suf}
     done
     touch ${prefix}.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        humann: "3.9"
-        metaphlan: "4.0.0"
-    END_VERSIONS
     """
 }
