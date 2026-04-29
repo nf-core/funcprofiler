@@ -1,5 +1,5 @@
 process HUMANN4_RENORM {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_low'
 
     conda 'bioconda::humann=4.0.0.alpha.1-final'
@@ -16,16 +16,16 @@ process HUMANN4_RENORM {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    if [[ $input == *.gz ]]; then
-        gunzip -c $input > input.tsv
+    if [[ ${input} == *.gz ]]; then
+        gunzip -c ${input} > input.tsv
     else
-        mv $input input.tsv
+        mv ${input} input.tsv
     fi
 
     humann_renorm_table \\
         --input input.tsv \\
         --output ${prefix}_renorm.tsv \\
-        $args
+        ${args}
 
     gzip -n ${prefix}_renorm.tsv
 

@@ -33,9 +33,9 @@ workflow PIPELINE_INITIALISATION {
     outdir //  string: The output directory where the results will be saved
     input //  string: Path to input samplesheet
     databases //  string: Path to databases
-    help              // boolean: Display help message and exit
-    help_full         // boolean: Show the full help message
-    show_hidden       // boolean: Show hidden parameters in the help message
+    help // boolean: Display help message and exit
+    help_full // boolean: Show the full help message
+    show_hidden // boolean: Show hidden parameters in the help message
 
     main:
 
@@ -64,7 +64,7 @@ workflow PIPELINE_INITIALISATION {
 \033[0;35m  nf-core/funcprofiler ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------\033[0m-
 """
-    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
     https://doi.org/10.1038/s41587-020-0439-x
 
@@ -84,8 +84,8 @@ workflow PIPELINE_INITIALISATION {
         show_hidden,
         before_text,
         after_text,
-        command
-	)
+        command,
+    )
 
     //
     // Check config provided to the pipeline
@@ -98,15 +98,13 @@ workflow PIPELINE_INITIALISATION {
     // Create channel from input file provided through params.input
     //
 
-    Channel
-        .fromList(samplesheetToList(params.input, "assets/schema_input.json"))
+    Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
         .set { ch_samplesheet }
 
     //
     // Create channel from databases file provided through params.databases
     //
-    Channel
-        .fromList(samplesheetToList(params.databases, "assets/schema_database.json"))
+    Channel.fromList(samplesheetToList(params.databases, "assets/schema_database.json"))
         .set { ch_databases }
 
     emit:
@@ -152,9 +150,6 @@ workflow PIPELINE_COMPLETION {
         }
 
         completionSummary(monochrome_logs)
-//        if (hook_url) {
-//            imNotification(summary_params, hook_url)
-//        }
     }
 
     workflow.onError {
@@ -213,11 +208,11 @@ def toolCitationText() {
     ].join(' ').trim()
 
     def text_eggnogmapper = [
-        "Functional Annotation, Orthology Assignments, and Domain Prediction was performed with eggNOG-mapper v2 (Cantalapiedra et. al 2021)",
+        "Functional Annotation, Orthology Assignments, and Domain Prediction was performed with eggNOG-mapper v2 (Cantalapiedra et. al 2021)"
     ].join(' ').trim()
 
     def text_rgi = [
-       "Resistome prediction was performed using RGI (Alcock et. al 2023)",
+        "Resistome prediction was performed using RGI (Alcock et. al 2023)"
     ].join(' ').trim()
 
     def citation_text = [
@@ -261,11 +256,11 @@ def toolBibliographyText() {
     ].join(' ').trim()
 
     def text_eggnggmapper = [
-        params.run_eggnogmapper ? "<li>Carlos P Cantalapiedra, Ana Hernández-Plaza, Ivica Letunic, Peer Bork, Jaime Huerta-Cepas, eggNOG-mapper v2: Functional Annotation, Orthology Assignments, and Domain Prediction at the Metagenomic Scale, Molecular Biology and Evolution, Volume 38, Issue 12, December 2021, <a href = \"https://doi.org/10.1093/molbev/msab293\">0.1093/molbev/msab293</a></li>" : "",
+        params.run_eggnogmapper ? "<li>Carlos P Cantalapiedra, Ana Hernández-Plaza, Ivica Letunic, Peer Bork, Jaime Huerta-Cepas, eggNOG-mapper v2: Functional Annotation, Orthology Assignments, and Domain Prediction at the Metagenomic Scale, Molecular Biology and Evolution, Volume 38, Issue 12, December 2021, <a href = \"https://doi.org/10.1093/molbev/msab293\">0.1093/molbev/msab293</a></li>" : ""
     ].join(' ').trim()
 
     def text_rgi = [
-        params.run_rgi ? "<li>Alcock et al. 2023. CARD 2023: expanded curation, support for machine learning, and resistome prediction at the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research<a href = \"https://doi.org/10.1093/molbev/msab293\"<a href=\"https://pubmed.ncbi.nlm.nih.gov/36263822/\">pubmed.ncbi.nlm.nih.gov/36263822</a></li>" : "",
+        params.run_rgi ? "<li>Alcock et al. 2023. CARD 2023: expanded curation, support for machine learning, and resistome prediction at the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research<a href = \"https://doi.org/10.1093/molbev/msab293\"<a href=\"https://pubmed.ncbi.nlm.nih.gov/36263822/\">pubmed.ncbi.nlm.nih.gov/36263822</a></li>" : ""
     ].join(' ').trim()
 
     def reference_text = [

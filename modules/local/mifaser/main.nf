@@ -1,10 +1,11 @@
 process MIFASER {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_medium'
 
     // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
     conda "${moduleDir}/environment.yml"
     container 'ghcr.io/vdblab/mifaser:1.64d'
+
     input:
     tuple val(meta), path(reads)
     path db_path
@@ -15,6 +16,7 @@ process MIFASER {
     tuple val(meta), path("*analysis.tsv"), emit: analysis
     tuple val(meta), path("*ec_count.tsv"), emit: ec_counts
     tuple val("${task.process}"), val('mi-faser'), eval("mifaser --version 2>&1 | sed 's/* v//'"), emit: versions_mifaser, topic: versions
+
     when:
     task.ext.when == null || task.ext.when
 
@@ -24,10 +26,10 @@ process MIFASER {
     def input_string = meta.single_end ? "-f" : "-l"
     """
     mifaser \\
-        $args \\
-        $input_string ${reads} \\
+        ${args} \\
+        ${input_string} ${reads} \\
         --threads 1 \\
-        --cpu  $task.cpus \\
+        --cpu  ${task.cpus} \\
         --databasefolder ${db_path} \\
         --outputfolder mifaser-${prefix}/
 
@@ -49,7 +51,7 @@ process MIFASER {
     //               - The definition of args `def args = task.ext.args ?: ''` above.
     //               - The use of the variable in the script `echo $args ` below.
     """
-    echo $args
+    echo ${args}
     mkdir ${prefix}
     for suf in multi_ec.tsv analysis.tsv ec_count.tsv
     do
