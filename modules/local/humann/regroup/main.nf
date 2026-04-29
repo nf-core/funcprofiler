@@ -1,5 +1,5 @@
 process HUMANN3_REGROUP {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"

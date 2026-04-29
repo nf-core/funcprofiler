@@ -15,9 +15,9 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { FUNCPROFILER            } from './workflows/funcprofiler'
+include { FUNCPROFILER } from './workflows/funcprofiler'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_funcprofiler_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_funcprofiler_pipeline'
+include { PIPELINE_COMPLETION } from './subworkflows/local/utils_nfcore_funcprofiler_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,20 +29,20 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_func
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
 workflow NFCORE_FUNCPROFILER {
-
     take:
     samplesheet // channel: samplesheet read in from --input
-    databases   // channel: databases in from --databases
+    databases // channel: databases in from --databases
 
     main:
 
     //
     // WORKFLOW: Run pipeline
     //
-    FUNCPROFILER (
+    FUNCPROFILER(
         samplesheet,
-	databases,
+        databases,
     )
+
     emit:
     multiqc_report = FUNCPROFILER.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
@@ -53,12 +53,10 @@ workflow NFCORE_FUNCPROFILER {
 */
 
 workflow {
-
-    main:
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
-    PIPELINE_INITIALISATION (
+    PIPELINE_INITIALISATION(
         params.version,
         params.validate_params,
         params.monochrome_logs,
@@ -68,16 +66,15 @@ workflow {
         params.databases,
         params.help,
         params.help_full,
-        params.show_hidden
-	)
-
-    def profileUsesContainers = (
-        workflow.containerEngine != null && workflow.containerEngine != ''
+        params.show_hidden,
     )
 
+    def profileUsesContainers = (workflow.containerEngine != null && workflow.containerEngine != '')
+
     if (params.run_fmhfunprofiler) {
-        if (!profileUsesContainers){
-            error """\
+        if (!profileUsesContainers) {
+            error(
+                """\
             ---------------------------------------------------------------
             ERROR: The step "fmhfunprofiler" currently requires that it be
             run with a profile with containerized support.  We are working
@@ -90,32 +87,27 @@ workflow {
               2. Disable this step by omitting the `run_fmhfunprofiler`
               flag.
             """
+            )
         }
     }
 
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_FUNCPROFILER (
+    NFCORE_FUNCPROFILER(
         PIPELINE_INITIALISATION.out.samplesheet,
         PIPELINE_INITIALISATION.out.databases,
     )
     //
     // SUBWORKFLOW: Run completion tasks
     //
-    PIPELINE_COMPLETION (
+    PIPELINE_COMPLETION(
         params.email,
         params.email_on_fail,
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_FUNCPROFILER.out.multiqc_report
+        NFCORE_FUNCPROFILER.out.multiqc_report,
     )
 }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/

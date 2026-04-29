@@ -54,10 +54,13 @@ process METAPHLAN_METAPHLAN {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def samfile_cmd = save_samfile ? "touch ${prefix}.sam" : ''
-    def input_type = "${input}" =~ /.*\.(fastq|fq)/ ? "fastq" :
-        "${input}" =~ /.*\.(fasta|fna|fa)/? "fasta" :
-        "${input}".endsWith(".bowtie2out.txt") ? "bowtie2out" :
-        "sam"
+    def input_type = "${input}" =~ /.*\.(fastq|fq)/
+        ? "fastq"
+        : "${input}" =~ /.*\.(fasta|fna|fa)/
+            ? "fasta"
+            : "${input}".endsWith(".bowtie2out.txt")
+                ? "bowtie2out"
+                : "sam"
     def bowtie2_cmd = "${input_type}" == "bowtie2out" || "${input_type}" == "sam" ? '' : "touch ${prefix}.bowtie2out.txt"
 
     """
