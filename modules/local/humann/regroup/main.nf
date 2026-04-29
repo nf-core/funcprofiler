@@ -1,5 +1,5 @@
 process HUMANN3_REGROUP {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_low'
 
     conda 'bioconda::humann=3.6.1'
@@ -19,10 +19,10 @@ process HUMANN3_REGROUP {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    if [[ $input == *.gz ]]; then
-        gunzip -c $input > input.tsv
+    if [[ ${input} == *.gz ]]; then
+        gunzip -c ${input} > input.tsv
     else
-        mv $input input.tsv
+        mv ${input} input.tsv
     fi
     STATIC_CONFIG=`python -c "import humann; print(humann.__file__.replace('__init__.py', 'humann.cfg'))"`
     cat \$STATIC_CONFIG  | sed "s|utility_mapping = .*|utility_mapping = ${utility_db}|g" > humann.cfg
@@ -31,8 +31,8 @@ process HUMANN3_REGROUP {
     humann_regroup_table \\
         --input input.tsv \\
         --output ${prefix}_regroup.tsv \\
-        --groups $groups \\
-        $args
+        --groups ${groups} \\
+        ${args}
 
     gzip -n ${prefix}_regroup.tsv
 

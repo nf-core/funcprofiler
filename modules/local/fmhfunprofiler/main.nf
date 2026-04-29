@@ -1,14 +1,13 @@
 process FMHFUNPROFILER {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_medium'
 
-//    conda "${moduleDir}/environment.yml"
+    //    conda "${moduleDir}/environment.yml"
     container 'ghcr.io/vdblab/fmhfunprofiler:20250930a'
 
     input:
     tuple val(meta), path(fastqs)
     tuple val(dbmeta), path(fmhfunprofiler_db)
-
 
     output:
     // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
@@ -23,13 +22,13 @@ process FMHFUNPROFILER {
     def args = dbmeta.db_params
     def prefix = task.ext.prefix ?: "${meta.id}"
     if (args.split(' ').size() != 2) {
-	throw new IllegalArgumentException("fmh-funcprofiler must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}:  ${args}")
+        throw new IllegalArgumentException("fmh-funcprofiler must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}:  ${args}")
     }
     """
     funcprofiler.py  \\
-        $fastqs \\
-        $fmhfunprofiler_db \\
-        $args  \\
+        ${fastqs} \\
+        ${fmhfunprofiler_db} \\
+        ${args}  \\
         ${prefix}.fmhfuncprofiler.ko
 
     """
@@ -38,7 +37,7 @@ process FMHFUNPROFILER {
     def args = dbmeta.db_params
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    echo $args > ${prefix}.fmhfuncprofiler.ko
+    echo ${args} > ${prefix}.fmhfuncprofiler.ko
 
     """
 }
