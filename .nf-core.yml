@@ -1,15 +1,15 @@
+lint:
+  files_unchanged:
+    - assets/nf-core-funcprofiler_logo_light.png
+    - .github/PULL_REQUEST_TEMPLATE.md
+nf_core_version: 4.0.2
 repository_type: pipeline
-
-nf_core_version: 3.3.2
-
-lint: {}
-
 template:
-  org: nf-core
-  name: funcprofiler
-  description: Read-based functional profiling of microbiome sequencing data
   author: Nick Waters
-  version: 1.0.0dev
-  force: true
-  outdir: .
+  description: Read-based functional profiling of microbiome sequencing data
+  force: false
   is_nfcore: true
+  name: funcprofiler
+  org: nf-core
+  outdir: .
+  version: 1.0.0dev
