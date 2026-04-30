@@ -36,8 +36,11 @@ Supported profilers:
 3. [**FMH FunProfiler**](https://github.com/dib-lab/fmh_funprofiler) — sketch-based functional profiling (`--run_fmhfunprofiler`)
 4. [**RGI**](https://github.com/arpcard/rgi) — antimicrobial resistance gene identification (`--run_rgi`, available)
 5. [**mifaser**](https://bromberglab.org/project/mifaser/) — functional profiling via mifaser (`--run_mifaser`, available)
-6. [**DIAMOND**](https://github.com/bbuchfink/diamond) — alignment with DIAMOND blastx (`--run_diamond`, available)
-7. [**eggNOG-mapper**](https://academic.oup.com/mbe/article/38/12/5825/6379734) — functional annotation, orthology assignments and domain prediction (`--run_eggnogmapper`, available)
+6. [**DIAMOND**](https://github.com/bbuchfink/diamond) — alignment with DIAMOND blastx (`--run_diamond`, ⚠️ beta)
+7. [**eggNOG-mapper**](https://academic.oup.com/mbe/article/38/12/5825/6379734) — functional annotation, orthology assignments and domain prediction (`--run_eggnogmapper`, ⚠️ beta)
+
+> [!NOTE]
+> DIAMOND and eggNOG-mapper support is currently in beta. Use with caution and expect potential issues.
 
 ## Usage
 
