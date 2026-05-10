@@ -83,6 +83,9 @@ fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
 
 EggNOG-mapper requires two database entries per named database: the search database and the EggNOG data directory. The `db_params` field of the `eggnogmapper_db` row must specify the search mode (e.g. `diamond`, `mmseqs`, `hmmer`).
 
+> [!WARNING]
+> EggNOG-mapper support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
+
 ```csv
 tool,db_name,db_entity,db_params,db_type,db_path
 eggnogmapper,eggnog_v5,eggnogmapper_db,diamond,,/data/databases/eggnog_mapper/eggnog_proteins.dmnd
@@ -147,6 +150,9 @@ rgi,card_v3,,,,/data/databases/card
 
 [DIAMOND](https://github.com/bbuchfink/diamond/wiki/) is a high-throughput sequence aligner for translated (nucleotide-vs-protein) alignment. Enable it with `--run_diamond`.
 
+> [!WARNING]
+> DIAMOND support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
+
 #### Database preparation
 
 The database supplied in the `--databases` CSV must already be in DIAMOND binary format (`.dmnd`). Build it from a protein FASTA using `diamond makedb`:
@@ -196,8 +202,8 @@ At least one profiler must be enabled via command-line flags. The pipeline will 
 | `--run_humann_v4`      | HUMANn v4       | Available |
 | `--run_fmhfunprofiler` | FMH FunProfiler | Available |
 | `--run_mifaser`        | mifaser         | Available |
-| `--run_diamond`        | diamond         | Available |
-| `--run_eggnogmapper`   | EggNOG-mapper   | Available |
+| `--run_diamond`        | diamond         | Work in progress / beta |
+| `--run_eggnogmapper`   | EggNOG-mapper   | Work in progress / beta |
 | `--run_rgi`            | RGI BWT         | Available |
 
 ### Parameters

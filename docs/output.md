@@ -14,8 +14,8 @@ The pipeline processes data using the following steps:
 - [HUMANn v3 / v4](#humann-v3--v4) - Functional profiling via MetaPhlAn + HUMANn
 - [FMH FunProfiler](#fmh-funprofiler) - Sketch-based functional profiling
 - [mifaser](#mifaser) - Read-level functional profiling
-- [DIAMOND blastx](#diamond-blastx) - Translated alignment against a protein database
-- [EggNOG-mapper](#eggnog-mapper) - Functional annotation via orthology assignment
+- [DIAMOND blastx](#diamond-blastx) - Translated alignment against a protein database (work in progress / beta)
+- [EggNOG-mapper](#eggnog-mapper) - Functional annotation via orthology assignment (work in progress / beta)
 - [RGI BWT](#rgi-bwt) - Antimicrobial resistance gene identification
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
@@ -80,6 +80,9 @@ Enabled with `--run_mifaser`. Maps reads to functional databases at the protein 
 
 Enabled with `--run_diamond`. Performs fast translated alignment of metagenomic reads against a protein reference database. Each read is aligned in all six reading frames and only significant hits are reported.
 
+> [!WARNING]
+> DIAMOND support is currently in beta and should be treated as work in progress. The module is still being validated in the full pipeline, including database handling, output behavior, and downstream reporting. Use with caution and independently review results before production use or interpretation.
+
 <details markdown="1">
 <summary>Output files</summary>
 
@@ -96,6 +99,9 @@ Requires a pre-built `.dmnd` database (see [usage docs](usage.md#diamond-blastx)
 ### EggNOG-mapper
 
 Enabled with `--run_eggnogmapper`. Assigns functional annotations to sequences by mapping them to orthologous groups in the EggNOG database.
+
+> [!WARNING]
+> EggNOG-mapper support is currently in beta and should be treated as work in progress. The module is still being validated in the full pipeline, including database handling, output behavior, and downstream reporting. Use with caution and independently review results before production use or interpretation.
 
 <details markdown="1">
 <summary>Output files</summary>
