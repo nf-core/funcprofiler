@@ -14,8 +14,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [HUMANn v3 / v4](#humann-v3--v4) - Functional profiling via MetaPhlAn + HUMANn
 - [FMH FunProfiler](#fmh-funprofiler) - Sketch-based functional profiling
 - [mifaser](#mifaser) - Read-level functional profiling
-- [DIAMOND blastx](#diamond-blastx) - Translated alignment against a protein database
-- [EggNOG-mapper](#eggnog-mapper) - Functional annotation via orthology assignment
+- [DIAMOND blastx](#diamond-blastx) - Translated alignment against a protein database (work in progress / beta)
+- [EggNOG-mapper](#eggnog-mapper) - Functional annotation via orthology assignment (work in progress / beta)
 - [RGI BWT](#rgi-bwt) - Antimicrobial resistance gene identification
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
@@ -60,7 +60,13 @@ Other than FastQC, MultiQC and pipeline information, all other steps (the profil
 
 ### DIAMOND blastx
 
-[DIAMOND](https://github.com/bbuchfink/diamond) performs fast translated alignment of (meta)genomic reads against a protein reference database. Each read is aligned in all six reading frames and only significant hits are reported. Enabled with `--run_diamond`.
+Enabled with `--run_diamond`. Performs fast translated alignment of metagenomic reads against a protein reference database. Each read is aligned in all six reading frames and only significant hits are reported.
+
+> [!WARNING]
+> DIAMOND support is currently in beta and should be treated as work in progress. The module is still being validated in the full pipeline, including database handling, output behavior, and downstream reporting. Use with caution and independently review results before production use or interpretation.
+
+<details markdown="1">
+<summary>Output files</summary>
 
 - `diamond/<db_name>/`
   - `*.tsv`: Tabular alignment results (BLAST tabular format 6) with one row per query-subject hit.
@@ -68,7 +74,13 @@ Other than FastQC, MultiQC and pipeline information, all other steps (the profil
 
 ### EggNOG-mapper
 
-[EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper) assigns functional annotations to sequences by mapping them to orthologous groups in the EggNOG database. Enabled with `--run_eggnogmapper`.
+Enabled with `--run_eggnogmapper`. Assigns functional annotations to sequences by mapping them to orthologous groups in the EggNOG database.
+
+> [!WARNING]
+> EggNOG-mapper support is currently in beta and should be treated as work in progress. The module is still being validated in the full pipeline, including database handling, output behavior, and downstream reporting. Use with caution and independently review results before production use or interpretation.
+
+<details markdown="1">
+<summary>Output files</summary>
 
 - `eggnogmapper/<db_name>/`
   - `*.emapper.annotations`: TSV file with functional annotations per query sequence, including GO terms, KEGG pathways, COG categories, and more.

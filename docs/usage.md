@@ -44,6 +44,23 @@ SAMPLE3,RUN1,OXFORD_NANOPORE,/data/sample3_nanopore.fastq.gz,,
 
 In this example, `SAMPLE1` has two runs which will be merged before profiling. `SAMPLE2` is single-end short reads. `SAMPLE3` is Oxford Nanopore long reads.
 
+## Enabling profilers
+
+At least one profiler must be enabled via command-line flags. The pipeline will only run the profilers you explicitly turn on:
+
+| Flag                   | Profiler        | Status                  |
+| ---------------------- | --------------- | ----------------------- |
+| `--run_humann_v3`      | HUMANn v3       | Available               |
+| `--run_humann_v4`      | HUMANn v4       | Available               |
+| `--run_fmhfunprofiler` | FMH FunProfiler | Available               |
+| `--run_mifaser`        | mifaser         | Available               |
+| `--run_diamond`        | diamond         | Work in progress / beta |
+| `--run_eggnogmapper`   | EggNOG-mapper   | Work in progress / beta |
+| `--run_rgi`            | RGI BWT         | Available               |
+
+> [!IMPORTANT]
+> Each `--run_` flag requires a matching database entry in the `--databases` CSV. Database rows for tools that are not enabled will be ignored.
+
 ## Databases input
 
 ```bash
@@ -51,6 +68,8 @@ In this example, `SAMPLE1` has two runs which will be merged before profiling. `
 ```
 
 The databases sheet is a comma-separated file that specifies which databases to use for each profiler. Only tools enabled via `--run_<tool>` flags will use the corresponding database entries.
+
+Use the `db_name` column to record the database release or version used for the run, for example `uniref90_v3`, `eggnog_v5`, `card_v3`, or `GS-24-all`.
 
 | Column      | Required | Description                                                                                                                                                                         |
 | ----------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -63,7 +82,7 @@ The databases sheet is a comma-separated file that specifies which databases to 
 
 ### HUMANn databases
 
-HUMANn requires four database components per named database, each as a separate row with the same `db_name`:
+HUMANn requires four database components per named database, each as a separate row with the same `db_name`. The example below uses a HUMANn v3-compatible UniRef90 database set; replace `uniref90_v3` with the exact release or version used in your analysis.
 
 ```csv
 tool,db_name,db_entity,db_params,db_type,db_path
@@ -75,7 +94,7 @@ humann_v3,uniref90_v3,humann_utility,,,/data/databases/utility_mapping
 
 ### FMH FunProfiler databases
 
-FMH FunProfiler requires a single sketch database:
+FMH FunProfiler requires a single sketch database. The example below uses a KEGG-derived sketch database labeled `kegg_v1`; replace this with the exact sketch/database version used in your analysis.
 
 ```csv
 tool,db_name,db_entity,db_params,db_type,db_path
@@ -84,7 +103,10 @@ fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
 
 ### EggNOG-mapper databases
 
-EggNOG-mapper requires two database entries per named database: the search database and the EggNOG data directory. The `db_params` field of the `eggnogmapper_db` row must specify the search mode (e.g. `diamond`, `mmseqs`, `hmmer`).
+EggNOG-mapper requires two database entries per named database: the search database and the EggNOG data directory. The `db_params` field of the `eggnogmapper_db` row must specify the search mode (e.g. `diamond`, `mmseqs`, `hmmer`). The example below uses an EggNOG v5 database label; replace `eggnog_v5` with the exact EggNOG database release used in your analysis.
+
+> [!WARNING]
+> EggNOG-mapper support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
 
 ```csv
 tool,db_name,db_entity,db_params,db_type,db_path
@@ -102,14 +124,16 @@ The EggNOG data directory can be downloaded with `download_eggnog_data.py` from 
 
 #### Database preparation
 
-Download a pre-built mifaser database (e.g. GS-21 or GS-580) from the [mifaser website](https://bromberglab.org/project/mifaser/). The `db_path` should point to the directory containing the database files.
+Download a pre-built mifaser database (e.g. GS-21, GS-24-all, or GS-580) from the [mifaser website](https://bromberglab.org/project/mifaser/). The `db_path` should point to the directory containing the database files and `db_name` should record the downloaded database version.
 
 ```csv
 tool,db_name,db_entity,db_params,db_type,db_path
-mifaser,gs21,,,short,/data/databases/mifaser/GS-21
+mifaser,GS-24-all,,,short,/data/databases/mifaser/GS-24-all
 ```
 
 ### Full example databases sheet
+
+This example uses versioned database names to make the database releases traceable in the run outputs. Replace these names and paths with the exact database releases you downloaded.
 
 ```csv
 tool,db_name,db_entity,db_params,db_type,db_path
@@ -130,7 +154,7 @@ fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
 
 #### Database preparation
 
-Download the CARD database and extract it to a directory:
+Download the CARD database and extract it to a directory. The example CSV below labels the database as `card_v3`; replace this with the exact CARD release used in your analysis.
 
 ```bash
 wget https://card.mcmaster.ca/latest/data
@@ -153,9 +177,12 @@ Wildcard variant databases are not currently supported by the pipeline. Only the
 
 [DIAMOND](https://github.com/bbuchfink/diamond/wiki/) is a high-throughput sequence aligner for translated (nucleotide-vs-protein) alignment. Enable it with `--run_diamond`.
 
+> [!WARNING]
+> DIAMOND support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
+
 #### Database preparation
 
-The database supplied in the `--databases` CSV must already be in DIAMOND binary format (`.dmnd`). Build it from a protein FASTA using `diamond makedb`:
+The database supplied in the `--databases` CSV must already be in DIAMOND binary format (`.dmnd`). Build it from a versioned protein FASTA using `diamond makedb`, and use `db_name` to record the source database and release.
 
 ```bash
 diamond makedb --in proteins.faa --db proteins
@@ -192,20 +219,6 @@ work                # Directory containing the nextflow working files
 .nextflow_log       # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
-
-### Enabling profilers
-
-At least one profiler must be enabled via command-line flags. The pipeline will only run the profilers you explicitly turn on:
-
-| Flag                   | Profiler        | Status    |
-| ---------------------- | --------------- | --------- |
-| `--run_humann_v3`      | HUMANn v3       | Available |
-| `--run_humann_v4`      | HUMANn v4       | Available |
-| `--run_fmhfunprofiler` | FMH FunProfiler | Available |
-| `--run_mifaser`        | mifaser         | Available |
-| `--run_diamond`        | diamond         | Available |
-| `--run_eggnogmapper`   | EggNOG-mapper   | Available |
-| `--run_rgi`            | RGI BWT         | Available |
 
 ### Parameters
 
