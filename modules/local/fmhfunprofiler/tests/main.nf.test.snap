@@ -9,14 +9,14 @@
                             "single_end": true,
                             "db_name": "demo"
                         },
-                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,82ff17528f0b59f02d8c72fd4beef144"
+                        "test_demo.fmhfunprofiler.fmhfunprofiler.ko:md5,82ff17528f0b59f02d8c72fd4beef144"
                     ]
                 ],
                 "1": [
                     [
                         "FMHFUNPROFILER",
                         "fmh-funprofiler",
-                        "ghcr.io/vdblab/fmhfunprofiler:20250930a"
+                        "20250930a"
                     ]
                 ],
                 "ko": [
@@ -26,14 +26,14 @@
                             "single_end": true,
                             "db_name": "demo"
                         },
-                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,82ff17528f0b59f02d8c72fd4beef144"
+                        "test_demo.fmhfunprofiler.fmhfunprofiler.ko:md5,82ff17528f0b59f02d8c72fd4beef144"
                     ]
                 ],
                 "versions_fmhfunprofiler": [
                     [
                         "FMHFUNPROFILER",
                         "fmh-funprofiler",
-                        "ghcr.io/vdblab/fmhfunprofiler:20250930a"
+                        "20250930a"
                     ]
                 ]
             }
@@ -54,14 +54,14 @@
                             "single_end": true,
                             "db_name": "demo"
                         },
-                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
+                        "test_demo.fmhfunprofiler.fmhfunprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ]
                 ],
                 "1": [
                     [
                         "FMHFUNPROFILER",
                         "fmh-funprofiler",
-                        "ghcr.io/vdblab/fmhfunprofiler:20250930a"
+                        "20250930a"
                     ]
                 ],
                 "ko": [
@@ -71,14 +71,14 @@
                             "single_end": true,
                             "db_name": "demo"
                         },
-                        "test_demo.fmhfunprofiler.fmhfuncprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
+                        "test_demo.fmhfunprofiler.fmhfunprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
                     ]
                 ],
                 "versions_fmhfunprofiler": [
                     [
                         "FMHFUNPROFILER",
                         "fmh-funprofiler",
-                        "ghcr.io/vdblab/fmhfunprofiler:20250930a"
+                        "20250930a"
                     ]
                 ]
             }
