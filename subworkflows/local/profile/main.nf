@@ -200,8 +200,8 @@ workflow PROFILING {
         ch_humann3_input = ch_input_for_humann_v3.reads
             .join(MPAHUMANN3.out.profile, by: 0)  // Join on meta map
         HUMANN3(
-            ch_humann3_input.map { meta, reads, _profile -> [meta, reads] },  // Extract reads
-            ch_humann3_input.map { meta, _reads, profile -> [meta, profile] }, // Extract profile
+            ch_humann3_input.map { it -> [it[0], it[1]] },  // Extract reads
+            ch_humann3_input.map { it -> [it[0], it[2]] }, // Extract profile
             getDbPath(ch_input_for_humann_v3.db, 'humann_nucleotide'),
             getDbPath(ch_input_for_humann_v3.db, 'humann_protein'),
             getDbPath(ch_input_for_humann_v3.db, 'humann_utility'),
@@ -221,8 +221,8 @@ workflow PROFILING {
             .join(MPAHUMANN4.out.profile, by: 0)  // Join on meta map
 
         HUMANN4(
-            ch_humann4_input.map { meta, reads, _profile -> [meta, reads] },  // Extract reads
-            ch_humann4_input.map { meta, _reads, profile -> [meta, profile] }, // Extract profile
+            ch_humann4_input.map { it -> [it[0], it[1]] },  // Extract reads
+            ch_humann4_input.map { it -> [it[0], it[2]] }, // Extract profile
             getDbPath(ch_input_for_humann_v4.db, 'humann_nucleotide'),
             getDbPath(ch_input_for_humann_v4.db, 'humann_protein'),
             getDbPath(ch_input_for_humann_v4.db, 'humann_utility'),
