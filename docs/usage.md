@@ -28,8 +28,9 @@ The samplesheet is a comma-separated file with the following columns:
 | `fasta`               | No\*     | Full path to gzipped FASTA file. Provide instead of FASTQ if your data is already assembled. Must end in `.fa.gz`, `.fna.gz`, or `.fasta.gz`. |
 
 :::note
+
 > \*Either `fastq_1` or `fasta` must be provided for each row.
-:::
+> :::
 
 ### Example samplesheet
 
