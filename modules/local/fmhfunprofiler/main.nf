@@ -10,10 +10,8 @@ process FMHFUNPROFILER {
     tuple val(dbmeta), path(fmhfunprofiler_db)
 
     output:
-    // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
-    tuple val(meta), path("*.fmhfuncprofiler.ko"), emit: ko
-    // TODO nf-core: List additional required output channels/values here
-    tuple val("${task.process}"), val('fmh-funprofiler'), val("ghcr.io/vdblab/fmhfunprofiler:20250930a"), emit: versions_fmhfunprofiler, topic: versions
+    tuple val(meta), path("*.fmhfunprofiler.ko"), emit: ko
+    tuple val("${task.process}"), val('fmh-funprofiler'), val("20250930a"), emit: versions_fmhfunprofiler, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -29,7 +27,7 @@ process FMHFUNPROFILER {
         ${fastqs} \\
         ${fmhfunprofiler_db} \\
         ${args}  \\
-        ${prefix}.fmhfuncprofiler.ko
+        ${prefix}.fmhfunprofiler.ko
 
     """
 
@@ -37,7 +35,7 @@ process FMHFUNPROFILER {
     def args = dbmeta.db_params
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    echo ${args} > ${prefix}.fmhfuncprofiler.ko
+    echo ${args} > ${prefix}.fmhfunprofiler.ko
 
     """
 }
