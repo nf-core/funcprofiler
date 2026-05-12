@@ -167,7 +167,8 @@ workflow PROFILING {
     // channel element order in sync with each other
 
     // PAIRED-END READ TOOLS
-    rgi_inputs = prepareInputs(reads, databases, 'rgi', false)
+    ch_input_for_rgi = prepareInputs(reads, databases, 'rgi', false)
+    ch_input_for_eggnogmapper = prepareInputs(reads_concat, databases, 'eggnogmapper', true)
 
     // CONCAT READ TOOLS
     ch_input_for_fmhfunprofiler = prepareInputs(reads_concat, databases, 'fmhfunprofiler', true)
@@ -199,8 +200,8 @@ workflow PROFILING {
         ch_humann3_input = ch_input_for_humann_v3.reads
             .join(MPAHUMANN3.out.profile, by: 0)  // Join on meta map
         HUMANN3(
-            ch_humann3_input.map { meta, reads, profile -> [meta, reads] },  // Extract reads
-            ch_humann3_input.map { meta, reads, profile -> [meta, profile] }, // Extract profile
+            ch_humann3_input.map { meta, reads, _profile -> [meta, reads] },  // Extract reads
+            ch_humann3_input.map { meta, _reads, profile -> [meta, profile] }, // Extract profile
             getDbPath(ch_input_for_humann_v3.db, 'humann_nucleotide'),
             getDbPath(ch_input_for_humann_v3.db, 'humann_protein'),
             getDbPath(ch_input_for_humann_v3.db, 'humann_utility'),
@@ -220,8 +221,8 @@ workflow PROFILING {
             .join(MPAHUMANN4.out.profile, by: 0)  // Join on meta map
 
         HUMANN4(
-            ch_humann4_input.map { meta, reads, profile -> [meta, reads] },  // Extract reads
-            ch_humann4_input.map { meta, reads, profile -> [meta, profile] }, // Extract profile
+            ch_humann4_input.map { meta, reads, _profile -> [meta, reads] },  // Extract reads
+            ch_humann4_input.map { meta, _reads, profile -> [meta, profile] }, // Extract profile
             getDbPath(ch_input_for_humann_v4.db, 'humann_nucleotide'),
             getDbPath(ch_input_for_humann_v4.db, 'humann_protein'),
             getDbPath(ch_input_for_humann_v4.db, 'humann_utility'),

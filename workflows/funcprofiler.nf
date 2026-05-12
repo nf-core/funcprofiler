@@ -9,28 +9,6 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_funcprofiler_pipeline'
 
-// Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.databases,
-//                            params.longread_hostremoval_index,
-//                            params.hostremoval_reference, params.shortread_hostremoval_index,
-//                            params.multiqc_config, params.shortread_qc_adapterlist,
-//                            params.krona_taxonomy_directory,
-//                            params.taxpasta_taxonomy_dir,
-//                            params.multiqc_logo, params.multiqc_methods_description
-                        ]
-checkPathParamList.each{param ->
-    if (param) { file(param, checkIfExists: true) }
-}
-
-// Check mandatory parameters (stolen from taxprofiler
-if ( params.input ) {
-    ch_input              = file(params.input, checkIfExists: true)
-} else {
-    error("Input samplesheet not specified")
-}
-
-if (params.databases) { ch_databases = file(params.databases, checkIfExists: true) } else { error('Input database sheet not specified!') }
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
