@@ -1,6 +1,6 @@
 {
     "@context": [
-        "https://w3id.org/ro/crate/1.1/context",
+        "https://w3id.org/ro/crate/1.2/context",
         {
             "GithubService": "https://w3id.org/ro/terms/test#GithubService",
             "JenkinsService": "https://w3id.org/ro/terms/test#JenkinsService",
@@ -99,7 +99,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#43d93482-10b4-4a4a-9aae-56cf094b0489"
+                    "@id": "#322dad57-f56e-4262-8284-302faf41fa1d"
                 }
             ],
             "name": "nf-core/funcprofiler"
@@ -112,7 +112,7 @@
             },
             "conformsTo": [
                 {
-                    "@id": "https://w3id.org/ro/crate/1.1"
+                    "@id": "https://w3id.org/ro/crate/1.2"
                 },
                 {
                     "@id": "https://w3id.org/workflowhub/workflow-ro-crate/1.0"
@@ -121,47 +121,26 @@
         },
         {
             "@id": "main.nf",
-            "@type": [
-                "File",
-                "SoftwareSourceCode",
-                "ComputationalWorkflow"
-            ],
-            "creator": [
+            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
+            "contributor": [
                 {
-                    "@id": "#nickp60@users.noreply.github.com"
+                    "@id": "#c6f629b9-26a9-487e-bd5f-f9ca5b819419"
                 }
             ],
             "dateCreated": "",
-            "dateModified": "2025-08-13T11:15:55Z",
+            "dateModified": "2026-04-30T13:32:35Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
-            "keywords": [
-                "nf-core",
-                "nextflow"
-            ],
-            "license": [
-                "MIT"
-            ],
-            "maintainer": [
-                {
-                    "@id": "#nickp60@users.noreply.github.com"
-                }
-            ],
-            "name": [
-                "nf-core/funcprofiler"
-            ],
+            "keywords": ["nf-core", "nextflow"],
+            "license": ["MIT"],
+            "name": ["nf-core/funcprofiler"],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
             "sdPublisher": {
                 "@id": "https://nf-co.re/"
             },
-            "url": [
-                "https://github.com/nf-core/funcprofiler",
-                "https://nf-co.re/funcprofiler/dev/"
-            ],
-            "version": [
-                "1.0.0dev"
-            ]
+            "url": ["https://github.com/nf-core/funcprofiler", "https://nf-co.re/funcprofiler/dev/"],
+            "version": ["1.0.0dev"]
         },
         {
             "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
@@ -173,14 +152,14 @@
             "url": {
                 "@id": "https://www.nextflow.io/"
             },
-            "version": "!>=24.10.5"
+            "version": "!>=25.10.4"
         },
         {
-            "@id": "#43d93482-10b4-4a4a-9aae-56cf094b0489",
+            "@id": "#322dad57-f56e-4262-8284-302faf41fa1d",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#d1cf13a7-6e4d-4a5b-9196-57c7109be07f"
+                    "@id": "#42032b30-363e-40c3-9805-13ea4dc9ae5d"
                 }
             ],
             "mainEntity": {
@@ -189,7 +168,7 @@
             "name": "Test suite for nf-core/funcprofiler"
         },
         {
-            "@id": "#d1cf13a7-6e4d-4a5b-9196-57c7109be07f",
+            "@id": "#42032b30-363e-40c3-9805-13ea4dc9ae5d",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing nf-core/funcprofiler",
             "resource": "repos/nf-core/funcprofiler/actions/workflows/nf-test.yml",
@@ -318,7 +297,7 @@
             "url": "https://nf-co.re/"
         },
         {
-            "@id": "#nickp60@users.noreply.github.com",
+            "@id": "#c6f629b9-26a9-487e-bd5f-f9ca5b819419",
             "@type": "Person",
             "email": "nickp60@users.noreply.github.com",
             "name": "Nick Waters"
