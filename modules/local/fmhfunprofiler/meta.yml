@@ -1,61 +1,52 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
-# # TODO nf-core: Add a description of the module and list keywords
 name: "fmhfunprofiler"
-description: write your description here
+description: FracMinHash-based functional profiler that assigns reads to KEGG Orthology (KO) categories using sketch databases.
 keywords:
-  - sort
-  - example
-  - genomics
+  - functional profiling
+  - sketch
+  - KEGG
+  - metagenomics
 tools:
-  ## TODO nf-core: Add a description and other details for the software below
   - "fmhfunprofiler":
-      description: ""
-      homepage: ""
-      documentation: ""
-      tool_dev_url: ""
+      description: "Rapid sketch-based functional profiling of metagenomic reads against KEGG Orthology databases using FracMinHash sketching."
+      homepage: "https://github.com/vdblab/fmhfunprofiler"
+      documentation: "https://github.com/vdblab/fmhfunprofiler"
+      tool_dev_url: "https://github.com/vdblab/fmhfunprofiler"
       doi: ""
-      licence: null
+      licence: ["MIT"]
       identifier: null
 
 input:
-  ### TODO nf-core: Add a description of all of the variables used as input
   - - meta:
         type: map
         description: |
           Groovy Map containing sample information
-          e.g. `[ id:'sample1' ]`
-    - bam:
+          e.g. `[ id:'sample1', single_end:false ]`
+    - fastqs:
         type: file
-        description: Sorted BAM/CRAM/SAM file
-        pattern: "*.{bam,cram,sam}"
-        ontologies:
-          - edam: "http://edamontology.org/format_2572" # BAM
-          - edam: "http://edamontology.org/format_2573" # CRAM
-          - edam: "http://edamontology.org/format_3462" # SAM
+        description: One or more gzipped FASTQ (or FASTA) files for the sample.
+        pattern: "*.{fastq.gz,fq.gz,fa.gz,fasta.gz}"
+  - - dbmeta:
+        type: map
+        description: |
+          Groovy Map containing database metadata, including db_params (space-separated kmer and sketch scale integers)
+          e.g. `[ db_name:'kegg_v1', db_params:'11 1000' ]`
+    - fmhfunprofiler_db:
+        type: file
+        description: FracMinHash sketch database (.sig.zip) built against KEGG Orthology entries.
+        pattern: "*.sig.zip"
 
 output:
-  ### TODO nf-core: Add a description of all of the variables used as output
-  bam:
-    - - meta:
+  - ko:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'sample1' ]`
-      - "*.bam":
+      - "*.fmhfunprofiler.ko":
           type: file
-          description: Sorted BAM/CRAM/SAM file
-          pattern: "*.{bam,cram,sam}"
-          ontologies:
-            - edam: "http://edamontology.org/format_2572" # BAM
-            - edam: "http://edamontology.org/format_2573" # CRAM
-            - edam: "http://edamontology.org/format_3462" # SAM
-  versions:
-    - "versions.yml":
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: "http://edamontology.org/format_3750" # YAML
+          description: Tab-separated KO abundance table for the sample.
+          pattern: "*.fmhfunprofiler.ko"
 
 authors:
   - "@nickp60"
