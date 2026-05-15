@@ -42,7 +42,7 @@
                     },
                     "rgi/bwt": {
                         "branch": "master",
-                        "git_sha": "d6ba7c11771e7d7b65136b4ecd11fbea49261cbb",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "seqkit/fq2fa": {
