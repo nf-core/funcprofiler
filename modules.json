@@ -17,7 +17,7 @@
                     },
                     "eggnogmapper": {
                         "branch": "master",
-                        "git_sha": "e11b95631ff49d1e2530b0e493289e7579ee259b",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "fastqc": {
