@@ -2,6 +2,9 @@ lint:
   files_unchanged:
     - assets/nf-core-funcprofiler_logo_light.png
     - .github/PULL_REQUEST_TEMPLATE.md
+  modules:
+    - main_nf_version_topic:
+        - multiqc
 nf_core_version: 4.0.2
 repository_type: pipeline
 

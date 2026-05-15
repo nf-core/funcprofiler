@@ -12,7 +12,7 @@
                     },
                     "diamond/blastx": {
                         "branch": "master",
-                        "git_sha": "8d52ac1b6f035f46c005a27b3510873c2a67ea41",
+                        "git_sha": "1b534ad2336876dbe82e9fea2773334cb624b426",
                         "installed_by": ["modules"]
                     },
                     "eggnogmapper": {
@@ -22,7 +22,7 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "4f6c351f7bbc62173b30f5a430e21ec907720676",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gunzip": {
@@ -37,7 +37,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "cb9f4bec379866ca560f7f79d9a9a06bea8c9b51",
+                        "git_sha": "008f9d3e61209bf995edac3ba531f54e269e1215",
                         "installed_by": ["modules"]
                     },
                     "rgi/bwt": {
