@@ -47,7 +47,7 @@
                     },
                     "seqkit/fq2fa": {
                         "branch": "master",
-                        "git_sha": "bf70cbf44b42ff4a81afcb673fcef604f5ef3a85",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "untar": {
