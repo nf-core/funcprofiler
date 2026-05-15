@@ -32,7 +32,7 @@
                     },
                     "metaphlan/metaphlan": {
                         "branch": "master",
-                        "git_sha": "fe0ec4b67b1abd71ff9b5ece41fd5a4d8abadad5",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
