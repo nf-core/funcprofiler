@@ -19,4 +19,4 @@ template:
   name: funcprofiler
   org: nf-core
   outdir: .
-  version: 1.0.0dev
+  version: 1.0.0
