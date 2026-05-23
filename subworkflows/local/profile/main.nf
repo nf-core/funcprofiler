@@ -2,10 +2,10 @@
 // Run profiling
 //
 
-include { MIFASER                                       } from '../../../modules/local/mifaser/main'
-include { HUMANN3                                       } from '../../../modules/local/humann/humann/main'
+include { MIFASER                                       } from '../../../modules/nf-core/mifaser/main'
+include { HUMANN3_HUMANN                                } from '../../../modules/nf-core/humann3/humann/main'
 include { HUMANN4                                       } from '../../../modules/local/humann4/humann/main'
-include { HUMANN3_REGROUP                               } from '../../../modules/local/humann/regroup/main'
+include { HUMANN3_REGROUP                               } from '../../../modules/nf-core/humann3/regroup/main'
 include { HUMANN4_REGROUP                               } from '../../../modules/local/humann4/regroup/main'
 include { FMHFUNPROFILER                                } from '../../../modules/local/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPAHUMANN3;
@@ -199,18 +199,18 @@ workflow PROFILING {
        // JOIN the original reads with the profile output
         ch_humann3_input = ch_input_for_humann_v3.reads
             .join(MPAHUMANN3.out.profile, by: 0)  // Join on meta map
-        HUMANN3(
+        HUMANN3_HUMANN(
             ch_humann3_input.map { it -> [it[0], it[1]] },  // Extract reads
             ch_humann3_input.map { it -> [it[0], it[2]] }, // Extract profile
             getDbPath(ch_input_for_humann_v3.db, 'humann_nucleotide'),
             getDbPath(ch_input_for_humann_v3.db, 'humann_protein'),
             getDbPath(ch_input_for_humann_v3.db, 'humann_utility'),
         )
-	HUMANN3_REGROUP(HUMANN3.out.genefamilies, "uniref90_level4ec", getDbPath(ch_input_for_humann_v3.db, 'humann_utility'))
+	HUMANN3_REGROUP(HUMANN3_HUMANN.out.genefamilies, "uniref90_level4ec", getDbPath(ch_input_for_humann_v3.db, 'humann_utility'))
         ch_raw_profiles    = ch_raw_profiles.mix( MPAHUMANN3.out.profile )
-        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN3.out.pathabundance )
-	    .mix( HUMANN3.out.genefamilies )
-	    .mix( HUMANN3.out.pathcoverage )
+        ch_raw_profiles        = ch_raw_profiles.mix( HUMANN3_HUMANN.out.pathabundance )
+	    .mix( HUMANN3_HUMANN.out.genefamilies )
+	    .mix( HUMANN3_HUMANN.out.pathcoverage )
     }
     if ( params.run_humann_v4 ) {
         MPAHUMANN4 (
