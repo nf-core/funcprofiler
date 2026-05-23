@@ -30,9 +30,29 @@
                         "git_sha": "96c57dfd98a0641886a67bd449fe33ee2ec0e374",
                         "installed_by": ["modules"]
                     },
+                    "humann3/humann": {
+                        "branch": "master",
+                        "git_sha": "7a2d8f7e1861c9c62472f1cd168d33cef918b108",
+                        "installed_by": ["modules"]
+                    },
+                    "humann3/regroup": {
+                        "branch": "master",
+                        "git_sha": "7a2d8f7e1861c9c62472f1cd168d33cef918b108",
+                        "installed_by": ["modules"]
+                    },
+                    "humann3/renorm": {
+                        "branch": "master",
+                        "git_sha": "7a2d8f7e1861c9c62472f1cd168d33cef918b108",
+                        "installed_by": ["modules"]
+                    },
                     "metaphlan/metaphlan": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "mifaser": {
+                        "branch": "master",
+                        "git_sha": "6b43745037429413ca11e0e4a1029d90493c3135",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
