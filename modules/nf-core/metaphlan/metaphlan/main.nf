@@ -3,9 +3,9 @@ process METAPHLAN_METAPHLAN {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
         ? 'https://depot.galaxyproject.org/singularity/metaphlan:4.1.1--pyhdfd78af_0'
-        : 'biocontainers/metaphlan:4.1.1--pyhdfd78af_0'}"
+        : 'quay.io/biocontainers/metaphlan:4.1.1--pyhdfd78af_0'}"
 
     input:
     tuple val(meta), path(input)
@@ -54,13 +54,10 @@ process METAPHLAN_METAPHLAN {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def samfile_cmd = save_samfile ? "touch ${prefix}.sam" : ''
-    def input_type = "${input}" =~ /.*\.(fastq|fq)/
-        ? "fastq"
-        : "${input}" =~ /.*\.(fasta|fna|fa)/
-            ? "fasta"
-            : "${input}".endsWith(".bowtie2out.txt")
-                ? "bowtie2out"
-                : "sam"
+    def input_type = "${input}" =~ /.*\.(fastq|fq)/ ? "fastq" :
+        "${input}" =~ /.*\.(fasta|fna|fa)/? "fasta" :
+        "${input}".endsWith(".bowtie2out.txt") ? "bowtie2out" :
+        "sam"
     def bowtie2_cmd = "${input_type}" == "bowtie2out" || "${input_type}" == "sam" ? '' : "touch ${prefix}.bowtie2out.txt"
 
     """

@@ -11,7 +11,7 @@ process HUMANN3 {
 
     input:
     tuple val(meta), path(input)
-    tuple val(meta), path(profile)
+    tuple val(_meta), path(profile)
     path nucleotide_db
     path protein_db
     path utility_db

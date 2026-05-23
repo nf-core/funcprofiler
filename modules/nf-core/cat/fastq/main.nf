@@ -3,7 +3,7 @@ process CAT_FASTQ {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
         ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/52/52ccce28d2ab928ab862e25aae26314d69c8e38bd41ca9431c67ef05221348aa/data'
         : 'community.wave.seqera.io/library/coreutils_grep_gzip_lbzip2_pruned:838ba80435a629f8'}"
 
@@ -26,8 +26,7 @@ process CAT_FASTQ {
             """
             cat ${readList.join(' ')} ${compress} > ${prefix}.merged.fastq.gz
             """
-        }
-        else {
+        } else {
             error("Could not find any FASTQ files to concatenate in the process input")
         }
     }
@@ -40,8 +39,7 @@ process CAT_FASTQ {
             cat ${read1.join(' ')} ${compress} > ${prefix}_1.merged.fastq.gz
             cat ${read2.join(' ')} ${compress} > ${prefix}_2.merged.fastq.gz
             """
-        }
-        else {
+        } else {
             error("Could not find any FASTQ file pairs to concatenate in the process input")
         }
     }
@@ -54,8 +52,7 @@ process CAT_FASTQ {
             """
             echo '' | gzip > ${prefix}.merged.fastq.gz
             """
-        }
-        else {
+        } else {
             error("Could not find any FASTQ files to concatenate in the process input")
         }
     }
@@ -65,8 +62,7 @@ process CAT_FASTQ {
             echo '' | gzip > ${prefix}_1.merged.fastq.gz
             echo '' | gzip > ${prefix}_2.merged.fastq.gz
             """
-        }
-        else {
+        } else {
             error("Could not find any FASTQ file pairs to concatenate in the process input")
         }
     }

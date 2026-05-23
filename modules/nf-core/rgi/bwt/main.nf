@@ -3,9 +3,9 @@ process RGI_BWT {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
         ? 'https://depot.galaxyproject.org/singularity/rgi:6.0.5--pyh05cac1d_0'
-        : 'biocontainers/rgi:6.0.5--pyh05cac1d_0'}"
+        : 'quay.io/biocontainers/rgi:6.0.5--pyh05cac1d_0'}"
 
     input:
     tuple val(meta), path(reads, arity: '1..2')
@@ -16,8 +16,8 @@ process RGI_BWT {
     tuple val(meta), path("*.json"), emit: json
     tuple val(meta), path("*.txt"), emit: tsv
     tuple val(meta), path("temp/"), emit: tmp
-    tuple val("${task.process}"), val('rgi'), eval("rgi main --version"), emit: versions_rgi, topic: versions
-    tuple val("${task.process}"), val('rgi-database'), eval("echo \$DB_VERSION"), emit: versions_db, topic: versions
+    tuple val("${task.process}"), val('rgi'), eval("rgi main --version"),  emit: versions_rgi, topic: versions
+    tuple val("${task.process}"), val('rgi-database'), eval("echo \$DB_VERSION"),  emit: versions_db , topic: versions
 
     when:
     task.ext.when == null || task.ext.when
