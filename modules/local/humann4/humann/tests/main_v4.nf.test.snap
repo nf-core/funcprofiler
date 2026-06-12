@@ -34,7 +34,8 @@
                 [
                     {
                         "id": "test",
-                        "single_end": true
+                        "single_end": false,
+                        "run_accession": "abc"
                     },
                     "test_genefamilies.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                 ]
@@ -43,7 +44,8 @@
                 [
                     {
                         "id": "test",
-                        "single_end": true
+                        "single_end": false,
+                        "run_accession": "abc"
                     },
                     "test_pathabundance.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                 ]
@@ -53,16 +55,17 @@
                 [
                     {
                         "id": "test",
-                        "single_end": true
+                        "single_end": false,
+                        "run_accession": "abc"
                     },
                     "test_reactions.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
                 ]
             ]
         ],
-        "timestamp": "2026-04-22T12:35:28.940285",
+        "timestamp": "2026-06-11T09:26:56.574951",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.1"
         }
     }
 }
