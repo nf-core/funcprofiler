@@ -1,7 +1,6 @@
 {
     "-profile test": {
         "content": [
-            28,
             [
                 "cat",
                 "cat/ERR5766181.merged.fastq.gz",
@@ -11,19 +10,21 @@
                 "fmhfunprofiler/null/ERR5766181_null.fmhfunprofiler.fmhfunprofiler.ko",
                 "fmhfunprofiler/null/minigut_null.fmhfunprofiler.fmhfunprofiler.ko",
                 "humann3",
+                "humann3/ERR5766181.log",
                 "humann3/ERR5766181_genefamilies.tsv.gz",
                 "humann3/ERR5766181_pathabundance.tsv.gz",
                 "humann3/ERR5766181_pathcoverage.tsv.gz",
-                "humann3/ERR5766181_regroup.tsv.gz",
+                "humann3/minigut.log",
                 "humann3/minigut_genefamilies.tsv.gz",
                 "humann3/minigut_pathabundance.tsv.gz",
                 "humann3/minigut_pathcoverage.tsv.gz",
-                "humann3/minigut_regroup.tsv.gz",
                 "humann4",
+                "humann4/ERR5766181.log",
                 "humann4/ERR5766181_2_genefamilies.tsv.gz",
                 "humann4/ERR5766181_3_reactions.tsv.gz",
                 "humann4/ERR5766181_4_pathabundance.tsv.gz",
                 "humann4/ERR5766181_regroup.tsv.gz",
+                "humann4/minigut.log",
                 "humann4/minigut_2_genefamilies.tsv.gz",
                 "humann4/minigut_3_reactions.tsv.gz",
                 "humann4/minigut_4_pathabundance.tsv.gz",
@@ -36,24 +37,19 @@
                 "mifaser/minigut_ec_count.tsv",
                 "mifaser/minigut_multi_ec.tsv",
                 "mpahumann3",
+                "mpahumann3/ERR5766181.biom",
                 "mpahumann3/ERR5766181.bowtie2out.txt",
                 "mpahumann3/ERR5766181_profile.txt",
+                "mpahumann3/minigut.biom",
                 "mpahumann3/minigut.bowtie2out.txt",
                 "mpahumann3/minigut_profile.txt",
                 "mpahumann4",
+                "mpahumann4/ERR5766181.biom",
                 "mpahumann4/ERR5766181.bowtie2out.txt",
                 "mpahumann4/ERR5766181_profile.txt",
+                "mpahumann4/minigut.biom",
                 "mpahumann4/minigut.bowtie2out.txt",
                 "mpahumann4/minigut_profile.txt",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_data/llms-full.txt",
-                "multiqc/multiqc_data/multiqc.parquet",
-                "multiqc/multiqc_data/multiqc_citations.txt",
-                "multiqc/multiqc_data/multiqc_data.json",
-                "multiqc/multiqc_data/multiqc_software_versions.txt",
-                "multiqc/multiqc_data/multiqc_sources.txt",
-                "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_funcprofiler_software_mqc_versions.yml"
             ],
@@ -62,14 +58,12 @@
                 "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129",
                 "ERR5766181_null.fmhfunprofiler.fmhfunprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08",
                 "minigut_null.fmhfunprofiler.fmhfunprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08",
-                "ERR5766181_genefamilies.tsv.gz:md5,5be83431bf30c5a8602dbe269ca10271",
+                "ERR5766181_genefamilies.tsv.gz:md5,39b8bd410b898f1a79882eb9f35ebde4",
                 "ERR5766181_pathabundance.tsv.gz:md5,96af4c4334623d4ad74878276d2bd572",
                 "ERR5766181_pathcoverage.tsv.gz:md5,7f7b3add3ab6334b9cc027dbc8f63c88",
-                "ERR5766181_regroup.tsv.gz:md5,6ddbd06597b107bd1c3b85ae47c3c021",
                 "minigut_genefamilies.tsv.gz:md5,11c2888e8eda72ec87b2154d89639676",
                 "minigut_pathabundance.tsv.gz:md5,2853ccd4a7f42d1891bd23a9cbe1dddb",
                 "minigut_pathcoverage.tsv.gz:md5,360493a3e2f6cfc5f705c25baadc6327",
-                "minigut_regroup.tsv.gz:md5,473030fe0d893e77f7f4785384788025",
                 "ERR5766181_2_genefamilies.tsv.gz:md5,47b792307ff85327c142bf41a4d36163",
                 "ERR5766181_3_reactions.tsv.gz:md5,77c271bd3d74085c0104366e1da5ed6a",
                 "ERR5766181_4_pathabundance.tsv.gz:md5,21cf9eaa5ce45d47b8bc12b962a31b32",
@@ -87,14 +81,13 @@
                 "ERR5766181_profile.txt:md5,fba1d7b083ccc627be64cf067a457598",
                 "minigut_profile.txt:md5,fee11b34f04b177f425f643601295968",
                 "ERR5766181_profile.txt:md5,ba0a9014d2c2ddb4169ee4952bbc9d83",
-                "minigut_profile.txt:md5,1525c5faa1a9e2614a8245f3412e16e4",
-                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
+                "minigut_profile.txt:md5,1525c5faa1a9e2614a8245f3412e16e4"
             ]
         ],
-        "timestamp": "2026-04-21T15:32:15.741897",
+        "timestamp": "2026-06-24T18:23:08.384706",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.1"
         }
     }
 }
