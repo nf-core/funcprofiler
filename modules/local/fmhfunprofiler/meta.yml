@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "fmhfunprofiler"
+description: FracMinHash-based functional profiler that assigns reads to KEGG Orthology (KO) categories using sketch databases.
+keywords:
+  - functional profiling
+  - sketch
+  - KEGG
+  - metagenomics
+tools:
+  - "fmhfunprofiler":
+      description: "Rapid sketch-based functional profiling of metagenomic reads against KEGG Orthology databases using FracMinHash sketching."
+      homepage: "https://github.com/vdblab/fmhfunprofiler"
+      documentation: "https://github.com/vdblab/fmhfunprofiler"
+      tool_dev_url: "https://github.com/vdblab/fmhfunprofiler"
+      doi: ""
+      licence: ["MIT"]
+      identifier: null
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - fastqs:
+        type: file
+        description: One or more gzipped FASTQ (or FASTA) files for the sample.
+        pattern: "*.{fastq.gz,fq.gz,fa.gz,fasta.gz}"
+  - - dbmeta:
+        type: map
+        description: |
+          Groovy Map containing database metadata, including db_params (space-separated kmer and sketch scale integers)
+          e.g. `[ db_name:'kegg_v1', db_params:'11 1000' ]`
+    - fmhfunprofiler_db:
+        type: file
+        description: FracMinHash sketch database (.sig.zip) built against KEGG Orthology entries.
+        pattern: "*.sig.zip"
+
+output:
+  - ko:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.fmhfunprofiler.ko":
+          type: file
+          description: Tab-separated KO abundance table for the sample.
+          pattern: "*.fmhfunprofiler.ko"
+
+authors:
+  - "@nickp60"
+maintainers:
+  - "@nickp60"

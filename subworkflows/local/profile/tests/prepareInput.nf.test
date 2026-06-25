@@ -1,0 +1,308 @@
+nextflow_workflow {
+
+    name "Test prepareInputs via wrapper workflow"
+    script "../main.nf"
+    workflow "TEST_PREPAREINPUTS_WRAPPER"
+
+    tag "subworkflows"
+    tag "subworkflows/profile"
+
+
+    test("prep inputs - single FQ tool -- fail when given paired data") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.fromList([
+        [
+                    [
+                        id: '2612',
+                        sample: '2612',
+                        run_accession: 'ERR5766176',
+                        instrument_platform: 'ILLUMINA',
+                        single_end: false
+                    ],
+                    ['ERX5474932_ERR5766176_r1.fastq.gz', 'ERX5474932_ERR5766176_r2.fastq.gz']
+            ],
+        [
+                    [
+                        id: 'sample2',
+                        sample: 'sample2',
+                        run_accession: 'abc',
+                        instrument_platform: 'ILLUMINA',
+                        single_end: false
+                    ],
+                    ['sample2_r1.fastq.gz', 'sample2_r2.fastq.gz']
+            ],
+        ])
+
+        input[1] = Channel.fromList([
+        [
+        [
+        tool: 'fmhfunprofiler',
+            db_name: 'fmhfunprofiler1000',
+            params: '11 1000'
+        ],
+            [
+        [db_entity: 'main', db_path: "./KOs_sketched_scaled_1000_demo.sig.zip"]
+        ]
+        ]])
+
+                input[2] = 'fmhfunprofiler'
+                input[3] = true
+                """
+            }
+        }
+    then {
+        assert workflow.failed
+        assert snapshot(workflow.out).match()
+
+    }
+    }
+    test("prep inputs - single FQ tool ") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.fromList([
+        [
+                    [
+                        id: '2612',
+                        sample: '2612',
+                        run_accession: 'ERR5766176',
+                        instrument_platform: 'ILLUMINA',
+                        single_end: false
+                    ],
+                    ['ERX5474932_ERR5766176_merged.fastq.gz']
+            ],
+        [
+                    [
+                        id: 'sample2',
+                        sample: 'sample2',
+                        run_accession: 'abc',
+                        instrument_platform: 'ILLUMINA',
+                        single_end: false
+                    ],
+                    ['sample2_merged.fastq.gz']
+            ],
+        ])
+        input[1] = Channel.fromList([
+        [
+        [
+        tool: 'fmhfunprofiler',
+            db_name: 'fmhfunprofiler1000',
+            params: '11 1000'
+        ],
+            [
+        [db_entity: 'main', db_path: "./KOs_sketched_scaled_1000_demo.sig.zip"]
+        ]
+        ]])
+                input[2] = 'fmhfunprofiler'
+                input[3] = true
+                """
+            }
+        }
+    then {
+        assert workflow.success
+        assert snapshot(workflow.out).match()
+
+    }
+    }
+    test("prep inputs - PE aware tool (rgi)") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.fromList([
+        [
+                    [
+                        id: '2612',
+                        sample: '2612',
+                        run_accession: 'ERR5766176',
+                        instrument_platform: 'ILLUMINA',
+                        single_end: false
+                    ],
+                    ['ERX5474932_ERR5766176_r1.fastq.gz', 'ERX5474932_ERR5766176_r2.fastq.gz']
+            ],
+        [
+                    [
+                        id: 'sample2',
+                        sample: 'sample2',
+                        run_accession: 'abc',
+                        instrument_platform: 'ILLUMINA',
+                        single_end: false
+                    ],
+                    ['sample2_r1.fastq.gz', 'sample2_r2.fastq.gz']
+            ],
+        ])
+
+        input[1] = Channel.fromList([
+        [
+                    [
+                        tool: 'rgi',
+                        db_name: '4.0.1',
+                        params: ''
+                    ],
+            [
+        [db_entity: 'main', db_path: 'broadstreet-v4.0.1.tar.bz2']
+        ]
+        ]])
+                input[2] = 'rgi'    // tool_name
+                input[3] = false    // singleFqTool
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+    }
+
+    test("prep inputs - grouped databases (humann_v3)") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [
+                        id: '2612',
+                        sample: '2612',
+                        run_accession: 'ERR5766176',
+                        instrument_platform: 'ILLUMINA',
+                        single_end: false
+                    ],
+                    ['ERX5474932_ERR5766176_merged.fastq.gz']
+                ])
+
+        input[1] = Channel.fromList([
+        [
+        [
+                id: 'humann_v3_demo_v3_humann_nucleotide',
+                    tool: 'humann_v3',
+                    db_name: 'demo_v3',
+                    db_entity: 'humann_nucleotide',
+                    db_params: ''
+            ],
+            [
+        [db_entity: 'humann_nucleotide', db_path: 'chocophlan_nfDEMO.tar.gz'],
+        [db_entity: 'humann_protein', db_path: 'uniref_nfDEMO.tar.gz'],
+        [db_entity: 'humann_utility', db_path: 'utility_nfDEMO.tar.gz']
+        ]
+        ]])
+
+                input[2] = 'humann_v3'  // tool_name
+                input[3] = true         // singleFqTool
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+    }
+    test("prep multisampleinputs - grouped databases (humann_v3)") {
+    setup {
+            run("DATAPREP") {
+        script "subworkflows/local/dataprep/main.nf"
+        process {
+                    """
+            input[0] = Channel.fromList(
+            [
+            [["id": "2612"],"ERR5766176",'ILLUMINA',
+            file(params.pipelines_testdata_base_path + 'taxprofiler/data/fastq/ERX5474932_ERR5766176_1.fastq.gz'),
+            file(params.pipelines_testdata_base_path + 'taxprofiler/data/fastq/ERX5474932_ERR5766176_2.fastq.gz'),''],
+            [["id": "2612"], "ERR5766176_B","ILLUMINA",
+            file(params.pipelines_testdata_base_path + 'taxprofiler/data/fastq/ERX5474932_ERR5766176_B_1.fastq.gz'),
+            file(params.pipelines_testdata_base_path + 'taxprofiler/data/fastq/ERX5474932_ERR5766176_B_2.fastq.gz'),''],
+
+            [['id':'minigut'],'1','ILLUMINA',
+            file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R1.fastq.gz'),
+            file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R2.fastq.gz'),'']
+        ]
+        )
+                    """
+        }
+            }
+            run("DBPREP") {
+        script "subworkflows/local/dbprep/main.nf"
+        process {
+                    """
+            input[0] = Channel.of(
+                    [
+                    [
+                    id: 'humann_v3_demo_v3_humann_nucleotide',
+            tool: 'humann_v3',
+            db_name: 'demo_v3',
+            db_entity: 'humann_nucleotide',
+            db_params: ''
+        ],
+            file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/humann/v3/chocophlan_nfDEMO.tar.gz')
+        ],
+            [
+                    [
+                    id: 'humann_v3_demo_v3_humann_protein',
+            tool: 'humann_v3',
+            db_name: 'demo_v3',
+            db_entity: 'humann_protein',
+            db_params: ''
+        ],
+            file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/humann/v3/uniref_nfDEMO.tar.gz')
+        ],
+            [
+                    [
+                    id: 'humann_v3_demo_v3_humann_metaphlan',
+            tool: 'humann_v3',
+            db_name: 'demo_v3',
+            db_entity: 'humann_metaphlan',
+            db_params: ''
+        ],
+            file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/delete_me/metaphlan4_database.tar.gz')
+        ],
+            [
+                    [
+                    id: 'humann_v3_demo_v3_humann_utility',
+            tool: 'humann_v3',
+            db_name: 'demo_v3',
+            db_entity: 'humann_utility',
+            db_params: ''
+        ],
+            file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/humann/v3/utility_nfDEMO.tar.gz')
+        ]
+
+        )
+                    """
+        }
+            }
+    }
+        when {
+            workflow {
+                """
+                input[0] = DATAPREP.out.reads_concat
+                input[1] = DBPREP.out.dbs
+                input[2] = 'humann_v3'  // tool_name
+                input[3] = true         // singleFqTool
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            assert snapshot(
+                workflow.out.reads
+                        .sort { it[0].toString() },
+                workflow.out.db
+                        .sort { it[0].toString() }
+                        .collect { item ->
+                                item.collect { element ->
+                                        if (element instanceof Map) {
+                        // Sort map by keys AND sort any list values
+                        return element.sort().collectEntries { key, value ->
+                            if (value instanceof List) {
+                                [(key): value.sort()]
+                            } else {
+                                [(key): value]
+                            }
+                        }
+                    }
+                    return element
+                    }
+                        }
+            ).match()
+        }
+    }
+}
