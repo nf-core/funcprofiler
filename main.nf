@@ -75,25 +75,25 @@ workflow {
 
     def profileUsesContainers = (workflow.containerEngine != null && workflow.containerEngine != '')
 
-    if (params.run_fmhfunprofiler) {
-        if (!profileUsesContainers) {
-            error(
-                """\
-            ---------------------------------------------------------------
-            ERROR: The step "fmhfunprofiler" currently requires that it be
-            run with a profile with containerized support.  We are working
-            to add this tool to bioconda and add non-containerized profile
-            support shortly.
+    // if (params.run_fmhfunprofiler) {
+    //     if (!profileUsesContainers) {
+    //         error(
+    //             """\
+    //         ---------------------------------------------------------------
+    //         ERROR: The step "fmhfunprofiler" currently requires that it be
+    //         run with a profile with containerized support.  We are working
+    //         to add this tool to bioconda and add non-containerized profile
+    //         support shortly.
 
-            Either:
-              1. Rerun this pipeline using a container-enabled profile eg:
-              `-profile singularity`.
-              2. Disable this step by omitting the `run_fmhfunprofiler`
-              flag.
-            """
-            )
-        }
-    }
+    //         Either:
+    //           1. Rerun this pipeline using a container-enabled profile eg:
+    //           `-profile singularity`.
+    //           2. Disable this step by omitting the `run_fmhfunprofiler`
+    //           flag.
+    //         """
+    //         )
+    //     }
+    // }
 
     //
     // WORKFLOW: Run main workflow
