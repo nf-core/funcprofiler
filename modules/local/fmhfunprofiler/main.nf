@@ -23,7 +23,7 @@ process FMHFUNPROFILER {
         throw new IllegalArgumentException("fmh-funcprofiler must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}:  ${args}")
     }
     """
-    funcprofiler.py  \\
+    funcprofiler  \\
         ${fastqs} \\
         ${fmhfunprofiler_db} \\
         ${args}  \\
