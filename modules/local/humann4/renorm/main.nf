@@ -2,7 +2,8 @@ process HUMANN4_RENORM {
     tag "${meta.id}"
     label 'process_low'
 
-    conda 'bioconda::humann=4.0.0.alpha.1-final'
+//    conda 'bioconda::humann=4.0.0.alpha.1-final'
+    conda 'biobakery::humann==4.0.0a1'
     container 'ghcr.io/vdblab/biobakery-profiler:4.0.6--4.0.0.alpha.1-final_smaller-pt2'
 
     input:
