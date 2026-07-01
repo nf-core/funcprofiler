@@ -53,7 +53,7 @@ runs:
         auto-update-conda: true
         conda-solver: libmamba
         channels: conda-forge
-        channel-priority: strict
+        channel-priority: flexible
         conda-remove-defaults: true
 
     - name: Run nf-test
