@@ -108,8 +108,8 @@ jobs:
         with:
           name: my-artifact-${{ matrix.profile }}-${{ matrix.NXF_VER }}-${{ matrix.shard }}
           path: |
-	     /home/runner/_work/funcprofiler/funcprofiler/
-	     !*/work/conda/
+	    /home/runner/_work/funcprofiler/funcprofiler/
+	    !*/work/conda/
           retention-days: 2
       - name: Report test status
         if: ${{ always() }}
