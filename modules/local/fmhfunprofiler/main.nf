@@ -2,8 +2,10 @@ process FMHFUNPROFILER {
     tag "${meta.id}"
     label 'process_medium'
 
-    //    conda "${moduleDir}/environment.yml"
-    container 'ghcr.io/vdblab/fmhfunprofiler:20250930a'
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/fmh-funprofiler:1.1.1--pyh106432d_0' :
+        'quay.io/biocontainers/fmh-funprofiler:1.1.1--pyh106432d_0' }"
 
     input:
     tuple val(meta), path(fastqs)
@@ -23,7 +25,7 @@ process FMHFUNPROFILER {
         throw new IllegalArgumentException("fmh-funcprofiler must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}:  ${args}")
     }
     """
-    funcprofiler.py  \\
+    funcprofiler  \\
         ${fastqs} \\
         ${fmhfunprofiler_db} \\
         ${args}  \\

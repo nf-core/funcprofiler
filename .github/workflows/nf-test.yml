@@ -68,13 +68,11 @@ jobs:
       fail-fast: false
       matrix:
         shard: ${{ fromJson(needs.nf-test-changes.outputs.shard) }}
-        profile: [docker, singularity]
+        profile: [docker, singularity, conda]
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
         # Exclude conda and singularity on dev
         exclude:
-          - isMain: false
-            profile: "conda"
           - isMain: false
             profile: "singularity"
         NXF_VER:
@@ -109,7 +107,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: my-artifact-${{ matrix.profile }}-${{ matrix.NXF_VER }}-${{ matrix.shard }}
-          path: /home/runner/_work/funcprofiler/funcprofiler/
+          path: |
+            /home/runner/_work/funcprofiler/funcprofiler/
+            !/home/runner/_work/funcprofiler/funcprofiler/**/work/conda/
           retention-days: 2
       - name: Report test status
         if: ${{ always() }}
