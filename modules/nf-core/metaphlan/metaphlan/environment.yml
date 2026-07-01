@@ -7,4 +7,4 @@ dependencies:
   - bioconda::metaphlan=4.1.1
   - pip
   - pip:
-    - distutils
+    - setuptools
