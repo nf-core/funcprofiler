@@ -7,5 +7,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - fmh-funprofile=1.1.1
+  - fmh-funprofiler=1.1.1
   - python>=3.8
