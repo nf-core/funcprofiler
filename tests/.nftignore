@@ -14,5 +14,9 @@ fastqc/*_fastqc.{html,zip}
 pipeline_info/*.{html,json,txt,yml}
 **/*.log
 **/*.biom
-**/*.profile
+**/*_profile.txt
+**/*_genefamilies.tsv.gz
+**/*_pathcoverage.tsv.gz
+**/*_pathabundance.tsv.gz
+**/*_reactions.tsv.gz
 **/*bowtie2out.txt

@@ -99,6 +99,7 @@ nextflow_workflow {
 	    params {
 		run_humann_v3 = true
 		run_fmhfunprofiler = true
+		outdir = "$outputDir"
 	    }
             workflow {
                 """
@@ -111,7 +112,8 @@ nextflow_workflow {
         }
         then {
             assert workflow.success
-            assert snapshot(workflow.out).match()
+	    def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assert snapshot(stable_path).match()
         }
     }
 }
