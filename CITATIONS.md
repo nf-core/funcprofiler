@@ -18,6 +18,10 @@
 
 > Buchfink B, Xie C, Huson DH. Fast and sensitive protein alignment using DIAMOND. Nat Methods. 2015 Jan;12(1):59-60. doi: 10.1038/nmeth.3176. Epub 2014 Nov 17. PMID: 25402007.
 
+- [eggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper)
+
+> Cantalapiedra CP, Hernández-Plaza A, Letunic I, Bork P, Huerta-Cepas J. eggNOG-mapper v2: Functional Annotation, Orthology Assignments, and Domain Prediction at the Metagenomic Scale. Mol Biol Evol. 2021 Dec 9;38(12):5825-5829. doi: 10.1093/molbev/msab293. PubMed PMID: 34597405.
+
 - [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
 > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
@@ -33,6 +37,10 @@
 - [mi-faser](https://academic.oup.com/nar/advance-article/doi/10.1093/nar/gkx1209/4670955)
 
 > Zhu C, Miller M, Marpaka S, Vaysberg P, Rühlemann M, Wu G, Heinsen FA, Tempel M, Zhao L, Leib W, Franke A, Bromberg Y. Functional sequencing read annotation for high precision microbiome analysis. Nucleic Acids Research. Volume 46, Issue 4. 2017. doi: 10.1093/nar/gkx1209.
+
+> Mahlich Y, Zhu C, Chung H, Velaga PK, De Paolis Kaluza MC, Radivojac P, Friedberg I, Bromberg Y. Learning from the unknown: exploring the range of bacterial functionality. Nucleic Acids Res. 2023 Oct 27;51(19):10162-10175. doi: 10.1093/nar/gkad757. PubMed PMID: 37739408.
+
+> Zhu C, Delmont TO, Vogel TM, Bromberg Y. Functional Basis of Microorganism Classification. PLoS Comput Biol. 2015 Aug 28;11(8):e1004472. doi: 10.1371/journal.pcbi.1004472. PubMed PMID: 26317871.
 
 - [MetaPhlAn3](http://segatalab.cibio.unitn.it/tools/metaphlan/index.html)
 
