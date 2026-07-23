@@ -47,18 +47,14 @@
     "run multisampleinputs - grouped databases (humann_v3)": {
         "content": [
             [
-                "2612.merged.fastq.gz:md5,270bf4c4d9707c6afc970fe5622cc673",
                 "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129",
-                "2612_null.fmhfunprofiler.fmhfunprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08",
-                "minigut_null.fmhfunprofiler.fmhfunprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08",
-                "2612_1.merged.fastq.gz:md5,e38f6e7ad98fc7b848b4967bde945d13",
-                "2612_2.merged.fastq.gz:md5,5f40e29533a8f88521954301b836dbd8"
+                "minigut_null.fmhfunprofiler.fmhfunprofiler.ko:md5,16b7196a90c1d2fd3e3109c8d252cd08"
             ]
         ],
-        "timestamp": "2026-07-01T17:06:22.10662",
+        "timestamp": "2026-07-23T15:26:56.236473",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.4"
         }
     }
 }
