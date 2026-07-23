@@ -30,12 +30,12 @@
 Supported profilers and current status:
 
 1. [**HUMANn v3**](https://huttenhower.sph.harvard.edu/humann/) — functional profiling via MetaPhlAn + HUMANn 3 (`--run_humann_v3`)
-2. [**HUMANn v4**](https://huttenhower.sph.harvard.edu/humann/) — functional profiling via MetaPhlAn + HUMANn 4 (`--run_humann_v4`)
-3. [**FMH FunProfiler**](https://github.com/dib-lab/fmh_funprofiler) — sketch-based functional profiling (`--run_fmhfunprofiler`)
+2. [**HUMANn v4**](https://docs.google.com/document/d/1rCx5JkuO7wCKWrL8_-UJx_FkopJAfcDFtZktgPspak0/edit?tab=t.0#heading=h.i5hn0zprhwld) — functional profiling via MetaPhlAn + HUMANn 4 (`--run_humann_v4`)
+3. [**FMH FunProfiler**](https://github.com/KoslickiLab/fmh-funprofiler) — sketch-based functional profiling (`--run_fmhfunprofiler`)
 4. [**RGI**](https://github.com/arpcard/rgi) — antimicrobial resistance gene identification (`--run_rgi`, available)
 5. [**mifaser**](https://bromberglab.org/project/mifaser/) — functional profiling via mifaser (`--run_mifaser`, available)
 6. [**DIAMOND**](https://github.com/bbuchfink/diamond) — alignment with DIAMOND blastx (`--run_diamond`, work in progress / beta)
-7. [**eggNOG-mapper**](https://academic.oup.com/mbe/article/38/12/5825/6379734) — functional annotation, orthology assignments and domain prediction (`--run_eggnogmapper`, work in progress / beta)
+7. [**eggNOG-mapper**](https://github.com/eggnogdb/eggnog-mapper) — functional annotation, orthology assignments and domain prediction (`--run_eggnogmapper`, work in progress / beta)
 
 > [!WARNING]
 > DIAMOND and eggNOG-mapper support is currently in beta and should be treated as work in progress. These modules are still being validated in the full pipeline, including database handling, output behavior, and downstream reporting. Use them with caution, expect potential issues, and independently review results before using them for production analyses or interpretation.
