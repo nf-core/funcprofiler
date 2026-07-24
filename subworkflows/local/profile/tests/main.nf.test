@@ -111,6 +111,68 @@ nextflow_workflow {
             assert snapshot(stable_path).match()
         }
     }
+    test("run fmh") {
+	tag 'fmh'
+	setup {
+            run("DATAPREP") {
+		script "subworkflows/local/dataprep/main.nf"
+		process {
+                    """
+		    input[0] = Channel.fromList(
+		    [
+			[['id':'minigut'],'1','ILLUMINA',
+			file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R1.fastq.gz'),
+			file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R2.fastq.gz'),'']
+		]
+		)
+                    """
+		}
+            }
+
+
+
+            run("DBPREP") {
+		script "subworkflows/local/dbprep/main.nf"
+		process {
+                    """
+		    input[0] = Channel.of(
+                [
+                [
+                id: 'fmh',
+                    tool: 'fmhfunprofiler',
+                    db_name: 'demo_1000',
+                    db_entity: '',
+                    db_params: '11 1000'
+		],
+			file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip')
+		],
+
+            )
+                    """
+		}
+            }
+	}
+        when {
+	    params {
+		run_humann_v3 = false
+		run_fmhfunprofiler = true
+		outdir = "$outputDir"
+	    }
+            workflow {
+                """
+                input[0] = DATAPREP.out.reads
+                input[1] = DATAPREP.out.reads_concat
+                input[2] = DBPREP.out.dbs
+
+                """
+            }
+        }
+        then {
+            assert workflow.success
+	    def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assert snapshot(stable_path).match()
+        }
+    }
     test("run RGI") {
 	tag 'rgi'
 	setup {

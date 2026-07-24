@@ -25,6 +25,11 @@
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
+                    "fmhfunprofiler": {
+                        "branch": "master",
+                        "git_sha": "da290c59a571dbc2fddcd9b87b69b7517cad6a94",
+                        "installed_by": ["modules"]
+                    },
                     "gunzip": {
                         "branch": "master",
                         "git_sha": "96c57dfd98a0641886a67bd449fe33ee2ec0e374",

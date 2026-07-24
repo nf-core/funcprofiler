@@ -7,7 +7,8 @@ include { HUMANN3_HUMANN                                } from '../../../modules
 include { HUMANN4                                       } from '../../../modules/local/humann4/humann/main'
 include { HUMANN3_REGROUP                               } from '../../../modules/nf-core/humann3/regroup/main'
 include { HUMANN4_REGROUP                               } from '../../../modules/local/humann4/regroup/main'
-include { FMHFUNPROFILER                                } from '../../../modules/local/fmhfunprofiler/main'
+//include { FMHFUNPROFILER                                } from '../../../modules/local/fmhfunprofiler/main'
+include { FMHFUNPROFILER                                } from '../../../modules/nf-core/fmhfunprofiler/main'
 include { METAPHLAN_METAPHLAN as MPAHUMANN3;
           METAPHLAN_METAPHLAN as MPAHUMANN4             } from '../../../modules/nf-core/metaphlan/metaphlan/main'
 include { DIAMOND_BLASTX                                } from '../../../modules/nf-core/diamond/blastx/main'
@@ -178,12 +179,27 @@ workflow PROFILING {
     ch_input_for_mifaser = prepareInputs(reads_concat, databases, 'mifaser', true)
 
     if ( params.run_fmhfunprofiler ) {
-	 // this tool needs the db_params at runtime, so it takes a [[meta], path] tuple instead of just a path
+	// this tool needs the db_params at runtime, so it takes a [[meta], path] tuple instead of just a path
+	getDbPath(ch_input_for_fmhfunprofiler.db, "main", true)
+	    .multiMap { db_meta, db_path ->
+	        def args = db_meta.db_params.split(" ")
+
+		if (args.size() != 2) {
+		    throw new IllegalArgumentException("fmh-funcprofiler's db_params must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}:  ${db_meta.db_params}")
+		}
+	        db_path: db_path
+                kmer:    args[0]
+                sketch:  args[1]
+	    }
+	    .set {fmh_db}
         FMHFUNPROFILER (
-	    ch_input_for_fmhfunprofiler.reads,
-	    getDbPath(ch_input_for_fmhfunprofiler.db, "main", true)
+            ch_input_for_fmhfunprofiler.reads,
+            fmh_db.db_path,
+            fmh_db.kmer,
+            fmh_db.sketch
+
 	)
-        ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.ko )
+        ch_raw_profiles        = ch_raw_profiles.mix( FMHFUNPROFILER.out.csv )
     }
     if ( params.run_mifaser ) {
         ch_input_for_mifaser =  prepareInputs(reads_concat, databases, 'mifaser', true)
