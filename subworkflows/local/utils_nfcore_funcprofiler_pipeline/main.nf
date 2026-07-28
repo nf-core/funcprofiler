@@ -99,13 +99,15 @@ workflow PIPELINE_INITIALISATION {
     // Create channel from input file provided through params.input
     //
 
-    Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
+    Channel
+        .fromList(samplesheetToList(params.input, "assets/schema_input.json"))
         .set { ch_samplesheet }
 
     //
     // Create channel from databases file provided through params.databases
     //
-    Channel.fromList(samplesheetToList(params.databases, "assets/schema_database.json"))
+    Channel
+        .fromList(samplesheetToList(params.databases, "assets/schema_database.json"))
         .set { ch_databases }
 
     emit:
@@ -182,9 +184,7 @@ def validateInputSamplesheet(input) {
 //
 def toolCitationText() {
 
-    def text_qc = [
-        "Sequencing quality control was performed with FastQC (Andrews 2010)."
-    ].join(' ').trim()
+    def text_qc = ["Sequencing quality control was performed with FastQC (Andrews 2010)."].join(' ').trim()
 
     def text_humann = [
         "Functional profiling was performed with",
@@ -196,25 +196,15 @@ def toolCitationText() {
         "using MetaPhlAn (Blanco-Míguez et al. 2023) for taxonomic marker-based profiling.",
     ].join(' ').trim()
 
-    def text_diamond = [
-        "Protein-level sequence alignment was performed with DIAMOND (Buchfink et al. 2021)."
-    ].join(' ').trim()
+    def text_diamond = ["Protein-level sequence alignment was performed with DIAMOND (Buchfink et al. 2021)."].join(' ').trim()
 
-    def text_fmhfunprofiler = [
-        "Functional profiling was additionally performed with fmhfunprofiler (Hera et al. 2024)."
-    ].join(' ').trim()
+    def text_fmhfunprofiler = ["Functional profiling was additionally performed with fmhfunprofiler (Hera et al. 2024)."].join(' ').trim()
 
-    def text_mifaser = [
-        "Enzyme function annotation was performed with mi-faser (Zhu et al. 2017)."
-    ].join(' ').trim()
+    def text_mifaser = ["Enzyme function annotation was performed with mi-faser (Zhu et al. 2017)."].join(' ').trim()
 
-    def text_eggnogmapper = [
-        "Functional Annotation, Orthology Assignments, and Domain Prediction was performed with eggNOG-mapper v2 (Cantalapiedra et. al 2021)"
-    ].join(' ').trim()
+    def text_eggnogmapper = ["Functional Annotation, Orthology Assignments, and Domain Prediction was performed with eggNOG-mapper v2 (Cantalapiedra et. al 2021)"].join(' ').trim()
 
-    def text_rgi = [
-        "Resistome prediction was performed using RGI (Alcock et. al 2023)"
-    ].join(' ').trim()
+    def text_rgi = ["Resistome prediction was performed using RGI (Alcock et. al 2023)"].join(' ').trim()
 
     def citation_text = [
         "Tools used in the workflow included:",
@@ -233,22 +223,16 @@ def toolCitationText() {
 
 def toolBibliographyText() {
 
-    def text_qc = [
-        !params.skip_preprocessing_qc ? "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. Available at: <a href=\"http://www.bioinformatics.babraham.ac.uk/projects/fastqc/\">http://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></li>" : ""
-    ].join(' ').trim()
+    def text_qc = [!params.skip_preprocessing_qc ? "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. Available at: <a href=\"http://www.bioinformatics.babraham.ac.uk/projects/fastqc/\">http://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></li>" : ""].join(' ').trim()
 
     def text_humann = [
         params.run_humann_v3 || params.run_humann_v4 ? "<li>Beghini, F., McIver, L. J., Blanco-M\u00edguez, A., Dubois, L., Asnicar, F., Maharjan, S., Mailyan, A., Thomas, A. M., Manghi, P., Valles-Colomer, M., Weingart, G., Zhang, Y., Zolfo, M., Huttenhower, C., Franzosa, E. A., & Segata, N. (2021). Integrating taxonomic, functional, and strain-level profiling of diverse microbial communities with bioBakery 3. eLife, 10, e65088. <a href=\"https://doi.org/10.7554/eLife.65088\">10.7554/eLife.65088</a></li>" : "",
         params.run_humann_v3 || params.run_humann_v4 ? "<li>Blanco-M\u00edguez, A., Beghini, F., Cumbo, F., McIver, L. J., Thompson, K. N., Zolfo, M., Manghi, P., Dubois, L., Huang, K. D., Thomas, A. M., Nickols, W. A., Piccinno, G., Piperni, E., Pun\u010doch\u00e1\u0159, M., Valles-Colomer, M., Tett, A., Giordano, F., Davies, R., Wolf, J., \u2026 Segata, N. (2023). Extending and improving metagenomic taxonomic profiling with uncharacterized species using MetaPhlAn 4. Nature Biotechnology, 41, 1633\u20131645. <a href=\"https://doi.org/10.1038/s41587-023-01688-w\">10.1038/s41587-023-01688-w</a></li>" : "",
     ].join(' ').trim()
 
-    def text_diamond = [
-        params.run_diamond ? "<li>Buchfink, B., Reuter, K., & Drost, H.-G. (2021). Sensitive protein alignments at tree-of-life scale using DIAMOND. Nature Methods, 18(4), 366–368. <a href=\"https://doi.org/10.1038/s41592-021-01101-x\">10.1038/s41592-021-01101-x</a></li>" : ""
-    ].join(' ').trim()
+    def text_diamond = [params.run_diamond ? "<li>Buchfink, B., Reuter, K., & Drost, H.-G. (2021). Sensitive protein alignments at tree-of-life scale using DIAMOND. Nature Methods, 18(4), 366–368. <a href=\"https://doi.org/10.1038/s41592-021-01101-x\">10.1038/s41592-021-01101-x</a></li>" : ""].join(' ').trim()
 
-    def text_fmhfunprofiler = [
-        params.run_fmhfunprofiler ? "<li>Hera, M. R., Liu, S., Wei, W., Rodriguez, J. S., Ma, C., & Koslicki, D. (2024). Metagenomic functional profiling: to sketch or not to sketch? Bioinformatics, 40(Suppl 2), ii165–ii173. <a href=\"https://doi.org/10.1093/bioinformatics/btae397\">10.1093/bioinformatics/btae397</a></li>" : ""
-    ].join(' ').trim()
+    def text_fmhfunprofiler = [params.run_fmhfunprofiler ? "<li>Hera, M. R., Liu, S., Wei, W., Rodriguez, J. S., Ma, C., & Koslicki, D. (2024). Metagenomic functional profiling: to sketch or not to sketch? Bioinformatics, 40(Suppl 2), ii165–ii173. <a href=\"https://doi.org/10.1093/bioinformatics/btae397\">10.1093/bioinformatics/btae397</a></li>" : ""].join(' ').trim()
 
     def text_mifaser = [
         params.run_mifaser ? "<li>Zhu, C., Miller, M., Marpaka, S., Vaysberg, P., R\u00fchlemann, M. C., Wu, G., Heinsen, F.-A., Tempel, M., Woodhouse, L., Burkhardt, L., Tams, R., Knecht, C., Heinig, M., Franke, A., Huser, T., & Bromberg, Y. (2017). Functional sequencing read annotation for high precision microbiome analysis. Nucleic Acids Research, 46(4), e23. <a href=\"https://doi.org/10.1093/nar/gkx1209\">10.1093/nar/gkx1209</a></li>" : "",
@@ -256,13 +240,9 @@ def toolBibliographyText() {
         params.run_mifaser ? "<li>Zhu, C., Delmont, T. O., Vogel, T. M., & Bromberg, Y. (2015). Functional basis of microorganism classification. PLoS Computational Biology, 11(8), e1004472. <a href=\"https://doi.org/10.1371/journal.pcbi.1004472\">10.1371/journal.pcbi.1004472</a></li>" : "",
     ].join(' ').trim()
 
-    def text_eggnggmapper = [
-        params.run_eggnogmapper ? "<li>Carlos P Cantalapiedra, Ana Hernández-Plaza, Ivica Letunic, Peer Bork, Jaime Huerta-Cepas, eggNOG-mapper v2: Functional Annotation, Orthology Assignments, and Domain Prediction at the Metagenomic Scale, Molecular Biology and Evolution, Volume 38, Issue 12, December 2021, <a href = \"https://doi.org/10.1093/molbev/msab293\">0.1093/molbev/msab293</a></li>" : ""
-    ].join(' ').trim()
+    def text_eggnggmapper = [params.run_eggnogmapper ? "<li>Carlos P Cantalapiedra, Ana Hernández-Plaza, Ivica Letunic, Peer Bork, Jaime Huerta-Cepas, eggNOG-mapper v2: Functional Annotation, Orthology Assignments, and Domain Prediction at the Metagenomic Scale, Molecular Biology and Evolution, Volume 38, Issue 12, December 2021, <a href = \"https://doi.org/10.1093/molbev/msab293\">0.1093/molbev/msab293</a></li>" : ""].join(' ').trim()
 
-    def text_rgi = [
-        params.run_rgi ? "<li>Alcock et al. 2023. CARD 2023: expanded curation, support for machine learning, and resistome prediction at the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research<a href = \"https://doi.org/10.1093/molbev/msab293\"<a href=\"https://pubmed.ncbi.nlm.nih.gov/36263822/\">pubmed.ncbi.nlm.nih.gov/36263822</a></li>" : ""
-    ].join(' ').trim()
+    def text_rgi = [params.run_rgi ? "<li>Alcock et al. 2023. CARD 2023: expanded curation, support for machine learning, and resistome prediction at the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research<a href = \"https://doi.org/10.1093/molbev/msab293\"<a href=\"https://pubmed.ncbi.nlm.nih.gov/36263822/\">pubmed.ncbi.nlm.nih.gov/36263822</a></li>" : ""].join(' ').trim()
 
     def reference_text = [
         text_qc,
