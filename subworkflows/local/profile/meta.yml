@@ -1,45 +1,56 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "profile"
-##
-description: Execute functional profiling tools
+description: |
+  Run the enabled read-based functional profilers. Reads are combined with every
+  database matching the tool, so a sample is profiled once per database name and
+  parameter combination. Tools that take paired input read from `reads`, tools
+  that take a single FASTQ read from `reads_concat`, and each profiler runs only
+  when its `run_<tool>` parameter is set.
 keywords:
   - microbiome
   - metagenome
   - fastq
-  - function
+  - functional profiling
 components:
-  - humann/humann
   - fmhfunprofiler
   - mifaser
+  - humann3/humann
+  - humann3/regroup
+  - metaphlan/metaphlan
+  - diamond/blastx
   - rgi/bwt
-
-## TODO nf-core: List all of the channels used as input with a description and their structure
+  - rgi/cardannotation
+  - eggnogmapper
+  - seqkit/fq2fa
+  - gunzip
 input:
   - reads:
       type: file
       description: |
-        The input channel containing paired fastq files
-        Structure: [ val(meta), path(fastq) ]
-      pattern: "*.{.fastq}*"
+        Channel of paired-end (or single-end) reads, used by the profilers that
+        accept a read pair.
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
   - reads_concat:
       type: file
       description: |
-        The input channel containing concatenated fastq pairs as a single fastq
-        Structure: [ val(meta), path(fastq) ]
-      pattern: "*.{.fastq}*"
+        Channel of reads concatenated into a single file per sample, used by the
+        profilers that accept only one FASTQ.
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
   - databases:
       type: file
       description: |
-        The input channel containing the database files
-        Structure: [ val(meta), path(file) ]
-## TODO nf-core: List all of the channels used as output with a descriptions and their structure
+        Channel of grouped databases as emitted by the `dbprep` subworkflow.
+        Structure: [ val(meta), [ [ db_entity: val(entity), db_path: path(db) ] ] ]
 output:
   - profiles:
       type: file
       description: |
-        Channel containing tabular profiling results
-        Structure: [ val(meta), path(paths) ]
-      pattern: "*.bam"
+        Channel of the tabular profiles produced by each enabled tool. The meta
+        map identifies the sample, the tool and the database used.
+        Structure: [ val(meta), path(profile) ]
+      pattern: "*.{tsv,csv,txt}"
   - versions:
       type: file
       description: |
@@ -49,7 +60,7 @@ output:
   - mqc:
       type: file
       description: |
-        File containing MultiQC files
+        Channel of files to be passed on to MultiQC
         Structure: [ path(file) ]
       pattern: "*"
 authors:
