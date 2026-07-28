@@ -152,10 +152,8 @@ workflow PROFILING {
     databases // [ [ meta ], path ]
 
     main:
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
-    ch_raw_profiles = Channel.empty()
     // These are count tables
+    ch_raw_profiles = channel.empty()
 
     /*
         COMBINE READS WITH POSSIBLE DATABASES
@@ -272,9 +270,8 @@ workflow PROFILING {
     }
 
     emit:
-    profiles = ch_raw_profiles // channel: [ val(meta), [ reads ] ] - should be text files or biom
-    versions = ch_versions // channel: [ versions.yml ]
-    mqc = ch_multiqc_files
+    profiles = ch_raw_profiles // channel: [ val(meta), path(profile) ]
+    // Software versions are published to the `versions` topic by each module
 }
 
 

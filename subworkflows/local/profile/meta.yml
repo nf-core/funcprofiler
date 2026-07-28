@@ -51,18 +51,8 @@ output:
         map identifies the sample, the tool and the database used.
         Structure: [ val(meta), path(profile) ]
       pattern: "*.{tsv,csv,txt}"
-  - versions:
-      type: file
-      description: |
-        File containing software versions
-        Structure: [ path(versions.yml) ]
-      pattern: "versions.yml"
-  - mqc:
-      type: file
-      description: |
-        Channel of files to be passed on to MultiQC
-        Structure: [ path(file) ]
-      pattern: "*"
+# Software versions are published to the `versions` topic by each module rather
+# than emitted as a channel.
 authors:
   - "@nickp60"
 maintainers:
