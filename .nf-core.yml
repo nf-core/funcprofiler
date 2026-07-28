@@ -3,7 +3,9 @@ lint:
     - assets/nf-core-funcprofiler_logo_light.png
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/workflows/linting.yml
-    - .github/workflows/linting_comment.yml
+    # The 4.0.3 template renders `HEAD_REPO:` with two spaces, which the prettier
+    # pin used by prek collapses to one, so this file can never match the template.
+    - .github/workflows/branch.yml
     - .gitignore
 nf_core_version: 4.0.3
 repository_type: pipeline
