@@ -12,7 +12,7 @@
                     },
                     "diamond/blastx": {
                         "branch": "master",
-                        "git_sha": "1b534ad2336876dbe82e9fea2773334cb624b426",
+                        "git_sha": "83ce9b314157a24d9a92f17a07ed5d55f30b78f9",
                         "installed_by": ["modules"]
                     },
                     "eggnogmapper": {
@@ -32,7 +32,7 @@
                     },
                     "gunzip": {
                         "branch": "master",
-                        "git_sha": "96c57dfd98a0641886a67bd449fe33ee2ec0e374",
+                        "git_sha": "0902eac3012baaf4f9ab6513c8c55acc9353c96c",
                         "installed_by": ["modules"]
                     },
                     "humann3/humann": {
@@ -52,12 +52,12 @@
                     },
                     "metaphlan/metaphlan": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "98ad2ea364508c5eefa3eee721f5659b3d7585a9",
                         "installed_by": ["modules"]
                     },
                     "mifaser": {
                         "branch": "master",
-                        "git_sha": "6b43745037429413ca11e0e4a1029d90493c3135",
+                        "git_sha": "522d0a5709833aaa28c58d4464b4348d03316a62",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
@@ -77,12 +77,12 @@
                     },
                     "seqkit/fq2fa": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "d07a945f421a4a91ce4e5a22db63e0e7f8741607",
                         "installed_by": ["modules"]
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "447f7bc0fa41dfc2400c8cad4c0291880dc060cf",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     }
                 }
@@ -101,7 +101,7 @@
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "ce3424257de288c0ca25f097a68d3a289da23f12",
+                        "git_sha": "a7b27fd25bfa8dcc07d299e88bd790585901a436",
                         "installed_by": ["subworkflows"]
                     }
                 }
