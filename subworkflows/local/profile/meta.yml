@@ -16,6 +16,8 @@ components:
   - mifaser
   - humann3/humann
   - humann3/regroup
+  - humann4
+  - humann4/regroup
   - metaphlan/metaphlan
   - diamond/blastx
   - rgi/bwt
