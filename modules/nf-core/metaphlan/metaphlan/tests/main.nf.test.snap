@@ -2,6 +2,39 @@
     "sarscov2 - illumina pair end [fastq] - stub": {
         "content": [
             {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_profile.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.biom:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bowtie2out.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    "versions.yml:md5,db17780c9fc65bc70e9641101c47d0e0"
+                ],
                 "biom": [
                     [
                         {
@@ -32,19 +65,15 @@
                 "sam": [
                     
                 ],
-                "versions_metaphlan": [
-                    [
-                        "METAPHLAN_METAPHLAN",
-                        "metaphlan",
-                        "4.1.1"
-                    ]
+                "versions": [
+                    "versions.yml:md5,db17780c9fc65bc70e9641101c47d0e0"
                 ]
             }
         ],
-        "timestamp": "2026-06-09T17:19:58.375514149",
+        "timestamp": "2026-02-16T10:17:01.145927415",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
         }
     },
     "sarscov2 - illumina pair end [fastq] - save sam": {
@@ -66,20 +95,14 @@
                 ]
             ],
             "SAM",
-            {
-                "versions_metaphlan": [
-                    [
-                        "METAPHLAN_METAPHLAN",
-                        "metaphlan",
-                        "4.1.1"
-                    ]
-                ]
-            }
+            [
+                "versions.yml:md5,db17780c9fc65bc70e9641101c47d0e0"
+            ]
         ],
-        "timestamp": "2026-06-09T17:19:47.219030947",
+        "timestamp": "2025-08-22T07:33:29.981757425",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
         }
     },
     "sarscov2 - illumina single end [fastq]": {
@@ -100,20 +123,14 @@
                     "test.bowtie2out.txt:md5,ef46a9c6a8ce9cae26fbfd5527116fd5"
                 ]
             ],
-            {
-                "versions_metaphlan": [
-                    [
-                        "METAPHLAN_METAPHLAN",
-                        "metaphlan",
-                        "4.1.1"
-                    ]
-                ]
-            }
+            [
+                "versions.yml:md5,db17780c9fc65bc70e9641101c47d0e0"
+            ]
         ],
-        "timestamp": "2026-06-09T17:19:05.401336447",
+        "timestamp": "2024-08-27T10:33:32.269571148",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         }
     },
     "sarscov2 - illumina single end [fasta]": {
@@ -134,20 +151,14 @@
                     "test.bowtie2out.txt:md5,d99d05d6b011c647adf816f10fc6acbe"
                 ]
             ],
-            {
-                "versions_metaphlan": [
-                    [
-                        "METAPHLAN_METAPHLAN",
-                        "metaphlan",
-                        "4.1.1"
-                    ]
-                ]
-            }
+            [
+                "versions.yml:md5,db17780c9fc65bc70e9641101c47d0e0"
+            ]
         ],
-        "timestamp": "2026-06-09T17:19:32.907241155",
+        "timestamp": "2024-08-27T10:34:10.262604527",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         }
     },
     "sarscov2 - illumina pair end [fastq]": {
@@ -168,20 +179,14 @@
                     "test.bowtie2out.txt:md5,8c1bc21e1d8484b5551bf46331d61bd8"
                 ]
             ],
-            {
-                "versions_metaphlan": [
-                    [
-                        "METAPHLAN_METAPHLAN",
-                        "metaphlan",
-                        "4.1.1"
-                    ]
-                ]
-            }
+            [
+                "versions.yml:md5,db17780c9fc65bc70e9641101c47d0e0"
+            ]
         ],
-        "timestamp": "2026-06-09T17:19:19.166830424",
+        "timestamp": "2024-08-27T10:33:51.829732777",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         }
     }
 }

@@ -52,7 +52,7 @@
                     },
                     "metaphlan/metaphlan": {
                         "branch": "master",
-                        "git_sha": "98ad2ea364508c5eefa3eee721f5659b3d7585a9",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "mifaser": {
