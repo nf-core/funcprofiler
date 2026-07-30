@@ -38,11 +38,16 @@ runs:
     - name: Setup apptainer
       if: contains(inputs.profile, 'singularity')
       uses: eWaterCycle/setup-apptainer@4bb22c52d4f63406c49e94c804632975787312b3 # v2.0.0
+      with:
+        apptainer-version: 1.5.3
 
     - name: Set up Singularity
       if: contains(inputs.profile, 'singularity')
       shell: bash
       run: |
+        # The runner image restricts unprivileged user namespaces, which non-suid
+        # apptainer needs to start a container at all.
+        sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
         mkdir -p $NXF_SINGULARITY_CACHEDIR
         mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 

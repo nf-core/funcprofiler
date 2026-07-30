@@ -48,26 +48,26 @@
         "content": [
             [
                 "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129",
-                "minigut_KOs_sketched_scaled_1000_demo.sig.fmhfunprofiler.csv:md5,16b7196a90c1d2fd3e3109c8d252cd08"
+                "minigut_KOs_sketched_scaled_1000_demo.sig.fmhfunprofiler.csv:md5,1081039ab9e9b378d2dfd3206e96e917"
             ]
         ],
-        "timestamp": "2026-07-23T16:38:21.384784",
+        "timestamp": "2026-07-29T16:20:47.621463",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "run multisampleinputs - grouped databases (humann_v3)": {
         "content": [
             [
                 "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129",
-                "minigut_KOs_sketched_scaled_1000_demo.sig.fmhfunprofiler.csv:md5,16b7196a90c1d2fd3e3109c8d252cd08"
+                "minigut_KOs_sketched_scaled_1000_demo.sig.fmhfunprofiler.csv:md5,1081039ab9e9b378d2dfd3206e96e917"
             ]
         ],
-        "timestamp": "2026-07-24T09:47:36.521206",
+        "timestamp": "2026-07-29T16:20:29.367839",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     }
 }

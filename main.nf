@@ -38,7 +38,7 @@ workflow NFCORE_FUNCPROFILER {
     //
     // WORKFLOW: Run pipeline
     //
-    FUNCPROFILER (
+    FUNCPROFILER(
         samplesheet,
         databases,
         params.multiqc_config,

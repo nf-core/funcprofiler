@@ -3,9 +3,9 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { MULTIQC } from '../modules/nf-core/multiqc/main'
+include { paramsSummaryMap } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_funcprofiler_pipeline'
 
@@ -35,16 +35,15 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_func
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { UNTAR                         } from '../modules/nf-core/untar/main'
-include { PROFILING                     } from '../subworkflows/local/profile/main'
-include { DATAPREP                      } from '../subworkflows/local/dataprep/main'
-include { DBPREP                        } from '../subworkflows/local/dbprep/main'
+include { UNTAR } from '../modules/nf-core/untar/main'
+include { PROFILING } from '../subworkflows/local/profile/main'
+include { DATAPREP } from '../subworkflows/local/dataprep/main'
+include { DBPREP } from '../subworkflows/local/dbprep/main'
 
 
 
 
 workflow FUNCPROFILER {
-
     take:
     samplesheet // channel: samplesheet read in from --input
     databases // channel: databases from --databases
@@ -58,25 +57,47 @@ workflow FUNCPROFILER {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    DATAPREP (
-	samplesheet
+    DATAPREP(
+        samplesheet
     )
 
-    DBPREP (
-	databases
+    DBPREP(
+        databases
     )
-    PROFILING (
-	DATAPREP.out.reads,
-	DATAPREP.out.reads_concat,
-	DBPREP.out.dbs
+    PROFILING(
+        DATAPREP.out.reads,
+        DATAPREP.out.reads_concat,
+        DBPREP.out.dbs,
     )
 
-    def ch_collated_versions = softwareVersionsToYAML(ch_versions)
+    //
+    // Collate and save software versions
+    //
+    def topic_versions = channel
+        .topic("versions")
+        .distinct()
+        .branch { entry ->
+            versions_file: entry instanceof Path
+            versions_tuple: true
+        }
+
+    def topic_versions_string = topic_versions.versions_tuple
+        .map { process, tool, version ->
+            [process[process.lastIndexOf(':') + 1..-1], "  ${tool}: ${version}"]
+        }
+        .groupTuple(by: 0)
+        .map { process, tool_versions ->
+            tool_versions.unique().sort()
+            "${process}:\n${tool_versions.join('\n')}"
+        }
+
+    def ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+        .mix(topic_versions_string)
         .collectFile(
             storeDir: "${outdir}/pipeline_info",
-            name: 'nf_core_'  +  'funcprofiler_software_'  + 'mqc_'  + 'versions.yml',
+            name: 'nf_core_' + 'funcprofiler_software_' + 'mqc_' + 'versions.yml',
             sort: true,
-            newLine: true
+            newLine: true,
         )
 
     //
@@ -108,11 +129,5 @@ workflow FUNCPROFILER {
 
     emit:
     multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+    versions = ch_versions // channel: [ path(versions.yml) ]
 }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/

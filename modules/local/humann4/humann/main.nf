@@ -1,6 +1,6 @@
 // Taken 98% from https://github.com/nf-core/modules/pull/1089/files
 process HUMANN4 {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -14,10 +14,10 @@ process HUMANN4 {
     path utility_db
 
     output:
-    tuple val(meta), path("*_genefamilies.tsv.gz") , emit: genefamilies
+    tuple val(meta), path("*_genefamilies.tsv.gz"), emit: genefamilies
     tuple val(meta), path("*_pathabundance.tsv.gz"), emit: pathabundance
-    tuple val(meta), path("*_reactions.tsv.gz")    , emit: reactions
-    tuple val(meta), path("*.log")                 , emit: log
+    tuple val(meta), path("*_reactions.tsv.gz"), emit: reactions
+    tuple val(meta), path("*.log"), emit: log
     tuple val("${task.process}"), val('HUMAnN'), eval("humann --version 2>&1 | sed 's/humann v//'"), emit: versions_humann, topic: versions
     tuple val("${task.process}"), val('MetaPHLan'), eval("metaphlan --version 2>&1 | sed 's/metaphlan v//'"), emit: versions_metaphlan, topic: versions
 
@@ -39,13 +39,13 @@ process HUMANN4 {
 
     find \${NUCS_DB}
     humann \\
-        $args \\
+        ${args} \\
         --threads ${task.cpus} \\
-        --input $input \\
+        --input ${input} \\
         --protein-database \${PROTS_DB} \\
         --nucleotide-database \${NUCS_DB} \\
-        --output-basename $prefix \\
-        $pangenome_string \\
+        --output-basename ${prefix} \\
+        ${pangenome_string} \\
 	${args} \\
         --o-log ${prefix}.log \\
         --output .
@@ -54,11 +54,12 @@ process HUMANN4 {
     gzip -n *.tsv
 
     """
+
     stub:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    echo $args
+    echo ${args}
 
     for suf in genefamilies.tsv.gz pathabundance.tsv.gz  reactions.tsv.gz
     do
