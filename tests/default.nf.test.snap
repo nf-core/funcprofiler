@@ -23,6 +23,18 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_funcprofiler_software_mqc_versions.yml",
                 "rgi",
+                "rgi/4.0.1",
+                "rgi/4.0.1/minigut.allele_mapping_data.json",
+                "rgi/4.0.1/minigut.allele_mapping_data.txt",
+                "rgi/4.0.1/minigut.artifacts_mapping_stats.txt",
+                "rgi/4.0.1/minigut.coverage.temp.txt",
+                "rgi/4.0.1/minigut.coverage_all_positions.summary.temp.txt",
+                "rgi/4.0.1/minigut.coverage_all_positions.temp.txt",
+                "rgi/4.0.1/minigut.gene_mapping_data.txt",
+                "rgi/4.0.1/minigut.overall_mapping_stats.txt",
+                "rgi/4.0.1/minigut.reference_mapping_stats.txt",
+                "rgi/4.0.1/minigut.seqs.temp.txt",
+                "rgi/4.0.1/minigut.temp.txt",
                 "rgi/card_database_processed",
                 "rgi/card_database_processed/CARD-Download-README.txt",
                 "rgi/card_database_processed/PMID.tsv",
@@ -43,19 +55,7 @@
                 "rgi/card_database_processed/protein_fasta_protein_variant_model.fasta",
                 "rgi/card_database_processed/shortname_antibiotics.tsv",
                 "rgi/card_database_processed/shortname_pathogens.tsv",
-                "rgi/card_database_processed/snps.txt",
-                "rgi/null",
-                "rgi/null/minigut.allele_mapping_data.json",
-                "rgi/null/minigut.allele_mapping_data.txt",
-                "rgi/null/minigut.artifacts_mapping_stats.txt",
-                "rgi/null/minigut.coverage.temp.txt",
-                "rgi/null/minigut.coverage_all_positions.summary.temp.txt",
-                "rgi/null/minigut.coverage_all_positions.temp.txt",
-                "rgi/null/minigut.gene_mapping_data.txt",
-                "rgi/null/minigut.overall_mapping_stats.txt",
-                "rgi/null/minigut.reference_mapping_stats.txt",
-                "rgi/null/minigut.seqs.temp.txt",
-                "rgi/null/minigut.temp.txt"
+                "rgi/card_database_processed/snps.txt"
             ],
             [
                 "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129",
@@ -63,6 +63,13 @@
                 "minigut_analysis.tsv:md5,1cda8e4b88a34f56539d04cc2dac0914",
                 "minigut_ec_count.tsv:md5,5c2306e908a487f57d70da9b4f131217",
                 "minigut_multi_ec.tsv:md5,915713718d7b6fabc3fbc3a1286999e0",
+                "minigut.artifacts_mapping_stats.txt:md5,26b4346ac5367d575ab67f9246e8ca08",
+                "minigut.coverage.temp.txt:md5,8fa9ceb6c1f02bdcd89472c2523a775a",
+                "minigut.coverage_all_positions.summary.temp.txt:md5,9d93d7e96faf94c18f637a02ef1cebf2",
+                "minigut.coverage_all_positions.temp.txt:md5,fd6083d850435153d3678aa5c387fdc2",
+                "minigut.overall_mapping_stats.txt:md5,7a66e3f185702925bef3873f356072ff",
+                "minigut.reference_mapping_stats.txt:md5,986084fa8f72769b0e8a8827ce84f138",
+                "minigut.temp.txt:md5,e8510289eeb0be3d0e25faaef0c43116",
                 "CARD-Download-README.txt:md5,b57364cc1a5fab0541e13a01fabe5dea",
                 "PMID.tsv:md5,e3ce79c4b5dcf0a9e3117ed683f96e54",
                 "aro_categories.tsv:md5,6f9c4b0410b9e2b3cf5867a2a3f1db07",
@@ -82,20 +89,13 @@
                 "protein_fasta_protein_variant_model.fasta:md5,8c02d8fc84c9a90953f8534355244019",
                 "shortname_antibiotics.tsv:md5,9a4ba742fd8a3a49c7f50744001a4129",
                 "shortname_pathogens.tsv:md5,5211712be4f4c3306cbe4052cafae1d7",
-                "snps.txt:md5,529d4fdb74c8940c0930ec1a7a6d4980",
-                "minigut.artifacts_mapping_stats.txt:md5,26b4346ac5367d575ab67f9246e8ca08",
-                "minigut.coverage.temp.txt:md5,8fa9ceb6c1f02bdcd89472c2523a775a",
-                "minigut.coverage_all_positions.summary.temp.txt:md5,9d93d7e96faf94c18f637a02ef1cebf2",
-                "minigut.coverage_all_positions.temp.txt:md5,fd6083d850435153d3678aa5c387fdc2",
-                "minigut.overall_mapping_stats.txt:md5,7a66e3f185702925bef3873f356072ff",
-                "minigut.reference_mapping_stats.txt:md5,986084fa8f72769b0e8a8827ce84f138",
-                "minigut.temp.txt:md5,e8510289eeb0be3d0e25faaef0c43116"
+                "snps.txt:md5,529d4fdb74c8940c0930ec1a7a6d4980"
             ]
         ],
-        "timestamp": "2026-07-24T09:51:29.593736",
+        "timestamp": "2026-07-31T09:50:44.24986845",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     }
 }

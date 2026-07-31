@@ -118,7 +118,10 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
             [meta, reads, db_meta, db_files]
         }
         .multiMap { it ->
-            reads: [it[0], it[1]]
+            // Carry the database identity into the read meta so that ext.args, ext.prefix
+            // and publishDir can key on it, as nf-core/taxprofiler does. Only a subset is
+            // merged: meta_db also holds an id, which must not overwrite the sample id.
+            reads: [it[0] + it[2].subMap('tool', 'db_name', 'db_params'), it[1]]
             db: [it[2], it[3]]
         }
     return result
@@ -249,8 +252,11 @@ workflow PROFILING {
     }
 
     if (params.run_diamond) {
-        DIAMOND_BLASTX(ch_input_for_diamond.reads, getDbPath(ch_input_for_diamond.db, "main"), 'tsv', '')
-        ch_raw_profiles = ch_raw_profiles.mix(DIAMOND_BLASTX.out.tsv)
+        // 'txt' selects --outfmt 6 (tabular alignments). Do not use 'tsv': that is
+        // --outfmt 102, DIAMOND's taxonomic classification format, which requires a
+        // database built with --taxonmap/--taxonnodes and reports taxa rather than hits.
+        DIAMOND_BLASTX(ch_input_for_diamond.reads, getDbPath(ch_input_for_diamond.db, "main", true), 'txt', '')
+        ch_raw_profiles = ch_raw_profiles.mix(DIAMOND_BLASTX.out.txt)
     }
 
     if (params.run_rgi) {
