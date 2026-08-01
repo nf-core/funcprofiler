@@ -267,10 +267,12 @@ workflow PROFILING {
     if (params.run_eggnogmapper) {
         SEQKIT_FQ2FA(ch_input_for_eggnogmapper.reads)
         GUNZIP(SEQKIT_FQ2FA.out.fasta)
+        // EGGNOGMAPPER takes the search database as [ search_mode, db ]: the mode picks the
+        // flag emapper.py is given, and 'diamond' is what a .dmnd database needs.
         EGGNOGMAPPER(
             GUNZIP.out.gunzip,
-            getDbPath(ch_input_for_eggnogmapper.db, "eggnogmapper_db"),
-            getDbPath(ch_input_for_eggnogmapper.db, ""),
+            getDbPath(ch_input_for_eggnogmapper.db, "eggnogmapper_db").map { db -> ['diamond', db] },
+            getDbPath(ch_input_for_eggnogmapper.db, "eggnogmapper_data_dir"),
         )
         ch_raw_profiles = ch_raw_profiles.mix(EGGNOGMAPPER.out.annotations)
     }
