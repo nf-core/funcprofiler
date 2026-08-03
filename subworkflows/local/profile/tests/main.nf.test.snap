@@ -44,6 +44,44 @@
             "nextflow": "26.04.4"
         }
     },
+    "run diamond": {
+        "content": [
+            1201,
+            [
+                "WP_002558051.1",
+                "WP_002560983.1",
+                "WP_004291423.1",
+                "WP_004291424.1",
+                "WP_004291426.1",
+                "WP_004291454.1",
+                "WP_004291455.1",
+                "WP_004291456.1",
+                "WP_004291466.1",
+                "WP_004291467.1"
+            ],
+            [
+                "minigut_bfragilis.diamond.log",
+                "minigut_bfragilis.diamond.txt"
+            ],
+            [
+                [
+                    "DATAPREP:CAT_FASTQ",
+                    "cat",
+                    "9.5"
+                ],
+                [
+                    "PROFILING:DIAMOND_BLASTX",
+                    "diamond",
+                    "2.2.1"
+                ]
+            ]
+        ],
+        "timestamp": "2026-08-04T00:03:08.736039079",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
     "run fmh": {
         "content": [
             [
@@ -65,6 +103,49 @@
             ]
         ],
         "timestamp": "2026-07-29T16:20:29.367839",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "run eggnogmapper": {
+        "content": [
+            "#query\tseed_ortholog\tevalue\tscore\teggNOG_OGs\tmax_annot_lvl\tCOG_category\tDescription\tPreferred_name\tGOs\tEC\tKEGG_ko\tKEGG_Pathway\tKEGG_Module\tKEGG_Reaction\tKEGG_rclass\tBRITE\tKEGG_TC\tCAZy\tBiGG_Reaction\tPFAMs",
+            [
+                [
+                    "ENSSASP00005000002.1",
+                    "COG0498@1|root,COG0498@2|Bacteria,1MUWQ@1224|Proteobacteria,2VHR6@28216|Betaproteobacteria,2KUMA@206389|Rhodocyclales",
+                    "threonine synthase"
+                ]
+            ],
+            [
+                "sarscov2.emapper.annotations",
+                "sarscov2.emapper.seed_orthologs"
+            ],
+            [
+                [
+                    "DATAPREP:CAT_FASTQ",
+                    "cat",
+                    "9.5"
+                ],
+                [
+                    "PROFILING:EGGNOGMAPPER",
+                    "eggnog-mapper",
+                    "2.1.13"
+                ],
+                [
+                    "PROFILING:GUNZIP",
+                    "gunzip",
+                    "1.13"
+                ],
+                [
+                    "PROFILING:SEQKIT_FQ2FA",
+                    "seqkit",
+                    "2.13.0"
+                ]
+            ]
+        ],
+        "timestamp": "2026-08-03T23:39:40.28796317",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

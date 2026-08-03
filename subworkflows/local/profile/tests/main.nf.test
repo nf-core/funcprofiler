@@ -249,4 +249,180 @@ nextflow_workflow {
 
         }
     }
+    test("run eggnogmapper") {
+	tag 'eggnogmapper'
+	setup {
+            run("DATAPREP") {
+		script "subworkflows/local/dataprep/main.nf"
+		process {
+                    """
+		    // sarscov2 reads rather than minigut: the demo eggnog.db only carries
+		    // annotations for the proteins in the demo proteome.dmnd, so a gut
+		    // metagenome snapshots an annotation file with nothing but the header
+		    input[0] = Channel.fromList(
+		    [
+			[['id':'sarscov2'],'1','ILLUMINA',
+			file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz'),
+			file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz'),'']
+		]
+		)
+                    """
+		}
+            }
+
+
+
+            run("DBPREP") {
+		script "subworkflows/local/dbprep/main.nf"
+		process {
+                    """
+		    // emapper.py's --data_dir must be a directory, but the demo eggnog.db is a bare file,
+		    // so put it in one here
+		    def eggnog_db = file(params.modules_testdata_base_path + 'delete_me/eggnogmapper/eggnog.db')
+		    eggnog_db.copyTo("${workDir}/eggnog_data_dir/eggnog.db")
+
+		    input[0] = Channel.of(
+                [
+                [
+                id: 'eggnogmapper_demo_eggnogmapper_db',
+                    tool: 'eggnogmapper',
+                    db_name: 'demo',
+                    db_entity: 'eggnogmapper_db',
+                    db_params: ''
+		],
+			file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/eggnog-mapper/proteome.dmnd')
+		],
+                [
+                [
+                id: 'eggnogmapper_demo_eggnogmapper_data_dir',
+                    tool: 'eggnogmapper',
+                    db_name: 'demo',
+                    db_entity: 'eggnogmapper_data_dir',
+                    db_params: ''
+		],
+			file("${workDir}/eggnog_data_dir")
+		]
+
+            )
+                    """
+		}
+            }
+	}
+        when {
+	    params {
+		run_eggnogmapper = true
+		outdir = "$outputDir"
+	    }
+            workflow {
+                """
+                input[0] = DATAPREP.out.reads
+                input[1] = DATAPREP.out.reads_concat
+                input[2] = DBPREP.out.dbs
+
+                """
+            }
+        }
+        then {
+            assert workflow.success
+	    def eggnog_paths = getAllFilesFromDir(params.outdir, include: ["eggnogmapper/**"])
+	    def annotationFile = eggnog_paths.find { it.name.endsWith(".emapper.annotations") }
+
+	    assert annotationFile != null : "No .emapper.annotations file found in ${params.outdir}/eggnogmapper"
+
+	    // the ## lines carry the emapper version, the full command line and a runtime, so drop them
+	    def stableLines = annotationFile.readLines().findAll { !it.startsWith("##") }
+	    def header = stableLines.head()
+	    def annotations = stableLines.tail().collect { it.split("\t", -1) }
+
+	    // guard the snapshot: a run that annotates nothing still writes the header, so
+	    // without this an empty result would snapshot cleanly and hide a broken search
+	    assert annotations : "No annotations in ${annotationFile}, only the header"
+
+	    // one row per annotated read is neither small nor guaranteed to be ordered the same
+	    // way twice, so snapshot what the annotation is rather than which reads carried it:
+	    // columns 2, 5 and 8 are seed_ortholog, eggNOG_OGs and Description
+	    def annotated = annotations.collect { [it[1], it[4], it[7]] }.unique().sort()
+
+	    assert snapshot(header, annotated, eggnog_paths*.name.sort(), topics.versions).match()
+
+        }
+    }
+    test("run diamond") {
+	tag 'diamond'
+	setup {
+            run("DATAPREP") {
+		script "subworkflows/local/dataprep/main.nf"
+		process {
+                    """
+		    input[0] = Channel.fromList(
+		    [
+			[['id':'minigut'],'1','ILLUMINA',
+			file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R1.fastq.gz'),
+			file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R2.fastq.gz'),'']
+		]
+		)
+                    """
+		}
+            }
+
+
+
+            run("DBPREP") {
+		script "subworkflows/local/dbprep/main.nf"
+		process {
+                    """
+		    // B. fragilis is one of the genomes behind the minigut fixture, so blastx
+		    // has something to find; the SARS-CoV-2 proteome the eggNOG-mapper test
+		    // uses returns a single hit on these reads
+		    input[0] = Channel.of(
+                [
+                [
+                id: 'diamond_bfragilis',
+                    tool: 'diamond',
+                    db_name: 'bfragilis',
+                    db_entity: '',
+                    db_params: ''
+		],
+			file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/diamond/bfragilis_proteome.dmnd')
+		],
+
+            )
+                    """
+		}
+            }
+	}
+        when {
+	    params {
+		run_diamond = true
+		outdir = "$outputDir"
+	    }
+            workflow {
+                """
+                input[0] = DATAPREP.out.reads
+                input[1] = DATAPREP.out.reads_concat
+                input[2] = DBPREP.out.dbs
+
+                """
+            }
+        }
+        then {
+            assert workflow.success
+	    def diamond_paths = getAllFilesFromDir(params.outdir, include: ["diamond/**"])
+	    def alignments = diamond_paths.find { it.name.endsWith(".txt") }
+
+	    assert alignments != null : "No DIAMOND alignment table found in ${params.outdir}/diamond"
+
+	    // --outfmt 6 writes no header, so an empty file is a silently failed search
+	    def hits = alignments.readLines().collect { it.split("\t", -1) }
+	    assert hits : "No alignments in ${alignments}"
+
+	    // as for eggNOG-mapper, snapshot which subjects were hit rather than which reads
+	    // hit them. minigut hits 1201 of the 4170 proteins in the database, which is
+	    // more than belongs in a snapshot file, so record how many and name the first few
+	    def subjects = hits.collect { it[1] }.unique().sort()
+
+	    assert snapshot(subjects.size(), subjects.take(10), diamond_paths*.name.sort(), topics.versions).match()
+
+        }
+    }
 }
