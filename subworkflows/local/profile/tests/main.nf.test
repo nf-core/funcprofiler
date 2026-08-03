@@ -249,4 +249,88 @@ nextflow_workflow {
 
         }
     }
+    test("run eggnogmapper") {
+	tag 'eggnogmapper'
+	setup {
+            run("DATAPREP") {
+		script "subworkflows/local/dataprep/main.nf"
+		process {
+                    """
+		    input[0] = Channel.fromList(
+		    [
+			[['id':'minigut'],'1','ILLUMINA',
+			file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R1.fastq.gz'),
+			file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R2.fastq.gz'),'']
+		]
+		)
+                    """
+		}
+            }
+
+
+
+            run("DBPREP") {
+		script "subworkflows/local/dbprep/main.nf"
+		process {
+                    """
+		    // emapper.py's --data_dir must be a directory, but the demo eggnog.db is a bare file,
+		    // so put it in one here
+		    def eggnog_db = file(params.modules_testdata_base_path + 'delete_me/eggnogmapper/eggnog.db')
+		    eggnog_db.copyTo("${workDir}/eggnog_data_dir/eggnog.db")
+
+		    input[0] = Channel.of(
+                [
+                [
+                id: 'eggnogmapper_demo_eggnogmapper_db',
+                    tool: 'eggnogmapper',
+                    db_name: 'demo',
+                    db_entity: 'eggnogmapper_db',
+                    db_params: ''
+		],
+			file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/eggnog-mapper/proteome.dmnd')
+		],
+                [
+                [
+                id: 'eggnogmapper_demo_eggnogmapper_data_dir',
+                    tool: 'eggnogmapper',
+                    db_name: 'demo',
+                    db_entity: 'eggnogmapper_data_dir',
+                    db_params: ''
+		],
+			file("${workDir}/eggnog_data_dir")
+		]
+
+            )
+                    """
+		}
+            }
+	}
+        when {
+	    params {
+		run_eggnogmapper = true
+		outdir = "$outputDir"
+	    }
+            workflow {
+                """
+                input[0] = DATAPREP.out.reads
+                input[1] = DATAPREP.out.reads_concat
+                input[2] = DBPREP.out.dbs
+
+                """
+            }
+        }
+        then {
+            assert workflow.success
+	    def eggnog_paths = getAllFilesFromDir(params.outdir, include: ["eggnogmapper/**"])
+	    def annotationFile = eggnog_paths.find { it.name.endsWith(".emapper.annotations") }
+
+	    assert annotationFile != null : "No .emapper.annotations file found in ${params.outdir}/eggnogmapper"
+
+	    // the ## lines carry the emapper version, the full command line and a runtime, so drop them
+	    def stableLines = annotationFile.readLines().findAll { !it.startsWith("##") }
+
+	    assert snapshot(stableLines, eggnog_paths*.name.sort(), topics.versions).match()
+
+        }
+    }
 }

@@ -69,5 +69,44 @@
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
         }
+    },
+    "run eggnogmapper": {
+        "content": [
+            [
+                "#query\tseed_ortholog\tevalue\tscore\teggNOG_OGs\tmax_annot_lvl\tCOG_category\tDescription\tPreferred_name\tGOs\tEC\tKEGG_ko\tKEGG_Pathway\tKEGG_Module\tKEGG_Reaction\tKEGG_rclass\tBRITE\tKEGG_TC\tCAZy\tBiGG_Reaction\tPFAMs"
+            ],
+            [
+                "minigut.emapper.annotations",
+                "minigut.emapper.hits",
+                "minigut.emapper.seed_orthologs"
+            ],
+            [
+                [
+                    "DATAPREP:CAT_FASTQ",
+                    "cat",
+                    "9.5"
+                ],
+                [
+                    "PROFILING:EGGNOGMAPPER",
+                    "eggnog-mapper",
+                    "2.1.13"
+                ],
+                [
+                    "PROFILING:GUNZIP",
+                    "gunzip",
+                    "1.13"
+                ],
+                [
+                    "PROFILING:SEQKIT_FQ2FA",
+                    "seqkit",
+                    "2.13.0"
+                ]
+            ]
+        ],
+        "timestamp": "2026-08-03T15:20:42.923020815",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     }
 }
