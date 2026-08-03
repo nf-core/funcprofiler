@@ -44,6 +44,44 @@
             "nextflow": "26.04.4"
         }
     },
+    "run diamond": {
+        "content": [
+            1201,
+            [
+                "WP_002558051.1",
+                "WP_002560983.1",
+                "WP_004291423.1",
+                "WP_004291424.1",
+                "WP_004291426.1",
+                "WP_004291454.1",
+                "WP_004291455.1",
+                "WP_004291456.1",
+                "WP_004291466.1",
+                "WP_004291467.1"
+            ],
+            [
+                "minigut_bfragilis.diamond.log",
+                "minigut_bfragilis.diamond.txt"
+            ],
+            [
+                [
+                    "DATAPREP:CAT_FASTQ",
+                    "cat",
+                    "9.5"
+                ],
+                [
+                    "PROFILING:DIAMOND_BLASTX",
+                    "diamond",
+                    "2.2.1"
+                ]
+            ]
+        ],
+        "timestamp": "2026-08-04T00:03:08.736039079",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
     "run fmh": {
         "content": [
             [

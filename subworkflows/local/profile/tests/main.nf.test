@@ -347,4 +347,82 @@ nextflow_workflow {
 
         }
     }
+    test("run diamond") {
+	tag 'diamond'
+	setup {
+            run("DATAPREP") {
+		script "subworkflows/local/dataprep/main.nf"
+		process {
+                    """
+		    input[0] = Channel.fromList(
+		    [
+			[['id':'minigut'],'1','ILLUMINA',
+			file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R1.fastq.gz'),
+			file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R2.fastq.gz'),'']
+		]
+		)
+                    """
+		}
+            }
+
+
+
+            run("DBPREP") {
+		script "subworkflows/local/dbprep/main.nf"
+		process {
+                    """
+		    // B. fragilis is one of the genomes behind the minigut fixture, so blastx
+		    // has something to find; the SARS-CoV-2 proteome the eggNOG-mapper test
+		    // uses returns a single hit on these reads
+		    input[0] = Channel.of(
+                [
+                [
+                id: 'diamond_bfragilis',
+                    tool: 'diamond',
+                    db_name: 'bfragilis',
+                    db_entity: '',
+                    db_params: ''
+		],
+			file(params.pipelines_testdata_base_path + 'funcprofiler/data/database/diamond/bfragilis_proteome.dmnd')
+		],
+
+            )
+                    """
+		}
+            }
+	}
+        when {
+	    params {
+		run_diamond = true
+		outdir = "$outputDir"
+	    }
+            workflow {
+                """
+                input[0] = DATAPREP.out.reads
+                input[1] = DATAPREP.out.reads_concat
+                input[2] = DBPREP.out.dbs
+
+                """
+            }
+        }
+        then {
+            assert workflow.success
+	    def diamond_paths = getAllFilesFromDir(params.outdir, include: ["diamond/**"])
+	    def alignments = diamond_paths.find { it.name.endsWith(".txt") }
+
+	    assert alignments != null : "No DIAMOND alignment table found in ${params.outdir}/diamond"
+
+	    // --outfmt 6 writes no header, so an empty file is a silently failed search
+	    def hits = alignments.readLines().collect { it.split("\t", -1) }
+	    assert hits : "No alignments in ${alignments}"
+
+	    // as for eggNOG-mapper, snapshot which subjects were hit rather than which reads
+	    // hit them. minigut hits 1201 of the 4170 proteins in the database, which is
+	    // more than belongs in a snapshot file, so record how many and name the first few
+	    def subjects = hits.collect { it[1] }.unique().sort()
+
+	    assert snapshot(subjects.size(), subjects.take(10), diamond_paths*.name.sort(), topics.versions).match()
+
+        }
+    }
 }
