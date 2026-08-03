@@ -86,9 +86,7 @@ Enabled with `--run_eggnogmapper`. Assigns functional annotations to sequences b
   - `*.emapper.annotations`: TSV file with functional annotations per query sequence, including GO terms, KEGG pathways, COG categories, and more.
   - `*.emapper.seed_orthologs`: TSV linking query sequences to their best seed orthologs _(optional, produced when search is performed)_. Pass this back to `emapper.py -m no_search --annotate_hits_table` to reannotate against a newer eggNOG release without repeating the search.
 
-The search phase also writes `*.emapper.hits`, the full hit table for every query. It is an order of
-magnitude larger than everything else here (5.6 GB per sample against 1.1 GB of annotations on a
-~5 M read metagenome) and nothing downstream consumes it, so it is not published.
+The search phase also writes `*.emapper.hits`, the full hit table for every query. It is a big file and not used very often, so it doesn't get published by default.
 
 ### RGI BWT
 
