@@ -72,13 +72,17 @@
     },
     "run eggnogmapper": {
         "content": [
+            "#query\tseed_ortholog\tevalue\tscore\teggNOG_OGs\tmax_annot_lvl\tCOG_category\tDescription\tPreferred_name\tGOs\tEC\tKEGG_ko\tKEGG_Pathway\tKEGG_Module\tKEGG_Reaction\tKEGG_rclass\tBRITE\tKEGG_TC\tCAZy\tBiGG_Reaction\tPFAMs",
             [
-                "#query\tseed_ortholog\tevalue\tscore\teggNOG_OGs\tmax_annot_lvl\tCOG_category\tDescription\tPreferred_name\tGOs\tEC\tKEGG_ko\tKEGG_Pathway\tKEGG_Module\tKEGG_Reaction\tKEGG_rclass\tBRITE\tKEGG_TC\tCAZy\tBiGG_Reaction\tPFAMs"
+                [
+                    "ENSSASP00005000002.1",
+                    "COG0498@1|root,COG0498@2|Bacteria,1MUWQ@1224|Proteobacteria,2VHR6@28216|Betaproteobacteria,2KUMA@206389|Rhodocyclales",
+                    "threonine synthase"
+                ]
             ],
             [
-                "minigut.emapper.annotations",
-                "minigut.emapper.hits",
-                "minigut.emapper.seed_orthologs"
+                "sarscov2.emapper.annotations",
+                "sarscov2.emapper.seed_orthologs"
             ],
             [
                 [
@@ -103,7 +107,7 @@
                 ]
             ]
         ],
-        "timestamp": "2026-08-03T15:20:42.923020815",
+        "timestamp": "2026-08-03T23:39:40.28796317",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

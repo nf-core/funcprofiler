@@ -256,11 +256,14 @@ nextflow_workflow {
 		script "subworkflows/local/dataprep/main.nf"
 		process {
                     """
+		    // sarscov2 reads rather than minigut: the demo eggnog.db only carries
+		    // annotations for the proteins in the demo proteome.dmnd, so a gut
+		    // metagenome snapshots an annotation file with nothing but the header
 		    input[0] = Channel.fromList(
 		    [
-			[['id':'minigut'],'1','ILLUMINA',
-			file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R1.fastq.gz'),
-			file(params.pipelines_testdata_base_path + 'mag/test_data/test_minigut_R2.fastq.gz'),'']
+			[['id':'sarscov2'],'1','ILLUMINA',
+			file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz'),
+			file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz'),'']
 		]
 		)
                     """
@@ -328,8 +331,19 @@ nextflow_workflow {
 
 	    // the ## lines carry the emapper version, the full command line and a runtime, so drop them
 	    def stableLines = annotationFile.readLines().findAll { !it.startsWith("##") }
+	    def header = stableLines.head()
+	    def annotations = stableLines.tail().collect { it.split("\t", -1) }
 
-	    assert snapshot(stableLines, eggnog_paths*.name.sort(), topics.versions).match()
+	    // guard the snapshot: a run that annotates nothing still writes the header, so
+	    // without this an empty result would snapshot cleanly and hide a broken search
+	    assert annotations : "No annotations in ${annotationFile}, only the header"
+
+	    // one row per annotated read is neither small nor guaranteed to be ordered the same
+	    // way twice, so snapshot what the annotation is rather than which reads carried it:
+	    // columns 2, 5 and 8 are seed_ortholog, eggNOG_OGs and Description
+	    def annotated = annotations.collect { [it[1], it[4], it[7]] }.unique().sort()
+
+	    assert snapshot(header, annotated, eggnog_paths*.name.sort(), topics.versions).match()
 
         }
     }
