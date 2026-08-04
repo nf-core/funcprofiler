@@ -1,7 +1,6 @@
 lint:
   files_unchanged:
     - assets/nf-core-funcprofiler_logo_light.png
-    - .github/PULL_REQUEST_TEMPLATE.md
     - .github/workflows/linting.yml
     - .github/workflows/branch.yml
     - .gitignore
@@ -9,7 +8,7 @@ nf_core_version: 4.1.0
 repository_type: pipeline
 
 template:
-  author: Nick Waters
+  author: Nick Waters, Vini Salazar, Yixuan Yang, Mirae Baichoo
   description: Read-based functional profiling of microbiome sequencing data
   force: false
   is_nfcore: true

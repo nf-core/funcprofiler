@@ -12,7 +12,7 @@ workflow DATAPREP {
     ch_validated = samplesheet.map { meta, run_accession, instrument_platform, fastq_1, fastq_2, fasta ->
 
         // Error checks
-        if (instrument_platform == "OXFORD_NANOPORE") {
+        if (instrument_platform == "OXFORD_NANOPORE" | instrument_platform == "PACBIO_SMRT") {
             error("ERROR: Long read data is not supported!")
         }
         if (fasta) {

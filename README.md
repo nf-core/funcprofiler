@@ -99,6 +99,7 @@ We thank the following people for their extensive assistance in the development 
 
 - Matthias Hörtenhuber
 - James Fellows Yates
+- Jonas Scheid
 
 ## Contributions and Support
 

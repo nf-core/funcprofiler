@@ -7,7 +7,6 @@ include { HUMANN3_HUMANN } from '../../../modules/nf-core/humann3/humann/main'
 include { HUMANN4 } from '../../../modules/local/humann4/humann/main'
 include { HUMANN3_REGROUP } from '../../../modules/nf-core/humann3/regroup/main'
 include { HUMANN4_REGROUP } from '../../../modules/local/humann4/regroup/main'
-//include { FMHFUNPROFILER                                } from '../../../modules/local/fmhfunprofiler/main'
 include { FMHFUNPROFILER } from '../../../modules/nf-core/fmhfunprofiler/main'
 include {
     METAPHLAN_METAPHLAN as MPAHUMANN3 ;
@@ -28,7 +27,7 @@ include { GUNZIP } from '../../../modules/nf-core/gunzip/main'
 * The channel elements are assumed to be tuples one of [ meta, profile ], and the
 * database to be of [db_key, meta, database_file].
 *
-* @param ch_profile A channel containing a meta and the profilign report of a given profiler
+* @param ch_profile A channel containing a meta and the profiling report of a given profiler
 * @param ch_database A channel containing a key, the database meta, and the database file/folders itself
 * @return A multiMap'ed output channel with two sub channels, one with the profile and the other with the db
 */
@@ -227,6 +226,7 @@ workflow PROFILING {
             .mix(HUMANN3_HUMANN.out.pathabundance)
             .mix(HUMANN3_HUMANN.out.genefamilies)
             .mix(HUMANN3_HUMANN.out.pathcoverage)
+	    .mix(HUMANN3_REGROUP.out.regroup)
     }
     if (params.run_humann_v4) {
         MPAHUMANN4(
@@ -249,6 +249,7 @@ workflow PROFILING {
             .mix(HUMANN4.out.pathabundance)
             .mix(HUMANN4.out.genefamilies)
             .mix(HUMANN4.out.reactions)
+	    .mix(HUMANN4_REGROUP.out.regroup)
     }
 
     if (params.run_diamond) {

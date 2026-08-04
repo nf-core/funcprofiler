@@ -18,18 +18,18 @@ You will need to create a samplesheet with information about the samples you wou
 
 The samplesheet is a comma-separated file with the following columns:
 
-| Column                | Required | Description                                                                                                                                   |
-| --------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`              | Yes      | Sample name. Rows with the same `sample` name (and different `run_accession`) are merged before profiling.                                    |
-| `run_accession`       | Yes      | Unique run identifier (e.g. `RUN1`, `SRR12345`). Used to distinguish multiple sequencing runs of the same sample.                             |
-| `instrument_platform` | Yes      | Sequencing platform. Must be one of: `ILLUMINA`, `OXFORD_NANOPORE`, `PACBIO_SMRT`, `ION_TORRENT`, `BGISEQ`, `DNBSEQ`, or `LS454`.             |
-| `fastq_1`             | No\*     | Full path to gzipped FASTQ file for read 1. Must end in `.fastq.gz` or `.fq.gz`.                                                              |
-| `fastq_2`             | No       | Full path to gzipped FASTQ file for read 2 (paired-end only). Leave empty for single-end or Nanopore reads.                                   |
-| `fasta`               | No\*     | Full path to gzipped FASTA file. Provide instead of FASTQ if your data is already assembled. Must end in `.fa.gz`, `.fna.gz`, or `.fasta.gz`. |
+| Column                | Required | Description                                                                                                         |
+| --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| `sample`              | Yes      | Sample name. Rows with the same `sample` name (and different `run_accession`) are merged before profiling.          |
+| `run_accession`       | Yes      | Unique run identifier (e.g. `RUN1`, `SRR12345`). Used to distinguish multiple sequencing runs of the same sample.   |
+| `instrument_platform` | Yes      | Sequencing platform. Must be one of: `ILLUMINA`,  `ION_TORRENT`, `BGISEQ`, `DNBSEQ`, or `LS454`.                    |
+| `fastq_1`             | Yes      | Full path to gzipped FASTQ file for read 1. Must end in `.fastq.gz` or `.fq.gz`.                                    |
+| `fastq_2`             | No       | Full path to gzipped FASTQ file for read 2 (paired-end only). Leave empty for single-end or Nanopore reads.         |
+| `fasta`               | No       | This column is unused, but retained for compatibility with nf-core/taxprofiler.                                     |
 
 :::note
 
-> \*Either `fastq_1` or `fasta` must be provided for each row.
+	> \* `fastq_1` must be provided for each row! We do **not** support `OXFORD_NANOPORE` or `PACBIO_SMRT` unput platforms, as long reads are incompatible (or at least, require nuanced interpretation) with most of these tools. Similarly, we do not support `fasta` input, as assembly-based pipelines like nf-core/funcscan would be more appropriate.
 > :::
 
 ### Example samplesheet
@@ -39,10 +39,9 @@ sample,run_accession,instrument_platform,fastq_1,fastq_2,fasta
 SAMPLE1,RUN1,ILLUMINA,/data/sample1_R1.fastq.gz,/data/sample1_R2.fastq.gz,
 SAMPLE1,RUN2,ILLUMINA,/data/sample1_lane2_R1.fastq.gz,/data/sample1_lane2_R2.fastq.gz,
 SAMPLE2,RUN1,ILLUMINA,/data/sample2_R1.fastq.gz,,
-SAMPLE3,RUN1,OXFORD_NANOPORE,/data/sample3_nanopore.fastq.gz,,
 ```
 
-In this example, `SAMPLE1` has two runs which will be merged before profiling. `SAMPLE2` is single-end short reads. `SAMPLE3` is Oxford Nanopore long reads.
+In this example, `SAMPLE1` has two runs which will be merged before profiling. `SAMPLE2` is single-end short reads. .
 
 ## Enabling profilers
 
@@ -77,7 +76,6 @@ Use the `db_name` column to record the database release or version used for the 
 | `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                                              |
 | `db_entity` | No       | For HUMANn: specifies the component (`humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`). For EggNOG-mapper: `eggnogmapper_db` or `eggnogmapper_data_dir`. |
 | `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                                  |
-| `db_type`   | No       | Read type this database applies to: `short`, `long`, or `short;long` (default). Use to restrict a database to only short-read or long-read samples.                                 |
 | `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                                   |
 
 ### HUMANn databases

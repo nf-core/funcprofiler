@@ -8,17 +8,6 @@ nextflow_process {
     tag "humann"
 
     setup{
-        run("UNTAR") {
-            script "modules/nf-core/untar/main.nf"
-            process {
-                """
-                input[0] = Channel.of([
-                    [],
-                    file( params.modules_testdata_base_path + 'delete_me/metaphlan4_database.tar.gz', checkIfExists: true )
-                ])
-                """
-            }
-        }
         run("UNTAR", alias: "UNTAR_v4_nuc") {
             script "modules/nf-core/untar/main.nf"
             process {
@@ -52,27 +41,6 @@ nextflow_process {
                 """
             }
         }
-	run("METAPHLAN_METAPHLAN", alias: "MPAHUMANN4") {
-            script "../../../../nf-core/metaphlan/metaphlan/main.nf"
-            process {
-                """
-                input[0] = Channel.of([
-                    [ id:'test', single_end:true ], // meta map
-                    file( params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz',checkIfExists: true )
-                ])
-                input[1] = UNTAR.out.untar.map{ it[1] }
-                input[2] = false
-                    """
-            }
-        }
-	run("SPOOF_METAPHLAN_VERSION") {
-            script "./spoof.nf"
-            process {
-                """
-                input[0] = MPAHUMANN4.out.profile
-                    """
-            }
-        }
     }
     test("humann_v4 sarscov2 - fastq") {
         when {
@@ -84,8 +52,8 @@ nextflow_process {
                 input[0]= Channel.of([
                     [ id:'test', single_end:false, run_accession:"abc" ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-        ])
-              input[1] = SPOOF_METAPHLAN_VERSION.out.profile
+            ])
+		input[1] = Channel.of([[], file("${moduleDir}/tests/mpa_test.txt")])
               input[2] = UNTAR_v4_nuc.out.untar.map{ it[1] }
               input[3] = UNTAR_v4_prot.out.untar.map{ it[1] }
               input[4] = UNTAR_v4_util.out.untar.map{ it[1] }
@@ -128,7 +96,7 @@ nextflow_process {
                     [ id:'test', single_end:false, run_accession:"abc" ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
         ])
-              input[1] = SPOOF_METAPHLAN_VERSION.out.profile
+		input[1] = Channel.of([[], file("${moduleDir}/tests/mpa_test.txt")])
               input[2] = UNTAR_v4_nuc.out.untar.map{ it[1] }
               input[3] = UNTAR_v4_prot.out.untar.map{ it[1] }
               input[4] = UNTAR_v4_util.out.untar.map{ it[1] }

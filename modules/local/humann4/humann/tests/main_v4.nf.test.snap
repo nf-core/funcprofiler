@@ -1,27 +1,22 @@
 {
     "humann_v4 sarscov2 - fastq": {
         "content": [
-            7,
+            4,
             [
                 "humann4",
                 "humann4/test_2_genefamilies.tsv.gz",
                 "humann4/test_3_reactions.tsv.gz",
                 "humann4/test_4_pathabundance.tsv.gz",
-                "mpahumann4",
-                "mpahumann4/test.bowtie2out.txt",
-                "mpahumann4/test_profile.txt",
-                "pipeline_info",
-                "spoof",
-                "spoof/test_mock_profile.txt"
+                "pipeline_info"
             ],
             [
                 
             ]
         ],
-        "timestamp": "2026-07-01T16:59:35.966324",
+        "timestamp": "2026-08-04T11:59:37.715128",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "humann_v4 sarscov2 - fastq - stub": {
