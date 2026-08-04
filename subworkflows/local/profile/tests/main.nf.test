@@ -3,7 +3,7 @@ nextflow_workflow {
     topics 'versions'
     name "Test profile "
     script "../main.nf"
-    workflow "PROFILING"
+    workflow "PROFILE"
 
     tag "subworkflows"
     tag "subworkflows/profile"

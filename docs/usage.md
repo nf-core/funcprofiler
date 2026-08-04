@@ -28,9 +28,8 @@ The samplesheet is a comma-separated file with the following columns:
 | `fasta`               | No       | This column is unused, but retained for compatibility with nf-core/taxprofiler.                                     |
 
 :::note
-
-	> \* `fastq_1` must be provided for each row! We do **not** support `OXFORD_NANOPORE` or `PACBIO_SMRT` unput platforms, as long reads are incompatible (or at least, require nuanced interpretation) with most of these tools. Similarly, we do not support `fasta` input, as assembly-based pipelines like nf-core/funcscan would be more appropriate.
-> :::
+\* `fastq_1` must be provided for each row! We do **not** support `OXFORD_NANOPORE` or `PACBIO_SMRT` unput platforms, as long reads are incompatible (or at least, require nuanced interpretation) with most of these tools. Similarly, we do not support `fasta` input, as assembly-based pipelines like nf-core/funcscan would be more appropriate.
+:::
 
 ### Example samplesheet
 
@@ -45,7 +44,7 @@ In this example, `SAMPLE1` has two runs which will be merged before profiling. `
 
 ## Enabling profilers
 
-At least one profiler must be enabled via command-line flags. The pipeline will only run the profilers you explicitly turn on:
+The pipeline will only run the profilers you explicitly turn on, and for which a database has been specified in your database samplesheet:
 
 | Flag                   | Profiler        | Status                  |
 | ---------------------- | --------------- | ----------------------- |
@@ -101,10 +100,11 @@ fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
 
 ### EggNOG-mapper databases
 
-EggNOG-mapper requires two database entries per named database: the search database and the EggNOG data directory. The `db_params` field of the `eggnogmapper_db` row must specify the search mode (e.g. `diamond`, `mmseqs`, `hmmer`). The example below uses an EggNOG v5 database label; replace `eggnog_v5` with the exact EggNOG database release used in your analysis.
+[EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper) requires two database entries per named database: the search database and the EggNOG data directory. The `db_params` field of the `eggnogmapper_db` row must specify the search mode (e.g. `diamond`, `mmseqs`, `hmmer`). The example below uses an EggNOG v5 database label; replace `eggnog_v5` with the exact EggNOG database release used in your analysis.
 
-> [!WARNING]
-> EggNOG-mapper support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
+:::warning
+EggNOG-mapper support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
+::
 
 ```csv
 tool,db_name,db_entity,db_params,db_type,db_path
@@ -116,9 +116,9 @@ eggnogmapper,eggnog_v5,eggnogmapper_data_dir,,,/data/databases/eggnog_mapper/dat
 The EggNOG data directory can be downloaded with `download_eggnog_data.py` from the eggnog-mapper package. See the [EggNOG-mapper documentation](https://github.com/eggnogdb/eggnog-mapper/wiki) for details.
 :::
 
-### Mifaser
+### mi-faser
 
-[mifaser](https://bromberglab.org/project/mifaser/) performs functional profiling by mapping reads to functional databases at the protein level. It supports both short-read and long-read data. Enable with `--run_mifaser`.
+[mi-faser](https://bromberglab.org/project/mifaser/) performs functional profiling by mapping reads to functional databases at the protein level. It supports both short-read and long-read data. Enable with `--run_mifaser`.
 
 #### Database preparation
 
@@ -148,7 +148,7 @@ fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
 
 ### RGI BWT
 
-[RGI](https://github.com/arpcard/rgi) (Resistance Gene Identifier) uses the Comprehensive Antibiotic Resistance Database (CARD) to identify AMR genes. The `bwt` subcommand aligns reads directly to CARD using Bowtie2/BWA. Enable with `--run_rgi`.
+[RGI](https://card.mcmaster.ca/about) (Resistance Gene Identifier) uses the Comprehensive Antibiotic Resistance Database (CARD) to identify AMR genes. The `bwt` subcommand aligns reads directly to CARD using Bowtie2/BWA. Enable with `--run_rgi`.
 
 #### Database preparation
 

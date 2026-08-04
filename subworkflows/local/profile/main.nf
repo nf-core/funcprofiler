@@ -147,7 +147,7 @@ def getDbPath(groupeddb, entity = 'main', asTuple = false) {
     return dbpath
 }
 
-workflow PROFILING {
+workflow PROFILE {
     take:
     reads // [ [ meta ], [ reads ] ]
     reads_concat // [ [ meta ], [ reads ] ]

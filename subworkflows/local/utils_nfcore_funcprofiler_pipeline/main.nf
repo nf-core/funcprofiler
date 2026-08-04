@@ -13,7 +13,6 @@ include { paramsSummaryMap } from 'plugin/nf-schema'
 include { samplesheetToList } from 'plugin/nf-schema'
 include { completionEmail } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary } from '../../nf-core/utils_nfcore_pipeline'
-//include { imNotification } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
 
@@ -183,8 +182,8 @@ def validateInputSamplesheet(input) {
 // Generate methods description for MultiQC
 //
 def toolCitationText() {
-
-    def text_qc = ["Sequencing quality control was performed with FastQC (Andrews 2010)."].join(' ').trim()
+    // pending fastq_shortreads_preprocess_qc implementation
+    def text_qc = ""
 
     def text_humann = [
         "Functional profiling was performed with",
@@ -222,8 +221,9 @@ def toolCitationText() {
 }
 
 def toolBibliographyText() {
-
-    def text_qc = [!params.skip_preprocessing_qc ? "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. Available at: <a href=\"http://www.bioinformatics.babraham.ac.uk/projects/fastqc/\">http://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></li>" : ""].join(' ').trim()
+    //
+    //def text_qc = [!params.skip_preprocessing_qc ? "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. Available at: <a href=\"http://www.bioinformatics.babraham.ac.uk/projects/fastqc/\">http://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></li>" : ""].join(' ').trim()
+    def text_qc = "" // pending implementation of fastq_shortreads_preprocess_qc subworkflow
 
     def text_humann = [
         params.run_humann_v3 || params.run_humann_v4 ? "<li>Beghini, F., McIver, L. J., Blanco-M\u00edguez, A., Dubois, L., Asnicar, F., Maharjan, S., Mailyan, A., Thomas, A. M., Manghi, P., Valles-Colomer, M., Weingart, G., Zhang, Y., Zolfo, M., Huttenhower, C., Franzosa, E. A., & Segata, N. (2021). Integrating taxonomic, functional, and strain-level profiling of diverse microbial communities with bioBakery 3. eLife, 10, e65088. <a href=\"https://doi.org/10.7554/eLife.65088\">10.7554/eLife.65088</a></li>" : "",

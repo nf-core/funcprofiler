@@ -22,26 +22,26 @@
                     "1.34"
                 ],
                 [
-                    "PROFILING:RGI_BWT",
+                    "PROFILE:RGI_BWT",
                     "kma",
                     "KMA-1.6.11"
                 ],
                 [
-                    "PROFILING:RGI_BWT",
+                    "PROFILE:RGI_BWT",
                     "rgi",
                     "6.0.8"
                 ],
                 [
-                    "PROFILING:RGI_BWT",
+                    "PROFILE:RGI_BWT",
                     "rgi-database",
                     "4.0.1"
                 ]
             ]
         ],
-        "timestamp": "2026-07-08T17:04:35.9631",
+        "timestamp": "2026-08-04T15:13:38.986799",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "run diamond": {
@@ -70,13 +70,13 @@
                     "9.5"
                 ],
                 [
-                    "PROFILING:DIAMOND_BLASTX",
+                    "PROFILE:DIAMOND_BLASTX",
                     "diamond",
                     "2.2.1"
                 ]
             ]
         ],
-        "timestamp": "2026-08-04T00:03:08.736039079",
+        "timestamp": "2026-08-04T15:23:43.891346",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -129,23 +129,23 @@
                     "9.5"
                 ],
                 [
-                    "PROFILING:EGGNOGMAPPER",
+                    "PROFILE:EGGNOGMAPPER",
                     "eggnog-mapper",
                     "2.1.13"
                 ],
                 [
-                    "PROFILING:GUNZIP",
+                    "PROFILE:GUNZIP",
                     "gunzip",
                     "1.13"
                 ],
                 [
-                    "PROFILING:SEQKIT_FQ2FA",
+                    "PROFILE:SEQKIT_FQ2FA",
                     "seqkit",
                     "2.13.0"
                 ]
             ]
         ],
-        "timestamp": "2026-08-03T23:39:40.28796317",
+        "timestamp": "2026-08-04T15:14:00.583844",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

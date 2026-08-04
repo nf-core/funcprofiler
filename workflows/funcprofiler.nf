@@ -36,7 +36,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_func
 // MODULE: Installed directly from nf-core/modules
 //
 include { UNTAR } from '../modules/nf-core/untar/main'
-include { PROFILING } from '../subworkflows/local/profile/main'
+include { PROFILE } from '../subworkflows/local/profile/main'
 include { DATAPREP } from '../subworkflows/local/dataprep/main'
 include { DBPREP } from '../subworkflows/local/dbprep/main'
 
@@ -64,7 +64,7 @@ workflow FUNCPROFILER {
     DBPREP(
         databases
     )
-    PROFILING(
+    PROFILE(
         DATAPREP.out.reads,
         DATAPREP.out.reads_concat,
         DBPREP.out.dbs,
