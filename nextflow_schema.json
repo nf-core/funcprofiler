@@ -411,9 +411,6 @@
             "$ref": "#/$defs/preprocessing_hostremoval_options"
         },
         {
-            "$ref": "#/$defs/preprocessing_run_merging_options"
-        },
-        {
             "$ref": "#/$defs/profiling_options"
         },
         {
