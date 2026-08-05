@@ -110,6 +110,20 @@ Use the `db_name` column to record the database release or version used for the 
 | `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                                  |
 | `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                                   |
 
+### Database versions and compatibility
+
+The pipeline passes `db_path` straight to the profiler and never checks it against the tool version, so pairing a database with a compatible tool release is up to you. The versions a run actually used are recorded in `<outdir>/pipeline_info/nf_core_funcprofiler_software_mqc_versions.yml`.
+
+These combinations were exercised on a human gut metagenome cohort during development; RGI, DIAMOND and HUMAnN v4 were only tested against the small CI databases.
+
+| Tool            | Tool version | Database                                                                                                          |
+| --------------- | ------------ | ----------------------------------------------------------------------------------------------------------------- |
+| HUMAnN v3       | 3.6.1        | ChocoPhlAn full `v201901_v31`, UniRef90 `201901b` full, `utility_mapping` full                                    |
+| MetaPhlAn       | 4.0.6        | `mpa_vJan21_CHOCOPhlAnSGB_202103`                                                                                 |
+| FMH FunProfiler | 1.1.1        | KO sketches from [Zenodo record 10045253](https://zenodo.org/records/10045253), scaled 1000 / k=11 and scaled 500 |
+| mi-faser        | 1.64         | `GS-24-all`, shipped inside the mi-faser biocontainer rather than downloaded separately                           |
+| eggNOG-mapper   | 2.1.13       | eggNOG 5.0.2 data directory                                                                                       |
+
 ### HUMANn databases
 
 HUMANn requires four database components per named database, each as a separate row with the same `db_name`. The example below uses a HUMANn v3-compatible UniRef90 database set; replace `uniref90_v3` with the exact release or version used in your analysis.

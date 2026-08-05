@@ -4,6 +4,15 @@
             [
                 "cat",
                 "cat/minigut.merged.fastq.gz",
+                "fastqc",
+                "fastqc/minigut_1_processed_1_fastqc.html",
+                "fastqc/minigut_1_processed_1_fastqc.zip",
+                "fastqc/minigut_1_processed_2_fastqc.html",
+                "fastqc/minigut_1_processed_2_fastqc.zip",
+                "fastqc/minigut_1_raw_1_fastqc.html",
+                "fastqc/minigut_1_raw_1_fastqc.zip",
+                "fastqc/minigut_1_raw_2_fastqc.html",
+                "fastqc/minigut_1_raw_2_fastqc.zip",
                 "fmhfunprofiler",
                 "fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip",
                 "fmhfunprofiler/KOs_sketched_scaled_1000_demo.sig.zip/minigut_KOs_sketched_scaled_1000_demo.sig.fmhfunprofiler.csv",
@@ -92,7 +101,7 @@
                 "snps.txt:md5,529d4fdb74c8940c0930ec1a7a6d4980"
             ]
         ],
-        "timestamp": "2026-07-31T09:50:44.24986845",
+        "timestamp": "2026-08-05T17:53:23.842325056",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
