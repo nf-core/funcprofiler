@@ -19,134 +19,6 @@ include { EGGNOGMAPPER } from '../../../modules/nf-core/eggnogmapper/main'
 include { SEQKIT_FQ2FA } from '../../../modules/nf-core/seqkit/fq2fa/main'
 include { GUNZIP } from '../../../modules/nf-core/gunzip/main'
 
-// Custom Functions
-
-/**
-* Combine profiles with their original database, then separate into two channels.
-*
-* The channel elements are assumed to be tuples one of [ meta, profile ], and the
-* database to be of [db_key, meta, database_file].
-*
-* @param ch_profile A channel containing a meta and the profiling report of a given profiler
-* @param ch_database A channel containing a key, the database meta, and the database file/folders itself
-* @return A multiMap'ed output channel with two sub channels, one with the profile and the other with the db
-*/
-def sanitizeId(str) {
-    return str
-        .toString()
-        // underscores to hyphens, spaces to hyphens, drop special chars, collapse hyphens
-        .replaceAll(/_/, '-')
-        .replaceAll(/\s+/, '-')
-        .replaceAll(/[^\w\-.]/, '')
-        .replaceAll(/-+/, '-')
-}
-def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
-    /*
-        COMBINE READS WITH DATABASES - GROUPED BY TOOL, VERSION, AND PARAMS
-
-        Input:
-        - pairedreads: channel of [meta, [reads]]
-        - databases: channel of [meta_db, file]
-        - tool_name: string - filter databases to only this tool (e.g., 'humann_v3', 'rgi')
-        - singleFqTool: boolean - if true, reads need concatenation for PE samples
-
-        Output:
-        - channel of [meta_sample, reads, meta_db_grouped, db_files_map]
-          where each sample has entries for the specified tool
-    */
-    // Step 1: Filter databases to only the requested tool, then group by db_name and db_params
-    def ch_dbs_grouped = databases
-        .flatMap { meta_db, file_list ->
-            // Flatten: emit one tuple per file object
-            file_list.collect { file_obj ->
-                // Merge the file object's db_entity into the metadata
-                def meta_with_entity = meta_db + [db_entity: file_obj.db_entity]
-                [meta_with_entity, file_obj]
-            }
-        }
-        .filter { meta_db, file ->
-            meta_db.tool == tool_name
-        }
-        .map { meta_db, file ->
-            // Create grouping key: [tool, db_name, db_params]
-            def group_key = [meta_db.tool, meta_db.db_name ?: '', meta_db.db_params ?: '']
-            [group_key, meta_db, file]
-        }
-        // Group all files for same tool+db_name+db_params
-        .groupTuple()
-        .map { group_key, meta_db_list, files ->
-            def tool = group_key[0]
-            def db_name = group_key[1]
-            def db_params = group_key[2]
-
-            // Convert files list to Map keyed by db_entity for deterministic snapshots
-            // Map structure: entity_name -> db_path (entity is already in the key)
-            def files_map = [:]
-            [meta_db_list, files]
-                .transpose()
-                .each { meta_db, file ->
-                    // Store only the path
-                    files_map[meta_db.db_entity] = file.db_path
-                }
-
-            // Create consolidated metadata with db_entities as a Set
-            def meta_db_grouped = [id: sanitizeId("${tool}--${db_name}--${db_params}"), tool: tool, db_name: db_name, db_params: db_params, db_entities: files_map.keySet() as Set, num_files: files_map.size()]
-
-            // Return files as map
-            [meta_db_grouped, files_map.toSorted()]
-        }
-    // Step 2: Combine reads with ALL grouped databases (cartesian product)
-    // Each sample will get one entry per unique db_name+db_params combination for this tool
-    def reads_with_dbs = pairedreads
-        .combine(ch_dbs_grouped)
-        .map { meta_sample, reads, meta_db, db_files_map ->
-            // Flatten reads to ensure consistent list format
-            def flat_reads = [reads].flatten()
-
-            // Return: [meta_sample, reads_list, meta_db, db_files_map]
-            [meta_sample, flat_reads, meta_db, db_files_map]
-        }
-
-    // Step 3: Validate and add metadata based on tool type
-    def result = reads_with_dbs
-        .map { meta, reads, db_meta, db_files ->
-            def expected = meta.single_end | singleFqTool ? 1 : 2
-            if (reads.size() != expected) {
-                error("PE-aware tool (${!singleFqTool})  '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${reads.size()}")
-            }
-            [meta, reads, db_meta, db_files]
-        }
-        .multiMap { it ->
-            // Carry the database identity into the read meta so that ext.args, ext.prefix
-            // and publishDir can key on it, as nf-core/taxprofiler does. Only a subset is
-            // merged: meta_db also holds an id, which must not overwrite the sample id.
-            reads: [it[0] + it[2].subMap('tool', 'db_name', 'db_params'), it[1]]
-            db: [it[2], it[3]]
-        }
-    return result
-}
-
-def getDbPath(groupeddb, entity = 'main', asTuple = false) {
-    // Extract the relevant database file path by entity key from the files map
-    def dbpath = groupeddb.map { meta_db, files_map ->
-        // files_map is now a Map[entity -> db_path], so direct lookup
-        if (!files_map.containsKey(entity)) {
-            error("No entity '${entity}' file found in database ${meta_db.id}")
-        }
-
-        def db_path = files_map[entity]
-        // Direct access to path
-
-        if (asTuple) {
-            return [meta_db, db_path]
-        }
-        else {
-            return db_path
-        }
-    }
-    return dbpath
-}
-
 workflow PROFILE {
     take:
     reads // [ [ meta ], [ reads ] ]
@@ -298,4 +170,133 @@ workflow TEST_PREPAREINPUTS_WRAPPER {
     emit:
     reads = testresult.reads
     db = testresult.db
+}
+
+
+// Custom Functions
+
+/**
+* Combine profiles with their original database, then separate into two channels.
+*
+* The channel elements are assumed to be tuples one of [ meta, profile ], and the
+* database to be of [db_key, meta, database_file].
+*
+* @param ch_profile A channel containing a meta and the profiling report of a given profiler
+* @param ch_database A channel containing a key, the database meta, and the database file/folders itself
+* @return A multiMap'ed output channel with two sub channels, one with the profile and the other with the db
+*/
+def sanitizeId(str) {
+    return str
+        .toString()
+        // underscores to hyphens, spaces to hyphens, drop special chars, collapse hyphens
+        .replaceAll(/_/, '-')
+        .replaceAll(/\s+/, '-')
+        .replaceAll(/[^\w\-.]/, '')
+        .replaceAll(/-+/, '-')
+}
+def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
+    /*
+        COMBINE READS WITH DATABASES - GROUPED BY TOOL, VERSION, AND PARAMS
+
+        Input:
+        - pairedreads: channel of [meta, [reads]]
+        - databases: channel of [meta_db, file]
+        - tool_name: string - filter databases to only this tool (e.g., 'humann_v3', 'rgi')
+        - singleFqTool: boolean - if true, reads need concatenation for PE samples
+
+        Output:
+        - channel of [meta_sample, reads, meta_db_grouped, db_files_map]
+          where each sample has entries for the specified tool
+    */
+    // Step 1: Filter databases to only the requested tool, then group by db_name and db_params
+    def ch_dbs_grouped = databases
+        .flatMap { meta_db, file_list ->
+            // Flatten: emit one tuple per file object
+            file_list.collect { file_obj ->
+                // Merge the file object's db_entity into the metadata
+                def meta_with_entity = meta_db + [db_entity: file_obj.db_entity]
+                [meta_with_entity, file_obj]
+            }
+        }
+        .filter { meta_db, file ->
+            meta_db.tool == tool_name
+        }
+        .map { meta_db, file ->
+            // Create grouping key: [tool, db_name, db_params]
+            def group_key = [meta_db.tool, meta_db.db_name ?: '', meta_db.db_params ?: '']
+            [group_key, meta_db, file]
+        }
+        // Group all files for same tool+db_name+db_params
+        .groupTuple()
+        .map { group_key, meta_db_list, files ->
+            def tool = group_key[0]
+            def db_name = group_key[1]
+            def db_params = group_key[2]
+
+            // Convert files list to Map keyed by db_entity for deterministic snapshots
+            // Map structure: entity_name -> db_path (entity is already in the key)
+            def files_map = [:]
+            [meta_db_list, files]
+                .transpose()
+                .each { meta_db, file ->
+                    // Store only the path
+                    files_map[meta_db.db_entity] = file.db_path
+                }
+
+            // Create consolidated metadata with db_entities as a Set
+            def meta_db_grouped = [id: sanitizeId("${tool}--${db_name}--${db_params}"), tool: tool, db_name: db_name, db_params: db_params, db_entities: files_map.keySet() as Set, num_files: files_map.size()]
+
+            // Return files as map
+            [meta_db_grouped, files_map.toSorted()]
+        }
+    // Step 2: Combine reads with ALL grouped databases (cartesian product)
+    // Each sample will get one entry per unique db_name+db_params combination for this tool
+    def reads_with_dbs = pairedreads
+        .combine(ch_dbs_grouped)
+        .map { meta_sample, reads, meta_db, db_files_map ->
+            // Flatten reads to ensure consistent list format
+            def flat_reads = [reads].flatten()
+
+            // Return: [meta_sample, reads_list, meta_db, db_files_map]
+            [meta_sample, flat_reads, meta_db, db_files_map]
+        }
+
+    // Step 3: Validate and add metadata based on tool type
+    def result = reads_with_dbs
+        .map { meta, reads, db_meta, db_files ->
+            def expected = meta.single_end | singleFqTool ? 1 : 2
+            if (reads.size() != expected) {
+                error("PE-aware tool (${!singleFqTool})  '${db_meta.tool}': expected ${expected} read file(s) for sample ${meta.id} (single_end=${meta.single_end}), got ${reads.size()}")
+            }
+            [meta, reads, db_meta, db_files]
+        }
+        .multiMap { it ->
+            // Carry the database identity into the read meta so that ext.args, ext.prefix
+            // and publishDir can key on it, as nf-core/taxprofiler does. Only a subset is
+            // merged: meta_db also holds an id, which must not overwrite the sample id.
+            reads: [it[0] + it[2].subMap('tool', 'db_name', 'db_params'), it[1]]
+            db: [it[2], it[3]]
+        }
+    return result
+}
+
+def getDbPath(groupeddb, entity = 'main', asTuple = false) {
+    // Extract the relevant database file path by entity key from the files map
+    def dbpath = groupeddb.map { meta_db, files_map ->
+        // files_map is now a Map[entity -> db_path], so direct lookup
+        if (!files_map.containsKey(entity)) {
+            error("No entity '${entity}' file found in database ${meta_db.id}")
+        }
+
+        def db_path = files_map[entity]
+        // Direct access to path
+
+        if (asTuple) {
+            return [meta_db, db_path]
+        }
+        else {
+            return db_path
+        }
+    }
+    return dbpath
 }

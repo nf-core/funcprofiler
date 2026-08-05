@@ -73,9 +73,6 @@ workflow {
         params.show_hidden,
     )
 
-    def profileUsesContainers = (workflow.containerEngine != null && workflow.containerEngine != '')
-
-
     //
     // WORKFLOW: Run main workflow
     //
