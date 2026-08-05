@@ -73,21 +73,6 @@
                 }
             }
         },
-        "preprocessing_run_merging_options": {
-            "title": "Preprocessing run merging options",
-            "type": "object",
-            "description": "Options for per-sample run-merging",
-            "default": "",
-            "properties": {
-                "save_runmerged_reads": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-save",
-                    "description": "Save reads from samples that went through the run-merging step",
-                    "help_text": "Save the run- and library-concatenated reads of a given sample in FASTQ format.\n\n> \u26a0\ufe0f Only samples that went through the run-merging step of the pipeline will be stored in the resulting directory. \n\nIf you wish to save the files that go to the classification/profiling steps for samples that _did not_ go through run merging, you must supply the appropriate upstream `--save_<preprocessing_step>` flag.\n\n"
-                }
-            },
-            "fa_icon": "fas fa-clipboard-check"
-        },
         "profiling_options": {
             "title": "Profiling options",
             "type": "object",
@@ -286,9 +271,6 @@
         },
         {
             "$ref": "#/$defs/preprocessing_qc_options"
-        },
-        {
-            "$ref": "#/$defs/preprocessing_run_merging_options"
         },
         {
             "$ref": "#/$defs/profiling_options"

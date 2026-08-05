@@ -60,10 +60,11 @@ Other than FastQC, MultiQC and pipeline information, all other steps (the profil
 
 ### DIAMOND blastx
 
-Enabled with `--run_diamond`. Performs fast translated alignment of metagenomic reads against a protein reference database. Each read is aligned in all six reading frames and only significant hits are reported.
+Enabled with `--run_diamond`. Performs fast translated alignment of (meta)genomic reads against a protein reference database. Each read is aligned in all six reading frames and only significant hits are reported.
 
-> [!WARNING]
-> DIAMOND support is currently in beta and should be treated as work in progress. The module is still being validated in the full pipeline, including database handling, output behavior, and downstream reporting. Use with caution and independently review results before production use or interpretation.
+:::warning
+DIAMOND support is currently in beta and should be treated as work in progress. The module is still being validated in the full pipeline, including database handling, output behavior, and downstream reporting. Use with caution and independently review results before production use or interpretation.
+:::
 
 - `diamond/<db_name>/`
   - `*.tsv`: Tabular alignment results (BLAST tabular format 6) with one row per query-subject hit.
@@ -73,8 +74,9 @@ Enabled with `--run_diamond`. Performs fast translated alignment of metagenomic 
 
 Enabled with `--run_eggnogmapper`. Assigns functional annotations to sequences by mapping them to orthologous groups in the EggNOG database.
 
-> [!WARNING]
-> EggNOG-mapper support is currently in beta and should be treated as work in progress. The module is still being validated in the full pipeline, including database handling, output behavior, and downstream reporting. Use with caution and independently review results before production use or interpretation.
+:::warning
+EggNOG-mapper support is currently in beta and should be treated as work in progress. The module is still being validated in the full pipeline, including database handling, output behavior, and downstream reporting. Use with caution and independently review results before production use or interpretation.
+:::
 
 - `eggnogmapper/<db_name>/`
   - `*.emapper.annotations`: TSV file with functional annotations per query sequence, including GO terms, KEGG pathways, COG categories, and more.

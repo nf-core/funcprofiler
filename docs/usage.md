@@ -56,8 +56,9 @@ The pipeline will only run the profilers you explicitly turn on, and for which a
 | `--run_eggnogmapper`   | EggNOG-mapper   | Work in progress / beta |
 | `--run_rgi`            | RGI BWT         | Available               |
 
-> [!IMPORTANT]
-> Each `--run_` flag requires a matching database entry in the `--databases` CSV. Database rows for tools that are not enabled will be ignored.
+:::info
+Each `--run_` flag requires a matching database entry in the `--databases` CSV. Database rows for tools that are not enabled will be ignored.
+:::
 
 ## Databases input
 
@@ -104,7 +105,7 @@ fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
 
 :::warning
 EggNOG-mapper support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
-::
+:::
 
 ```csv
 tool,db_name,db_entity,db_params,db_type,db_path
@@ -175,8 +176,9 @@ Wildcard variant databases are not currently supported by the pipeline. Only the
 
 [DIAMOND](https://github.com/bbuchfink/diamond/wiki/) is a high-throughput sequence aligner for translated (nucleotide-vs-protein) alignment. Enable it with `--run_diamond`.
 
-> [!WARNING]
-> DIAMOND support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
+:::warning
+DIAMOND support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
+:::
 
 #### Database preparation
 
