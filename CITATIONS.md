@@ -64,6 +64,50 @@
 
 > Shen W, Le S, Li Y, Hu F. SeqKit: A Cross-Platform and Ultrafast Toolkit for FASTA/Q File Manipulation. PLoS One. 2016 Oct 5;11(10):e0163962. doi: 10.1371/journal.pone.0163962. PMID: 27706213; PMCID: PMC5051824.
 
+## Read preprocessing tools
+
+Only the tools you select through the preprocessing parameters are run. See `docs/usage.md`.
+
+- [AdapterRemoval](https://pubmed.ncbi.nlm.nih.gov/26868221/)
+
+> Schubert M, Lindgreen S, Orlando L. AdapterRemoval v2: rapid adapter trimming, identification, and read merging. BMC Res Notes. 2016 Feb 12;9:88. doi: 10.1186/s13104-016-1900-2. PMID: 26868221; PMCID: PMC4751634.
+
+- [BBMap/BBDuk/Clumpify](https://sourceforge.net/projects/bbmap/)
+
+> Bushnell B. (2022) BBMap. sourceforge.net/projects/bbmap/.
+
+- [Cutadapt](https://doi.org/10.14806/ej.17.1.200)
+
+> Martin M. Cutadapt removes adapter sequences from high-throughput sequencing reads. EMBnet.journal. 2011;17(1):10-12. doi: 10.14806/ej.17.1.200.
+
+- [Deacon](https://github.com/bede/deacon)
+
+> Constantinides B. Deacon: fast alignment-free host depletion. github.com/bede/deacon.
+
+- [fastp](https://pubmed.ncbi.nlm.nih.gov/30423086/)
+
+> Chen S, Zhou Y, Chen Y, Gu J. fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics. 2018 Sep 1;34(17):i884-i890. doi: 10.1093/bioinformatics/bty560. PMID: 30423086; PMCID: PMC6129281.
+
+- [Hostile](https://pubmed.ncbi.nlm.nih.gov/38191289/)
+
+> Constantinides B, Hunt M, Crook DW. Hostile: accurate decontamination of microbial host sequences. Bioinformatics. 2023 Dec 1;39(12):btad728. doi: 10.1093/bioinformatics/btad728. PMID: 38191289; PMCID: PMC10746824.
+
+- [leeHom](https://pubmed.ncbi.nlm.nih.gov/25100869/)
+
+> Renaud G, Stenzel U, Kelso J. leeHom: adaptor trimming and merging for Illumina sequencing reads. Nucleic Acids Res. 2014 Oct;42(18):e141. doi: 10.1093/nar/gku699. PMID: 25100869; PMCID: PMC4191382.
+
+- [PRINSEQ++](https://doi.org/10.7287/peerj.preprints.27553v1)
+
+> Cantu VA, Sadural J, Edwards R. PRINSEQ++, a multi-threaded tool for fast and efficient quality control and preprocessing of sequencing datasets. PeerJ Preprints. 2019;7:e27553v1. doi: 10.7287/peerj.preprints.27553v1.
+
+- [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
+
+> Krueger F. Trim Galore!: a wrapper around Cutadapt and FastQC. bioinformatics.babraham.ac.uk/projects/trim_galore/.
+
+- [Trimmomatic](https://pubmed.ncbi.nlm.nih.gov/24695404/)
+
+> Bolger AM, Lohse M, Usadel B. Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics. 2014 Aug 1;30(15):2114-20. doi: 10.1093/bioinformatics/btu170. PMID: 24695404; PMCID: PMC4103590.
+
 ## Software packaging/containerisation tools
 
 - [Anaconda](https://anaconda.com)

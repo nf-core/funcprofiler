@@ -10,7 +10,7 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-- [FastQC](#fastqc) - Raw read QC and preprocessing
+- [Read preprocessing](#read-preprocessing) - FastQC, adapter trimming, complexity filtering and host removal
 - [HUMAnN v3 / v4](#humann-v3--v4) - Functional profiling via MetaPhlAn + HUMAnN
 - [FMH FunProfiler](#fmh-funprofiler) - Sketch-based functional profiling
 - [mifaser](#mifaser) - Read-level functional profiling
@@ -24,13 +24,18 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 Other than FastQC, MultiQC and pipeline information, all other steps (the profilers) are off by default, and must be switched on manually.
 :::
 
-### FastQC
+### Read preprocessing
 
-[FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content, adapter contamination, and overrepresented sequences. For further reading and documentation see the [FastQC help pages](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+Preprocessing runs through the nf-core [`fastq_shortreads_preprocess_qc`](https://nf-co.re/subworkflows/fastq_shortreads_preprocess_qc/) subworkflow, per sequencing run and before runs of the same sample are merged. Only FastQC is on by default; the steps that modify reads are switched on individually, see [read preprocessing in the usage docs](usage.md#read-preprocessing).
+
+[FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content, adapter contamination, and overrepresented sequences. For further reading and documentation see the [FastQC help pages](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/). It runs twice, once before and once after preprocessing.
 
 - `fastqc/`
-  - `*_fastqc.html`: FastQC report containing quality metrics for each sample.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report and data files.
+  - `*_raw_fastqc.{html,zip}`: FastQC report for the reads as they arrived.
+  - `*_processed_fastqc.{html,zip}`: FastQC report for the reads that go on to the profilers.
+- `preprocessing/`
+  - `*.{log,json,settings,txt}`: Logs and reports from the trimming, complexity filtering, deduplication and host removal steps that ran. Always published, and picked up by MultiQC.
+  - `*.fastq.gz`: The intermediate FASTQ files themselves, only with `--save_preprocessed_reads`.
 
 ### HUMAnN v3 / v4
 

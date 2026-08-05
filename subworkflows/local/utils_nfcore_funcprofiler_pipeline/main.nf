@@ -184,6 +184,43 @@ def validateInputSamplesheet(input) {
 def toolCitationText() {
     def text_qc = ["Read quality was assessed with FastQC (Andrews 2010)."].join(' ').trim()
 
+    def shortread_qc_citations = [
+        'fastp': "fastp (Chen et al. 2018)",
+        'adapterremoval': "AdapterRemoval (Schubert et al. 2016)",
+        'trimmomatic': "Trimmomatic (Bolger et al. 2014)",
+        'cutadapt': "Cutadapt (Martin 2011)",
+        'trimgalore': "Trim Galore! (Krueger 2015)",
+        'bbduk': "BBDuk (Bushnell 2022)",
+        'leehom': "leeHom (Renaud et al. 2014)",
+    ]
+
+    def complexityfilter_citations = [
+        'bbduk': "BBDuk (Bushnell 2022)",
+        'prinseqplusplus': "PRINSEQ++ (Cantu et al. 2019)",
+        'fastp': "fastp (Chen et al. 2018)",
+    ]
+
+    def hostremoval_citations = [
+        'hostile': "Hostile (Constantinides et al. 2023)",
+        'deacon': "Deacon (Constantinides 2024)",
+    ]
+
+    def text_shortread_qc = [
+        "Adapter clipping and quality filtering were performed with",
+        "${shortread_qc_citations[params.shortread_qc_tool]}.",
+        params.shortread_qc_dedup ? "Duplicate reads were removed with Clumpify (Bushnell 2022)." : "",
+    ].join(' ').trim()
+
+    def text_complexityfilter = [
+        "Low-complexity reads were removed with",
+        "${complexityfilter_citations[params.shortread_complexityfilter_tool]}.",
+    ].join(' ').trim()
+
+    def text_hostremoval = [
+        "Host-derived reads were removed with",
+        "${hostremoval_citations[params.shortread_hostremoval_tool]}.",
+    ].join(' ').trim()
+
     def text_humann = [
         "Functional profiling was performed with",
         params.run_humann_v3 && params.run_humann_v4
@@ -207,6 +244,9 @@ def toolCitationText() {
     def citation_text = [
         "Tools used in the workflow included:",
         !params.skip_preprocessing_qc ? text_qc : "",
+        params.perform_shortread_qc ? text_shortread_qc : "",
+        params.perform_shortread_complexityfilter ? text_complexityfilter : "",
+        params.perform_shortread_hostremoval ? text_hostremoval : "",
         params.run_humann_v3 || params.run_humann_v4 ? text_humann : "",
         params.run_diamond ? text_diamond : "",
         params.run_fmhfunprofiler ? text_fmhfunprofiler : "",
@@ -221,6 +261,27 @@ def toolCitationText() {
 
 def toolBibliographyText() {
     def text_qc = [!params.skip_preprocessing_qc ? "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. Available at: <a href=\"http://www.bioinformatics.babraham.ac.uk/projects/fastqc/\">http://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></li>" : ""].join(' ').trim()
+
+    // One reference per preprocessing tool, keyed the same way as the params that select them.
+    def bib_preprocessing = [
+        'adapterremoval': "<li>Schubert, M., Lindgreen, S., & Orlando, L. (2016). AdapterRemoval v2: rapid adapter trimming, identification, and read merging. BMC Research Notes, 9, 88. <a href=\"https://doi.org/10.1186/s13104-016-1900-2\">10.1186/s13104-016-1900-2</a></li>",
+        'bbduk': "<li>Bushnell, B. (2022). BBMap. <a href=\"https://sourceforge.net/projects/bbmap/\">https://sourceforge.net/projects/bbmap/</a></li>",
+        'cutadapt': "<li>Martin, M. (2011). Cutadapt removes adapter sequences from high-throughput sequencing reads. EMBnet.journal, 17(1), 10–12. <a href=\"https://doi.org/10.14806/ej.17.1.200\">10.14806/ej.17.1.200</a></li>",
+        'deacon': "<li>Constantinides, B. (2024). Deacon: fast alignment-free host depletion. <a href=\"https://github.com/bede/deacon\">https://github.com/bede/deacon</a></li>",
+        'fastp': "<li>Chen, S., Zhou, Y., Chen, Y., & Gu, J. (2018). fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics, 34(17), i884–i890. <a href=\"https://doi.org/10.1093/bioinformatics/bty560\">10.1093/bioinformatics/bty560</a></li>",
+        'hostile': "<li>Constantinides, B., Hunt, M., & Crook, D. W. (2023). Hostile: accurate decontamination of microbial host sequences. Bioinformatics, 39(12), btad728. <a href=\"https://doi.org/10.1093/bioinformatics/btad728\">10.1093/bioinformatics/btad728</a></li>",
+        'leehom': "<li>Renaud, G., Stenzel, U., & Kelso, J. (2014). leeHom: adaptor trimming and merging for Illumina sequencing reads. Nucleic Acids Research, 42(18), e141. <a href=\"https://doi.org/10.1093/nar/gku699\">10.1093/nar/gku699</a></li>",
+        'prinseqplusplus': "<li>Cantu, V. A., Sadural, J., & Edwards, R. (2019). PRINSEQ++, a multi-threaded tool for fast and efficient quality control and preprocessing of sequencing datasets. PeerJ Preprints, 7, e27553v1. <a href=\"https://doi.org/10.7287/peerj.preprints.27553v1\">10.7287/peerj.preprints.27553v1</a></li>",
+        'trimgalore': "<li>Krueger, F. (2015). Trim Galore!: a wrapper around Cutadapt and FastQC. <a href=\"https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/\">https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/</a></li>",
+        'trimmomatic': "<li>Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114–2120. <a href=\"https://doi.org/10.1093/bioinformatics/btu170\">10.1093/bioinformatics/btu170</a></li>",
+    ]
+
+    def text_preprocessing = [
+        params.perform_shortread_qc ? bib_preprocessing[params.shortread_qc_tool] : "",
+        params.perform_shortread_qc && params.shortread_qc_dedup ? bib_preprocessing['bbduk'] : "",
+        params.perform_shortread_complexityfilter ? bib_preprocessing[params.shortread_complexityfilter_tool] : "",
+        params.perform_shortread_hostremoval ? bib_preprocessing[params.shortread_hostremoval_tool] : "",
+    ].unique().join(' ').trim()
 
     def text_humann = [
         params.run_humann_v3 || params.run_humann_v4 ? "<li>Beghini, F., McIver, L. J., Blanco-M\u00edguez, A., Dubois, L., Asnicar, F., Maharjan, S., Mailyan, A., Thomas, A. M., Manghi, P., Valles-Colomer, M., Weingart, G., Zhang, Y., Zolfo, M., Huttenhower, C., Franzosa, E. A., & Segata, N. (2021). Integrating taxonomic, functional, and strain-level profiling of diverse microbial communities with bioBakery 3. eLife, 10, e65088. <a href=\"https://doi.org/10.7554/eLife.65088\">10.7554/eLife.65088</a></li>" : "",
@@ -243,6 +304,7 @@ def toolBibliographyText() {
 
     def reference_text = [
         text_qc,
+        text_preprocessing,
         text_humann,
         text_eggnggmapper,
         text_rgi,

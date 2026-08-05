@@ -59,6 +59,38 @@ The pipeline will only run the profilers you explicitly turn on, and for which a
 > [!IMPORTANT]
 > Each `--run_` flag requires a matching database entry in the `--databases` CSV. Database rows for tools that are not enabled will be ignored.
 
+## Read preprocessing
+
+Preprocessing is handled by the nf-core [`fastq_shortreads_preprocess_qc`](https://nf-co.re/subworkflows/fastq_shortreads_preprocess_qc/) subworkflow. It runs per sequencing run, before runs of the same sample are merged, so each run is trimmed against its own adapters and quality profile.
+
+Only read QC is on by default: FastQC runs and reports into MultiQC, and the reads reach the profilers untouched. Every step that modifies reads is opt-in.
+
+FastQC runs twice per run, once on the raw reads and once after preprocessing, so the reports are suffixed `_raw` and `_processed`. With no preprocessing steps enabled the two are identical by construction.
+
+| Flag                                   | Default   | Effect                                                                                           |
+| -------------------------------------- | --------- | ------------------------------------------------------------------------------------------------ |
+| `--skip_preprocessing_qc`              | `false`   | Skip FastQC. Nothing else in this table depends on it                                            |
+| `--perform_shortread_qc`               | `false`   | Turn on adapter trimming and quality filtering                                                   |
+| `--shortread_qc_tool`                  | `fastp`   | One of `fastp`, `adapterremoval`, `trimmomatic`, `cutadapt`, `trimgalore`, `bbduk`, `leehom`     |
+| `--shortread_qc_skipadaptertrim`       | `false`   | Keep the quality filtering but skip adapter removal                                              |
+| `--shortread_qc_adapterlist`           | `null`    | Custom adapter file. FASTA for `bbduk`/`fastp`, plain text for `adapterremoval`                  |
+| `--shortread_qc_mergepairs`            | `false`   | Emit merged read pairs instead of the trimmed pairs. `fastp` and `adapterremoval` only           |
+| `--shortread_qc_savetrimmedfail`       | `false`   | Also keep the reads that failed the `fastp` filters                                              |
+| `--shortread_qc_dedup`                 | `false`   | Deduplicate with BBMap `clumpify`                                                                |
+| `--perform_shortread_complexityfilter` | `false`   | Turn on low-complexity filtering                                                                 |
+| `--shortread_complexityfilter_tool`    | `bbduk`   | One of `bbduk`, `prinseqplusplus`, `fastp`                                                       |
+| `--perform_shortread_hostremoval`      | `false`   | Turn on host decontamination                                                                     |
+| `--shortread_hostremoval_tool`         | `hostile` | Either `hostile` or `deacon`                                                                     |
+| `--shortread_hostremoval_reference`    | `null`    | Host genome FASTA to build an index from                                                         |
+| `--shortread_hostremoval_index`        | `null`    | Pre-built index directory, used instead of building one from the reference                       |
+| `--shortread_hostremoval_index_name`   | `null`    | Name of the pre-built index                                                                      |
+| `--save_preprocessed_reads`            | `false`   | Publish the intermediate FASTQs to `<outdir>/preprocessing`. Logs and reports publish regardless |
+
+Tool-specific arguments (minimum read length, entropy thresholds and similar) are set through `ext.args` in `conf/modules.config` rather than as pipeline parameters. See [Custom Tool Arguments](#custom-tool-arguments).
+
+> [!NOTE]
+> The pipeline still does no read preprocessing by default, so reads are expected to arrive already cleaned unless you enable the steps above.
+
 ## Databases input
 
 ```bash

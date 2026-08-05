@@ -2,18 +2,21 @@
 name: "dataprep"
 description: |
   Validate the input samplesheet and prepare read channels for profiling. Sets
-  `single_end`, `run_accession` and `instrument_platform` on the meta map, merges
-  multiple runs belonging to the same sample, and produces an additional channel
-  in which read pairs are concatenated into a single file for tools that cannot
-  take paired input.
+  `single_end`, `run_accession` and `instrument_platform` on the meta map,
+  optionally runs read QC and preprocessing per sequencing run, merges multiple
+  runs belonging to the same sample, and produces an additional channel in which
+  read pairs are concatenated into a single file for tools that cannot take
+  paired input.
 keywords:
   - samplesheet
   - fastq
+  - preprocessing
   - merging
   - concatenation
   - metagenome
 components:
   - cat/fastq
+  - fastq_shortreads_preprocess_qc
 input:
   - samplesheet:
       type: file
@@ -37,6 +40,13 @@ output:
         with `single_end` forced to `true`, for tools that accept only one FASTQ.
         Structure: [ val(meta), [ path(reads) ] ]
       pattern: "*.{fq,fastq}{,.gz}"
+  - multiqc_files:
+      type: file
+      description: |
+        Logs and reports from the preprocessing steps that ran, ready for MultiQC.
+        Empty when preprocessing is skipped entirely.
+        Structure: [ path(report) ]
+      pattern: "*.{html,json,log,settings,txt,zip}"
 authors:
   - "@nickp60"
 maintainers:
