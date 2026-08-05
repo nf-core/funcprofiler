@@ -61,15 +61,144 @@
             }
         },
         "preprocessing_qc_options": {
-            "title": "Preprocessing QC options",
+            "title": "Preprocessing general options",
             "type": "object",
-            "description": "",
+            "description": "Options that apply to read preprocessing as a whole",
             "default": "",
             "properties": {
                 "skip_preprocessing_qc": {
                     "type": "boolean",
                     "description": "Skip quality control step when preprocessing",
                     "help_text": "When True, this won't perform any of the quality control steps in preprocessing, such as discarding low-quality reads."
+                },
+                "save_preprocessed_reads": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-save",
+                    "description": "Save reads from adapter clipping/pair-merging, length filtering, complexity filtering and/or host-removal",
+                    "help_text": "Saves the FASTQ files of every preprocessing step that ran, so you can inspect what each step removed. Files are published to `<outdir>/preprocessing/`.\n\nOnly steps that actually ran produce output, so enabling this without enabling any of `--perform_shortread_qc`, `--perform_shortread_complexityfilter` or `--perform_shortread_hostremoval` saves nothing."
+                }
+            },
+            "fa_icon": "fas fa-users-cog"
+        },
+        "preprocessing_shortread_qc_options": {
+            "title": "Preprocessing short-read QC options",
+            "type": "object",
+            "description": "Options for adapter clipping, quality trimming, pair-merging and deduplication of short reads",
+            "default": "",
+            "fa_icon": "fas fa-cut",
+            "properties": {
+                "perform_shortread_qc": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Turn on short-read adapter clipping and quality trimming",
+                    "help_text": "Runs the `fastq_shortreads_preprocess_qc` nf-core subworkflow on every short-read library before run merging. The tool is selected with `--shortread_qc_tool`."
+                },
+                "shortread_qc_tool": {
+                    "type": "string",
+                    "default": "fastp",
+                    "enum": ["fastp", "adapterremoval", "trimmomatic", "cutadapt", "trimgalore", "bbduk", "leehom"],
+                    "fa_icon": "fas fa-tools",
+                    "description": "Specify which tool to use for short-read QC"
+                },
+                "shortread_qc_skipadaptertrim": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-forward",
+                    "description": "Skip adapter trimming",
+                    "help_text": "Turns off adapter removal while keeping the other operations of the selected tool, e.g. quality trimming or pair merging. Useful when the reads have already been adapter-clipped."
+                },
+                "shortread_qc_adapterlist": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "fa_icon": "fas fa-list",
+                    "description": "Specify a list of adapter sequences to be removed",
+                    "help_text": "A file of adapter sequences to clip instead of the tool's built-in defaults. The expected format depends on the tool: fastp and Trimmomatic take FASTA, AdapterRemoval takes a two-column (paired-end) or one-column (single-end) text file."
+                },
+                "shortread_qc_mergepairs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-object-group",
+                    "description": "Turn on merging of read pairs",
+                    "help_text": "Collapses overlapping read pairs into single reads. Note that funcprofiler concatenates R1 and R2 for most profilers anyway, so this mainly matters for the RGI path, which consumes the paired channel."
+                },
+                "shortread_qc_dedup": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-clone",
+                    "description": "Turn on deduplication of reads with Clumpify",
+                    "help_text": "Removes exact and near-duplicate reads with BBMap's Clumpify (`dedupe=t`) after adapter clipping."
+                },
+                "shortread_qc_savetrimmedfail": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-save",
+                    "description": "Save reads that failed the trimming/filtering thresholds"
+                }
+            }
+        },
+        "preprocessing_shortread_complexityfilter_options": {
+            "title": "Preprocessing short-read complexity filtering options",
+            "type": "object",
+            "description": "Options for removing low-complexity reads",
+            "default": "",
+            "fa_icon": "fas fa-filter",
+            "properties": {
+                "perform_shortread_complexityfilter": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Turn on removal of low-complexity reads",
+                    "help_text": "Low-complexity reads (homopolymers, short tandem repeats) inflate spurious hits in translated search. Removing them cuts both runtime and false positives."
+                },
+                "shortread_complexityfilter_tool": {
+                    "type": "string",
+                    "default": "bbduk",
+                    "enum": ["bbduk", "prinseqplusplus", "fastp"],
+                    "fa_icon": "fas fa-tools",
+                    "description": "Specify which tool to use for complexity filtering",
+                    "help_text": "Thresholds are not exposed as params. Override them through `ext.args` in `conf/modules.config`, e.g. `entropy=` for BBDuk or `--low_complexity_filter --complexity_threshold` for fastp."
+                }
+            }
+        },
+        "preprocessing_hostremoval_options": {
+            "title": "Preprocessing host-removal options",
+            "type": "object",
+            "description": "Options for removing host-derived reads",
+            "default": "",
+            "fa_icon": "fas fa-user-times",
+            "properties": {
+                "perform_shortread_hostremoval": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Turn on removal of host-derived reads",
+                    "help_text": "Requires either `--shortread_hostremoval_reference`, `--shortread_hostremoval_index` or `--shortread_hostremoval_index_name`, depending on the selected tool."
+                },
+                "shortread_hostremoval_tool": {
+                    "type": "string",
+                    "default": "hostile",
+                    "enum": ["hostile", "deacon"],
+                    "fa_icon": "fas fa-tools",
+                    "description": "Specify which tool to use for host removal",
+                    "help_text": "Hostile fetches and caches its own reference indexes by name; Deacon builds a minimiser index from a FASTA reference."
+                },
+                "shortread_hostremoval_reference": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "fa_icon": "fas fa-file-alt",
+                    "description": "Specify a reference genome FASTA to remove reads against",
+                    "help_text": "Used by Deacon to build a filtering index. Ignored when a pre-built index is supplied with `--shortread_hostremoval_index`."
+                },
+                "shortread_hostremoval_index": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-database",
+                    "description": "Specify a pre-built host-removal index",
+                    "help_text": "Skips index construction. The expected format depends on the tool: a Deacon `.idx` file, or a Hostile index directory."
+                },
+                "shortread_hostremoval_index_name": {
+                    "type": "string",
+                    "fa_icon": "fas fa-tag",
+                    "description": "Specify the name of a Hostile-hosted index to download",
+                    "help_text": "Hostile resolves the name against its own index registry and caches the download, e.g. `human-t2t-hla`. Only used when `--shortread_hostremoval_tool hostile`."
                 }
             }
         },
@@ -271,6 +400,15 @@
         },
         {
             "$ref": "#/$defs/preprocessing_qc_options"
+        },
+        {
+            "$ref": "#/$defs/preprocessing_shortread_qc_options"
+        },
+        {
+            "$ref": "#/$defs/preprocessing_shortread_complexityfilter_options"
+        },
+        {
+            "$ref": "#/$defs/preprocessing_hostremoval_options"
         },
         {
             "$ref": "#/$defs/profiling_options"

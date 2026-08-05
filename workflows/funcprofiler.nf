@@ -61,6 +61,8 @@ workflow FUNCPROFILER {
         samplesheet
     )
 
+    ch_multiqc_files = ch_multiqc_files.mix(DATAPREP.out.multiqc_files)
+
     DBPREP(
         databases
     )

@@ -1,5 +1,6 @@
 include { CAT_FASTQ as MERGE_RUNS } from '../../../modules/nf-core/cat/fastq/main'
 include { CAT_FASTQ } from '../../../modules/nf-core/cat/fastq/main'
+include { FASTQ_SHORTREADS_PREPROCESS_QC } from '../../nf-core/fastq_shortreads_preprocess_qc/main'
 
 
 workflow DATAPREP {
@@ -34,8 +35,59 @@ workflow DATAPREP {
         return [meta, reads]
     }
 
+    // Step 1b: Optional preprocessing and read QC, per run.
+    // This runs before the run merging below so that each run is trimmed against its own
+    // adapters and quality profile, which is the order nf-core/taxprofiler uses. The
+    // subworkflow can concatenate runs itself, but MERGE_RUNS already does that here, so
+    // its final concatenation stays switched off.
+    ch_multiqc_files = Channel.empty()
+    def run_preprocessing = !params.skip_preprocessing_qc || params.perform_shortread_qc || params.perform_shortread_complexityfilter || params.perform_shortread_hostremoval
+
+    if (run_preprocessing) {
+        FASTQ_SHORTREADS_PREPROCESS_QC(
+            ch_validated,
+            params.skip_preprocessing_qc,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            0,
+            !params.perform_shortread_qc || params.shortread_qc_skipadaptertrim,
+            params.shortread_qc_tool,
+            params.shortread_qc_adapterlist ? Channel.value(file(params.shortread_qc_adapterlist, checkIfExists: true)) : Channel.value([]),
+            params.shortread_qc_mergepairs,
+            false,
+            params.shortread_qc_savetrimmedfail,
+            !params.perform_shortread_complexityfilter,
+            params.shortread_complexityfilter_tool,
+            !params.shortread_qc_dedup,
+            !params.perform_shortread_hostremoval,
+            params.shortread_hostremoval_reference ? Channel.value([[id: 'host'], file(params.shortread_hostremoval_reference, checkIfExists: true)]) : Channel.value([[], []]),
+            params.shortread_hostremoval_index ? Channel.value([params.shortread_hostremoval_index_name, file(params.shortread_hostremoval_index, checkIfExists: true)]) : Channel.value([[], []]),
+            params.shortread_hostremoval_index_name,
+            params.shortread_hostremoval_tool,
+            true,
+        )
+        ch_preprocessed = FASTQ_SHORTREADS_PREPROCESS_QC.out.reads
+        // multiqc_files carries the trimming and complexity-filter logs but not the FastQC
+        // archives, which the subworkflow emits on their own channels. MultiQC wants bare
+        // paths, so drop the meta on the way out.
+        ch_multiqc_files = FASTQ_SHORTREADS_PREPROCESS_QC.out.multiqc_files
+            .mix(FASTQ_SHORTREADS_PREPROCESS_QC.out.pre_stats_fastqc_zip)
+            .mix(FASTQ_SHORTREADS_PREPROCESS_QC.out.post_stats_fastqc_zip)
+            .map { _meta, report -> report }
+    }
+    else {
+        ch_preprocessed = ch_validated
+    }
+
     // Step 2: Group by meta.id and merge runs if needed
-    ch_grouped = ch_validated
+    ch_grouped = ch_preprocessed
         .map { meta, reads ->
             // Create grouping key and new meta without run_accession for grouping
             def group_key = meta.id
@@ -92,4 +144,5 @@ workflow DATAPREP {
     emit:
     reads = ch_reads // Paired-end reads (R1, R2) or single-end
     reads_concat = ch_concatenated // All reads concatenated into single file
+    multiqc_files = ch_multiqc_files // Reports from the preprocessing subworkflow
 }

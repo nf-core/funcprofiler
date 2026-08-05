@@ -60,6 +60,38 @@ The pipeline will only run the profilers you explicitly turn on, and for which a
 Each `--run_` flag requires a matching database entry in the `--databases` CSV. Database rows for tools that are not enabled will be ignored.
 :::
 
+## Read preprocessing
+
+Preprocessing is handled by the nf-core [`fastq_shortreads_preprocess_qc`](https://nf-co.re/subworkflows/fastq_shortreads_preprocess_qc/) subworkflow. It runs per sequencing run, before runs of the same sample are merged, so each run is trimmed against its own adapters and quality profile.
+
+Only read QC is on by default: FastQC runs and reports into MultiQC, and the reads reach the profilers untouched. Every step that modifies reads is opt-in.
+
+FastQC runs twice per run, once on the raw reads and once after preprocessing, so the reports are suffixed `_raw` and `_processed`. With no preprocessing steps enabled the two are identical by construction.
+
+| Flag                                   | Default   | Effect                                                                                           |
+| -------------------------------------- | --------- | ------------------------------------------------------------------------------------------------ |
+| `--skip_preprocessing_qc`              | `false`   | Skip FastQC. Nothing else in this table depends on it                                            |
+| `--perform_shortread_qc`               | `false`   | Turn on adapter trimming and quality filtering                                                   |
+| `--shortread_qc_tool`                  | `fastp`   | One of `fastp`, `adapterremoval`, `trimmomatic`, `cutadapt`, `trimgalore`, `bbduk`, `leehom`     |
+| `--shortread_qc_skipadaptertrim`       | `false`   | Keep the quality filtering but skip adapter removal                                              |
+| `--shortread_qc_adapterlist`           | `null`    | Custom adapter file. FASTA for `bbduk`/`fastp`, plain text for `adapterremoval`                  |
+| `--shortread_qc_mergepairs`            | `false`   | Emit merged read pairs instead of the trimmed pairs. `fastp` and `adapterremoval` only           |
+| `--shortread_qc_savetrimmedfail`       | `false`   | Also keep the reads that failed the `fastp` filters                                              |
+| `--shortread_qc_dedup`                 | `false`   | Deduplicate with BBMap `clumpify`                                                                |
+| `--perform_shortread_complexityfilter` | `false`   | Turn on low-complexity filtering                                                                 |
+| `--shortread_complexityfilter_tool`    | `bbduk`   | One of `bbduk`, `prinseqplusplus`, `fastp`                                                       |
+| `--perform_shortread_hostremoval`      | `false`   | Turn on host decontamination                                                                     |
+| `--shortread_hostremoval_tool`         | `hostile` | Either `hostile` or `deacon`                                                                     |
+| `--shortread_hostremoval_reference`    | `null`    | Host genome FASTA to build an index from                                                         |
+| `--shortread_hostremoval_index`        | `null`    | Pre-built index directory, used instead of building one from the reference                       |
+| `--shortread_hostremoval_index_name`   | `null`    | Name of the pre-built index                                                                      |
+| `--save_preprocessed_reads`            | `false`   | Publish the intermediate FASTQs to `<outdir>/preprocessing`. Logs and reports publish regardless |
+
+Tool-specific arguments (minimum read length, entropy thresholds and similar) are set through `ext.args` in `conf/modules.config` rather than as pipeline parameters. See [Custom Tool Arguments](#custom-tool-arguments).
+
+> [!NOTE]
+> The pipeline still does no read preprocessing by default, so reads are expected to arrive already cleaned unless you enable the steps above.
+
 ## Databases input
 
 ```bash
@@ -77,6 +109,20 @@ Use the `db_name` column to record the database release or version used for the 
 | `db_entity` | No       | For HUMANn: specifies the component (`humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`). For EggNOG-mapper: `eggnogmapper_db` or `eggnogmapper_data_dir`. |
 | `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                                  |
 | `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                                   |
+
+### Database versions and compatibility
+
+The pipeline passes `db_path` straight to the profiler and never checks it against the tool version, so pairing a database with a compatible tool release is up to you. The versions a run actually used are recorded in `<outdir>/pipeline_info/nf_core_funcprofiler_software_mqc_versions.yml`.
+
+These combinations were exercised on a human gut metagenome cohort during development; RGI, DIAMOND and HUMAnN v4 were only tested against the small CI databases.
+
+| Tool            | Tool version | Database                                                                                                          |
+| --------------- | ------------ | ----------------------------------------------------------------------------------------------------------------- |
+| HUMAnN v3       | 3.6.1        | ChocoPhlAn full `v201901_v31`, UniRef90 `201901b` full, `utility_mapping` full                                    |
+| MetaPhlAn       | 4.0.6        | `mpa_vJan21_CHOCOPhlAnSGB_202103`                                                                                 |
+| FMH FunProfiler | 1.1.1        | KO sketches from [Zenodo record 10045253](https://zenodo.org/records/10045253), scaled 1000 / k=11 and scaled 500 |
+| mi-faser        | 1.64         | `GS-24-all`, shipped inside the mi-faser biocontainer rather than downloaded separately                           |
+| eggNOG-mapper   | 2.1.13       | eggNOG 5.0.2 data directory                                                                                       |
 
 ### HUMANn databases
 
