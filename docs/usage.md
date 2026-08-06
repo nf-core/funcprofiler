@@ -8,6 +8,12 @@
 
 **nf-core/funcprofiler** performs read-based functional profiling of microbiome sequencing data. It requires two input CSV files: a samplesheet describing your samples and a databases sheet describing the profiling databases to use.
 
+## Read preprocessing
+
+The pipeline does no read QC or preprocessing. Reads are expected to arrive already trimmed, quality filtered and host decontaminated.
+
+This is deliberate for v1.0.0. Most users run funcprofiler alongside [nf-core/taxprofiler](https://nf-co.re/taxprofiler), which already covers short-read preprocessing, so the same tool stack is not duplicated here. Adopting the nf-core [`fastq_shortreads_preprocess_qc`](https://nf-co.re/subworkflows/fastq_shortreads_preprocess_qc/) subworkflow is planned for a later release.
+
 ## Samplesheet input
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
@@ -77,6 +83,20 @@ Use the `db_name` column to record the database release or version used for the 
 | `db_entity` | No       | For HUMANn: specifies the component (`humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`). For EggNOG-mapper: `eggnogmapper_db` or `eggnogmapper_data_dir`. |
 | `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                                  |
 | `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                                   |
+
+### Database versions and compatibility
+
+The pipeline passes `db_path` straight to the profiler and never checks it against the tool version, so pairing a database with a compatible tool release is up to you. The versions a run actually used are recorded in `<outdir>/pipeline_info/nf_core_funcprofiler_software_mqc_versions.yml`.
+
+These combinations were exercised on a human gut metagenome cohort during development; RGI, DIAMOND and HUMAnN v4 were only tested against the small CI databases.
+
+| Tool            | Tool version | Database                                                                                                          |
+| --------------- | ------------ | ----------------------------------------------------------------------------------------------------------------- |
+| HUMAnN v3       | 3.6.1        | ChocoPhlAn full `v201901_v31`, UniRef90 `201901b` full, `utility_mapping` full                                    |
+| MetaPhlAn       | 4.0.6        | `mpa_vJan21_CHOCOPhlAnSGB_202103`                                                                                 |
+| FMH FunProfiler | 1.1.1        | KO sketches from [Zenodo record 10045253](https://zenodo.org/records/10045253), scaled 1000 / k=11 and scaled 500 |
+| mi-faser        | 1.64         | `GS-24-all`, shipped inside the mi-faser biocontainer rather than downloaded separately                           |
+| eggNOG-mapper   | 2.1.13       | eggNOG 5.0.2 data directory                                                                                       |
 
 ### HUMANn databases
 

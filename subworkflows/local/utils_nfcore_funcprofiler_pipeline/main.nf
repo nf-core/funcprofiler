@@ -182,9 +182,6 @@ def validateInputSamplesheet(input) {
 // Generate methods description for MultiQC
 //
 def toolCitationText() {
-    // pending fastq_shortreads_preprocess_qc implementation
-    def text_qc = ""
-
     def text_humann = [
         "Functional profiling was performed with",
         params.run_humann_v3 && params.run_humann_v4
@@ -207,7 +204,6 @@ def toolCitationText() {
 
     def citation_text = [
         "Tools used in the workflow included:",
-        !params.skip_preprocessing_qc ? text_qc : "",
         params.run_humann_v3 || params.run_humann_v4 ? text_humann : "",
         params.run_diamond ? text_diamond : "",
         params.run_fmhfunprofiler ? text_fmhfunprofiler : "",
@@ -221,10 +217,6 @@ def toolCitationText() {
 }
 
 def toolBibliographyText() {
-    //
-    //def text_qc = [!params.skip_preprocessing_qc ? "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. Available at: <a href=\"http://www.bioinformatics.babraham.ac.uk/projects/fastqc/\">http://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></li>" : ""].join(' ').trim()
-    def text_qc = "" // pending implementation of fastq_shortreads_preprocess_qc subworkflow
-
     def text_humann = [
         params.run_humann_v3 || params.run_humann_v4 ? "<li>Beghini, F., McIver, L. J., Blanco-M\u00edguez, A., Dubois, L., Asnicar, F., Maharjan, S., Mailyan, A., Thomas, A. M., Manghi, P., Valles-Colomer, M., Weingart, G., Zhang, Y., Zolfo, M., Huttenhower, C., Franzosa, E. A., & Segata, N. (2021). Integrating taxonomic, functional, and strain-level profiling of diverse microbial communities with bioBakery 3. eLife, 10, e65088. <a href=\"https://doi.org/10.7554/eLife.65088\">10.7554/eLife.65088</a></li>" : "",
         params.run_humann_v3 || params.run_humann_v4 ? "<li>Blanco-M\u00edguez, A., Beghini, F., Cumbo, F., McIver, L. J., Thompson, K. N., Zolfo, M., Manghi, P., Dubois, L., Huang, K. D., Thomas, A. M., Nickols, W. A., Piccinno, G., Piperni, E., Pun\u010doch\u00e1\u0159, M., Valles-Colomer, M., Tett, A., Giordano, F., Davies, R., Wolf, J., \u2026 Segata, N. (2023). Extending and improving metagenomic taxonomic profiling with uncharacterized species using MetaPhlAn 4. Nature Biotechnology, 41, 1633\u20131645. <a href=\"https://doi.org/10.1038/s41587-023-01688-w\">10.1038/s41587-023-01688-w</a></li>" : "",
@@ -245,7 +237,6 @@ def toolBibliographyText() {
     def text_rgi = [params.run_rgi ? "<li>Alcock et al. 2023. CARD 2023: expanded curation, support for machine learning, and resistome prediction at the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research<a href = \"https://doi.org/10.1093/molbev/msab293\"<a href=\"https://pubmed.ncbi.nlm.nih.gov/36263822/\">pubmed.ncbi.nlm.nih.gov/36263822</a></li>" : ""].join(' ').trim()
 
     def reference_text = [
-        text_qc,
         text_humann,
         text_eggnggmapper,
         text_rgi,

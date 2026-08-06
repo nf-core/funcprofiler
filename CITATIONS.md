@@ -22,10 +22,6 @@
 
 > Cantalapiedra CP, Hernández-Plaza A, Letunic I, Bork P, Huerta-Cepas J. eggNOG-mapper v2: Functional Annotation, Orthology Assignments, and Domain Prediction at the Metagenomic Scale. Mol Biol Evol. 2021 Dec 9;38(12):5825-5829. doi: 10.1093/molbev/msab293. PubMed PMID: 34597405.
 
-- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-
-> Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
-
 - [fmh-funprofiler](https://pubmed.ncbi.nlm.nih.gov/39230701/)
 
 > Hera MR, Liu S, Wei W, Rodriguez JS, Ma C, Koslicki D. Metagenomic functional profiling: to sketch or not to sketch? Bioinformatics. 2024 Sep 1;40(Suppl 2):ii165-ii173. doi: 10.1093/bioinformatics/btae397. PMID: 39230701; PMCID: PMC11373326.

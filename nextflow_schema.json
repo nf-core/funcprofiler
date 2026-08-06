@@ -60,19 +60,6 @@
                 }
             }
         },
-        "preprocessing_qc_options": {
-            "title": "Preprocessing QC options",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "skip_preprocessing_qc": {
-                    "type": "boolean",
-                    "description": "Skip quality control step when preprocessing",
-                    "help_text": "When True, this won't perform any of the quality control steps in preprocessing, such as discarding low-quality reads."
-                }
-            }
-        },
         "profiling_options": {
             "title": "Profiling options",
             "type": "object",
@@ -268,9 +255,6 @@
     "allOf": [
         {
             "$ref": "#/$defs/input_output_options"
-        },
-        {
-            "$ref": "#/$defs/preprocessing_qc_options"
         },
         {
             "$ref": "#/$defs/profiling_options"
