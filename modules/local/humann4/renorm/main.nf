@@ -1,3 +1,8 @@
+//
+// Local module: there is no nf-core/modules HUMAnN 4 module, because HUMAnN 4 is still an alpha
+// release with no Bioconda package or Biocontainer of its own. The script follows the nf-core
+// humann3 modules; the container is a community build carrying humann 4.0.0.alpha.1.
+//
 process HUMANN4_RENORM {
     tag "${meta.id}"
     label 'process_low'
@@ -28,7 +33,6 @@ process HUMANN4_RENORM {
         ${args}
 
     gzip -n ${prefix}_renorm.tsv
-
     """
 
     stub:
@@ -36,6 +40,5 @@ process HUMANN4_RENORM {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     echo "stub" | gzip > ${prefix}_renorm.tsv.gz
-
     """
 }

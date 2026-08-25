@@ -1,3 +1,11 @@
+//
+// Prepare the databases for profiling.
+//
+// Takes the validated database sheet from PIPELINE_INITIALISATION, drops the rows belonging to
+// profilers that are not enabled, decompresses the TAR archives among the rest, and groups the
+// remaining paths by [ tool, db_name, db_params ] into a Map of `db_entity -> path`. Tools that
+// take a single database leave `db_entity` empty in the sheet and are stored under 'main'.
+//
 include { UNTAR } from '../../../modules/nf-core/untar/main'
 
 workflow DBPREP {

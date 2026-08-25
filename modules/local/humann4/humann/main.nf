@@ -1,4 +1,8 @@
-// Taken 98% from https://github.com/nf-core/modules/pull/1089/files
+//
+// Local module: there is no nf-core/modules HUMAnN 4 module, because HUMAnN 4 is still an alpha
+// release with no Bioconda package or Biocontainer of its own. The script follows the nf-core
+// humann3 modules; the container is a community build carrying humann 4.0.0.alpha.1.
+//
 process HUMANN4 {
     tag "${meta.id}"
     label 'process_high'
@@ -37,7 +41,6 @@ process HUMANN4 {
     cat \$STATIC_CONFIG  | sed "s|utility_mapping = .*|utility_mapping = ${utility_db}|g" > humann.cfg
     export HUMANN_CONFIG=humann.cfg
 
-    find \${NUCS_DB}
     humann \\
         ${args} \\
         --threads ${task.cpus} \\
@@ -46,13 +49,10 @@ process HUMANN4 {
         --nucleotide-database \${NUCS_DB} \\
         --output-basename ${prefix} \\
         ${pangenome_string} \\
-	${args} \\
         --o-log ${prefix}.log \\
         --output .
 
-
     gzip -n *.tsv
-
     """
 
     stub:
