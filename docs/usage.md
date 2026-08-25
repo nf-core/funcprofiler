@@ -6,36 +6,38 @@
 
 ## Introduction
 
-**nf-core/funcprofiler** performs read-based functional profiling of microbiome sequencing data. It requires two input CSV files: a samplesheet describing your samples and a databases sheet describing the profiling databases to use.
+**nf-core/funcprofiler** performs read-based functional profiling of microbiome sequencing data.
+It requires two input CSV files: a samplesheet describing your samples and a databases sheet describing the profiling databases to use.
 
 ## Read preprocessing
 
-The pipeline does no read QC or preprocessing. Reads are expected to arrive already trimmed, quality filtered and host decontaminated.
+The pipeline does not perform read QC or preprocessing!
+Reads are expected to arrive already trimmed, quality filtered and host decontaminated.
 
-This is deliberate for v1.0.0. Most users run funcprofiler alongside [nf-core/taxprofiler](https://nf-co.re/taxprofiler), which already covers short-read preprocessing, so the same tool stack is not duplicated here. Adopting the nf-core [`fastq_shortreads_preprocess_qc`](https://nf-co.re/subworkflows/fastq_shortreads_preprocess_qc/) subworkflow is planned for a later release.
+We recommend users run nf-core/funcprofiler after running [nf-core/taxprofiler](https://nf-co.re/taxprofiler), which already covers short-read preprocessing, and provides complimentary information.
+Adopting the nf-core [`fastq_shortreads_preprocess_qc`](https://nf-co.re/subworkflows/fastq_shortreads_preprocess_qc/) subworkflow is planned for a later release.
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline.
+Use this parameter to specify its location.
+It has to be a comma-separated file with a header row and the columns shown below.
 
 ```bash
 --input '[path to samplesheet file]'
 ```
 
-The samplesheet is a comma-separated file with the following columns:
+| Column                | Required | Description                                                                                                                                            |
+| --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `sample`              | Yes      | Sample name. Rows with the same `sample` name (and different `run_accession`) are merged before profiling.                                             |
+| `run_accession`       | Yes      | Unique run identifier (e.g. `RUN1`, `SRR12345`). Used to distinguish multiple sequencing runs of the same sample.                                      |
+| `instrument_platform` | Yes      | Sequencing platform. Must be one of: `ABI_SOLID`, `BGISEQ`, `CAPILLARY`, `COMPLETE_GENOMICS`, `DNBSEQ`, `HELICOS`, `ILLUMINA`, `ION_TORRENT`, `LS454`. |
+| `fastq_1`             | Yes      | Full path to gzipped already preprocessed FASTQ file for read 1. Must end in `.fastq.gz` or `.fq.gz`.                                                  |
+| `fastq_2`             | No       | Full path to gzipped already preprocessed FASTQ file for read 2 (paired-end only). Leave empty for single-end reads.                                   |
+| `fasta`               | No       | Unused. The column is retained for compatibility with nf-core/taxprofiler samplesheets and must be left empty.                                         |
 
-| Column                | Required | Description                                                                                                       |
-| --------------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
-| `sample`              | Yes      | Sample name. Rows with the same `sample` name (and different `run_accession`) are merged before profiling.        |
-| `run_accession`       | Yes      | Unique run identifier (e.g. `RUN1`, `SRR12345`). Used to distinguish multiple sequencing runs of the same sample. |
-| `instrument_platform` | Yes      | Sequencing platform. Must be one of: `ILLUMINA`, `ION_TORRENT`, `BGISEQ`, `DNBSEQ`, or `LS454`.                   |
-| `fastq_1`             | Yes      | Full path to gzipped FASTQ file for read 1. Must end in `.fastq.gz` or `.fq.gz`.                                  |
-| `fastq_2`             | No       | Full path to gzipped FASTQ file for read 2 (paired-end only). Leave empty for single-end or Nanopore reads.       |
-| `fasta`               | No       | This column is unused, but retained for compatibility with nf-core/taxprofiler.                                   |
-
-:::note
-\* `fastq_1` must be provided for each row! We do **not** support `OXFORD_NANOPORE` or `PACBIO_SMRT` unput platforms, as long reads are incompatible (or at least, require nuanced interpretation) with most of these tools. Similarly, we do not support `fasta` input, as assembly-based pipelines like nf-core/funcscan would be more appropriate.
-:::
+> [!NOTE]
+> `fastq_1` must be provided for each row! We do **not** support `OXFORD_NANOPORE` or `PACBIO_SMRT` platforms, as long reads are incompatible (or at least, require nuanced interpretation) with most of these tools. Similarly, we do not support `fasta` input, as assembly-based pipelines like nf-core/funcscan would be more appropriate.
 
 ### Example samplesheet
 
@@ -46,7 +48,7 @@ SAMPLE1,RUN2,ILLUMINA,/data/sample1_lane2_R1.fastq.gz,/data/sample1_lane2_R2.fas
 SAMPLE2,RUN1,ILLUMINA,/data/sample2_R1.fastq.gz,,
 ```
 
-In this example, `SAMPLE1` has two runs which will be merged before profiling. `SAMPLE2` is single-end short reads. .
+In this example, `SAMPLE1` has two runs which will be merged before profiling. `SAMPLE2` is single-end short reads.
 
 ## Enabling profilers
 
@@ -54,17 +56,16 @@ The pipeline will only run the profilers you explicitly turn on, and for which a
 
 | Flag                   | Profiler        | Status                  |
 | ---------------------- | --------------- | ----------------------- |
-| `--run_humann_v3`      | HUMANn v3       | Available               |
-| `--run_humann_v4`      | HUMANn v4       | Available               |
+| `--run_humann_v3`      | HUMAnN v3       | Available               |
+| `--run_humann_v4`      | HUMAnN v4       | Available               |
 | `--run_fmhfunprofiler` | FMH FunProfiler | Available               |
-| `--run_mifaser`        | mifaser         | Available               |
-| `--run_diamond`        | diamond         | Work in progress / beta |
-| `--run_eggnogmapper`   | EggNOG-mapper   | Work in progress / beta |
+| `--run_mifaser`        | mi-faser        | Available               |
 | `--run_rgi`            | RGI BWT         | Available               |
+| `--run_diamond`        | DIAMOND blastx  | Work in progress / beta |
+| `--run_eggnogmapper`   | eggNOG-mapper   | Work in progress / beta |
 
-:::info
-Each `--run_` flag requires a matching database entry in the `--databases` CSV. Database rows for tools that are not enabled will be ignored.
-:::
+> [!NOTE]
+> Each `--run_` flag requires a matching database entry in the `--databases` CSV. Database rows for tools that are not enabled will be ignored.
 
 ## Databases input
 
@@ -72,21 +73,30 @@ Each `--run_` flag requires a matching database entry in the `--databases` CSV. 
 --databases '[path to databases file]'
 ```
 
-The databases sheet is a comma-separated file that specifies which databases to use for each profiler. Only tools enabled via `--run_<tool>` flags will use the corresponding database entries.
+The databases sheet is a comma-separated file that specifies which databases to use for each profiler.
+Only tools enabled via `--run_<tool>` flags will use the corresponding database entries.
 
 Use the `db_name` column to record the database release or version used for the run, for example `uniref90_v3`, `eggnog_v5`, `card_v3`, or `GS-24-all`.
 
-| Column      | Required | Description                                                                                                                                                                         |
-| ----------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tool`      | Yes      | Profiler name. Must be one of: `humann_v3`, `humann_v4`, `fmhfunprofiler`, `mifaser`, `diamond`, `rgi`, `eggnogmapper`.                                                             |
-| `db_name`   | Yes      | Unique identifier for this database set. All HUMANn database components must share the same `db_name`.                                                                              |
-| `db_entity` | No       | For HUMANn: specifies the component (`humann_metaphlan`, `humann_nucleotide`, `humann_protein`, `humann_utility`). For EggNOG-mapper: `eggnogmapper_db` or `eggnogmapper_data_dir`. |
-| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                                                  |
-| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                                                   |
+| Column      | Required | Description                                                                                                                                                   |
+| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tool`      | Yes      | Profiler name. Must be one of: `humann_v3`, `humann_v4`, `fmhfunprofiler`, `mifaser`, `diamond`, `rgi`, `eggnogmapper`.                                       |
+| `db_name`   | Yes      | Name of the database as a whole, i.e. the release or version you want recorded in the results. All rows belonging to the same database must share this name.  |
+| `db_entity` | No       | Name of an individual component of that database, for the tools that need more than one. Leave empty for tools that take a single database file or directory. |
+| `db_params` | No       | Additional parameters to pass to the profiler (no quotes allowed).                                                                                            |
+| `db_path`   | Yes      | Absolute path to the database file or directory. Gzipped TAR archives (`.tar.gz`) are automatically decompressed.                                             |
+
+> [!IMPORTANT]
+> `db_name` and `db_entity` describe two different levels. `db_name` names the database, `db_entity` names one of its parts.
+> HUMAnN and eggNOG-mapper need several parts, so they take **one row per part**, all sharing the same `db_name` and each naming a different `db_entity`: `humann_metaphlan`, `humann_nucleotide`, `humann_protein` and `humann_utility` for HUMAnN, and `eggnogmapper_db` and `eggnogmapper_data_dir` for eggNOG-mapper.
+> FMH FunProfiler, mi-faser, DIAMOND and RGI take a single database, so they take one row with `db_entity` left empty.
+
+The pipeline checks the database sheet against the enabled profilers before it submits any job, so a missing component fails immediately rather than partway through a run.
 
 ### Database versions and compatibility
 
-The pipeline passes `db_path` straight to the profiler and never checks it against the tool version, so pairing a database with a compatible tool release is up to you. The versions a run actually used are recorded in `<outdir>/pipeline_info/nf_core_funcprofiler_software_mqc_versions.yml`.
+The pipeline passes `db_path` straight to the profiler and never checks it against the tool version, so pairing a database with a compatible tool release is up to you.
+The versions a run actually used are recorded in `<outdir>/pipeline_info/nf_core_funcprofiler_software_mqc_versions.yml`.
 
 These combinations were exercised on a human gut metagenome cohort during development; RGI, DIAMOND and HUMAnN v4 were only tested against the small CI databases.
 
@@ -98,82 +108,77 @@ These combinations were exercised on a human gut metagenome cohort during develo
 | mi-faser        | 1.64         | `GS-24-all`, shipped inside the mi-faser biocontainer rather than downloaded separately                           |
 | eggNOG-mapper   | 2.1.13       | eggNOG 5.0.2 data directory                                                                                       |
 
-### HUMANn databases
+### HUMAnN
 
-HUMANn requires four database components per named database, each as a separate row with the same `db_name`. The example below uses a HUMANn v3-compatible UniRef90 database set; replace `uniref90_v3` with the exact release or version used in your analysis.
-
-```csv
-tool,db_name,db_entity,db_params,db_type,db_path
-humann_v3,uniref90_v3,humann_metaphlan,,,/data/databases/metaphlan_db
-humann_v3,uniref90_v3,humann_nucleotide,,,/data/databases/chocophlan
-humann_v3,uniref90_v3,humann_protein,,,/data/databases/uniref90_diamond
-humann_v3,uniref90_v3,humann_utility,,,/data/databases/utility_mapping
-```
-
-### FMH FunProfiler databases
-
-FMH FunProfiler requires a single sketch database. The example below uses a KEGG-derived sketch database labeled `kegg_v1`; replace this with the exact sketch/database version used in your analysis.
-
-```csv
-tool,db_name,db_entity,db_params,db_type,db_path
-fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
-```
-
-### EggNOG-mapper databases
-
-[EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper) requires two database entries per named database: the search database and the EggNOG data directory. The `db_params` field of the `eggnogmapper_db` row must specify the search mode (e.g. `diamond`, `mmseqs`, `hmmer`). The example below uses an EggNOG v5 database label; replace `eggnog_v5` with the exact EggNOG database release used in your analysis.
-
-:::warning
-EggNOG-mapper support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
-:::
-
-```csv
-tool,db_name,db_entity,db_params,db_type,db_path
-eggnogmapper,eggnog_v5,eggnogmapper_db,diamond,,/data/databases/eggnog_mapper/eggnog_proteins.dmnd
-eggnogmapper,eggnog_v5,eggnogmapper_data_dir,,,/data/databases/eggnog_mapper/data
-```
-
-:::note
-The EggNOG data directory can be downloaded with `download_eggnog_data.py` from the eggnog-mapper package. See the [EggNOG-mapper documentation](https://github.com/eggnogdb/eggnog-mapper/wiki) for details.
-:::
-
-### mi-faser
-
-[mi-faser](https://bromberglab.org/project/mifaser/) performs functional profiling by mapping reads to functional databases at the protein level. It supports both short-read and long-read data. Enable with `--run_mifaser`.
+[HUMAnN](https://huttenhower.sph.harvard.edu/humann/) profiles the abundance of microbial metabolic pathways and gene families, guided by a MetaPhlAn taxonomic profile.
+Enable it with `--run_humann_v3` or `--run_humann_v4`.
 
 #### Database preparation
 
-Download a pre-built mifaser database (e.g. GS-21, GS-24-all, or GS-580) from the [mifaser website](https://bromberglab.org/project/mifaser/). The `db_path` should point to the directory containing the database files and `db_name` should record the downloaded database version.
+HUMAnN requires four database components per named database, each as a separate row with the same `db_name`.
+The ChocoPhlAn nucleotide database, the UniRef protein database and the utility mapping files are downloaded with `humann_databases`, which ships with HUMAnN; the MetaPhlAn marker database is downloaded with `metaphlan --install`.
 
-```csv
-tool,db_name,db_entity,db_params,db_type,db_path
-mifaser,GS-24-all,,,short,/data/databases/mifaser/GS-24-all
+```bash
+humann_databases --download chocophlan full /data/databases
+humann_databases --download uniref uniref90_diamond /data/databases
+humann_databases --download utility_mapping full /data/databases
+metaphlan --install --bowtie2db /data/databases/metaphlan_db
 ```
 
-### Full example databases sheet
-
-This example uses versioned database names to make the database releases traceable in the run outputs. Replace these names and paths with the exact database releases you downloaded.
+See the [HUMAnN documentation](https://github.com/biobakery/humann#5-download-the-databases) for the full list of available releases.
+The example below uses a HUMAnN v3-compatible UniRef90 database set; replace `uniref90_v3` with the exact release or version used in your analysis.
 
 ```csv
-tool,db_name,db_entity,db_params,db_type,db_path
-humann_v3,uniref90_v3,humann_metaphlan,,,/data/databases/metaphlan_db
-humann_v3,uniref90_v3,humann_nucleotide,,,/data/databases/chocophlan
-humann_v3,uniref90_v3,humann_protein,,,/data/databases/uniref90_diamond
-humann_v3,uniref90_v3,humann_utility,,,/data/databases/utility_mapping
-humann_v4,uniref90_v4,humann_metaphlan,,,/data/databases/metaphlan4_db
-humann_v4,uniref90_v4,humann_nucleotide,,,/data/databases/chocophlan_v4
-humann_v4,uniref90_v4,humann_protein,,,/data/databases/uniref90_v4_diamond
-humann_v4,uniref90_v4,humann_utility,,,/data/databases/utility_mapping_v4
-fmhfunprofiler,kegg_v1,,,short;long,/data/databases/fmhfunprofiler_kegg.sig.zip
+tool,db_name,db_entity,db_params,db_path
+humann_v3,uniref90_v3,humann_metaphlan,,/data/databases/metaphlan_db
+humann_v3,uniref90_v3,humann_nucleotide,,/data/databases/chocophlan
+humann_v3,uniref90_v3,humann_protein,,/data/databases/uniref90_diamond
+humann_v3,uniref90_v3,humann_utility,,/data/databases/utility_mapping
+```
+
+### FMH FunProfiler
+
+[FMH FunProfiler](https://github.com/KoslickiLab/fmh-funprofiler) uses FracMinHash sketching to assign reads to KEGG Orthology (KO) categories.
+Enable it with `--run_fmhfunprofiler`.
+
+#### Database preparation
+
+Download a pre-sketched KO database from [Zenodo record 10045253](https://zenodo.org/records/10045253), or build your own sketches with `sourmash sketch` as described in the [FMH FunProfiler README](https://github.com/KoslickiLab/fmh-funprofiler#usage).
+`db_path` points at the `.sig.zip` sketch file.
+
+FMH FunProfiler is the one tool that needs its `db_params` filled in: it takes the k-mer size and the sketch scale of the database, in that order, separated by a space.
+A sketch built at k=11 and scale 1000 therefore needs `11 1000`.
+
+```csv
+tool,db_name,db_entity,db_params,db_path
+fmhfunprofiler,kegg_v1,,11 1000,/data/databases/fmhfunprofiler_kegg.sig.zip
+```
+
+### mi-faser
+
+[mi-faser](https://bromberglab.org/project/mifaser/) performs functional profiling by mapping reads to functional databases at the protein level.
+Enable it with `--run_mifaser`.
+
+#### Database preparation
+
+Download a pre-built mi-faser database (e.g. GS-21, GS-24-all, or GS-580) from the [mi-faser website](https://bromberglab.org/project/mifaser/).
+`db_path` should point to the directory containing the database files, and `db_name` should record the downloaded database version.
+
+```csv
+tool,db_name,db_entity,db_params,db_path
+mifaser,GS-24-all,,,/data/databases/mifaser/GS-24-all
 ```
 
 ### RGI BWT
 
-[RGI](https://card.mcmaster.ca/about) (Resistance Gene Identifier) uses the Comprehensive Antibiotic Resistance Database (CARD) to identify AMR genes. The `bwt` subcommand aligns reads directly to CARD using Bowtie2/BWA. Enable with `--run_rgi`.
+[RGI](https://card.mcmaster.ca/about) (Resistance Gene Identifier) uses the Comprehensive Antibiotic Resistance Database (CARD) to identify AMR genes.
+The `bwt` subcommand aligns reads directly to CARD using Bowtie2/BWA.
+Enable it with `--run_rgi`.
 
 #### Database preparation
 
-Download the CARD database and extract it to a directory. The example CSV below labels the database as `card_v3`; replace this with the exact CARD release used in your analysis.
+Download the CARD database and extract it to a directory.
+The example CSV below labels the database as `card_v3`; replace this with the exact CARD release used in your analysis.
 
 ```bash
 wget https://card.mcmaster.ca/latest/data
@@ -184,25 +189,52 @@ rgi load --card_json card.json --local
 The `db_path` in the databases CSV must point to the directory containing `card.json` and the pre-built CARD annotation files (`card_database_v*.fasta`).
 
 ```csv
-tool,db_name,db_entity,db_params,db_type,db_path
-rgi,card_v3,,,,/data/databases/card
+tool,db_name,db_entity,db_params,db_path
+rgi,card_v3,,,/data/databases/card
 ```
 
-:::note
-Wildcard variant databases are not currently supported by the pipeline. Only the core CARD database is used.
-:::
+> [!NOTE]
+> Wildcard variant databases are not currently supported by the pipeline. Only the core CARD database is used.
 
-### DIAMOND blastx
+### eggNOG-mapper
 
-[DIAMOND](https://github.com/bbuchfink/diamond/wiki/) is a high-throughput sequence aligner for translated (nucleotide-vs-protein) alignment. Enable it with `--run_diamond`.
+[eggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper) assigns functional annotations by mapping sequences to orthologous groups in the eggNOG database.
+Enable it with `--run_eggnogmapper`.
 
-:::warning
-DIAMOND support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
-:::
+> [!WARNING]
+> eggNOG-mapper support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
 
 #### Database preparation
 
-The database supplied in the `--databases` CSV must already be in DIAMOND binary format (`.dmnd`). Build it from a versioned protein FASTA using `diamond makedb`, and use `db_name` to record the source database and release.
+eggNOG-mapper requires two rows per named database: the search database (`eggnogmapper_db`) and the eggNOG data directory (`eggnogmapper_data_dir`).
+Both are downloaded with `download_eggnog_data.py`, which ships with the eggnog-mapper package; see the [eggNOG-mapper wiki](https://github.com/eggnogdb/eggnog-mapper/wiki) for the available releases.
+
+```bash
+download_eggnog_data.py --data_dir /data/databases/eggnog_mapper/data -P
+create_dbs.py -m diamond --dbname eggnog_proteins --data_dir /data/databases/eggnog_mapper
+```
+
+The `db_params` field of the `eggnogmapper_db` row must specify the search mode (e.g. `diamond`, `mmseqs`, `hmmer`).
+The example below uses an eggNOG v5 database label; replace `eggnog_v5` with the exact eggNOG database release used in your analysis.
+
+```csv
+tool,db_name,db_entity,db_params,db_path
+eggnogmapper,eggnog_v5,eggnogmapper_db,diamond,/data/databases/eggnog_mapper/eggnog_proteins.dmnd
+eggnogmapper,eggnog_v5,eggnogmapper_data_dir,,/data/databases/eggnog_mapper/data
+```
+
+### DIAMOND blastx
+
+[DIAMOND](https://github.com/bbuchfink/diamond/wiki/) is a high-throughput sequence aligner for translated (nucleotide-vs-protein) alignment.
+Enable it with `--run_diamond`.
+
+> [!WARNING]
+> DIAMOND support is currently in beta and should be treated as work in progress. Database handling, output behavior, and downstream reporting are still being validated in the full pipeline, so use with caution and independently review results before production use or interpretation.
+
+#### Database preparation
+
+The database supplied in the `--databases` CSV must already be in DIAMOND binary format (`.dmnd`).
+Build it from a versioned protein FASTA using `diamond makedb`, and use `db_name` to record the source database and release.
 
 ```bash
 diamond makedb --in proteins.faa --db proteins
@@ -211,9 +243,36 @@ diamond makedb --in proteins.faa --db proteins
 
 See the [DIAMOND makedb documentation](https://github.com/bbuchfink/diamond/wiki/3.-Command-line-options#makedb-options) for all available options (e.g. adding taxonomy, setting block size).
 
-:::warning
-The path should point to the **directory** containing the `.dmnd` file, not the file itself. The pipeline will automatically locate the `.dmnd` file within that directory.
-:::
+```csv
+tool,db_name,db_entity,db_params,db_path
+diamond,uniref90_v3,,,/data/databases/diamond
+```
+
+> [!WARNING]
+> The path should point to the **directory** containing the `.dmnd` file, not the file itself. The pipeline will automatically locate the `.dmnd` file within that directory.
+
+### Full example databases sheet
+
+This example uses versioned database names to make the database releases traceable in the run outputs.
+Replace these names and paths with the exact database releases you downloaded.
+
+```csv
+tool,db_name,db_entity,db_params,db_path
+humann_v3,uniref90_v3,humann_metaphlan,,/data/databases/metaphlan_db
+humann_v3,uniref90_v3,humann_nucleotide,,/data/databases/chocophlan
+humann_v3,uniref90_v3,humann_protein,,/data/databases/uniref90_diamond
+humann_v3,uniref90_v3,humann_utility,,/data/databases/utility_mapping
+humann_v4,uniref90_v4,humann_metaphlan,,/data/databases/metaphlan4_db
+humann_v4,uniref90_v4,humann_nucleotide,,/data/databases/chocophlan_v4
+humann_v4,uniref90_v4,humann_protein,,/data/databases/uniref90_v4_diamond
+humann_v4,uniref90_v4,humann_utility,,/data/databases/utility_mapping_v4
+fmhfunprofiler,kegg_v1,,11 1000,/data/databases/fmhfunprofiler_kegg.sig.zip
+mifaser,GS-24-all,,,/data/databases/mifaser/GS-24-all
+rgi,card_v3,,,/data/databases/card
+eggnogmapper,eggnog_v5,eggnogmapper_db,diamond,/data/databases/eggnog_mapper/eggnog_proteins.dmnd
+eggnogmapper,eggnog_v5,eggnogmapper_data_dir,,/data/databases/eggnog_mapper/data
+diamond,uniref90_v3,,,/data/databases/diamond
+```
 
 ## Running the pipeline
 
@@ -246,9 +305,8 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
-:::warning
-Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
-:::
+> [!WARNING]
+> Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
 
 The above pipeline run specified with a params file in yaml format:
 
@@ -285,15 +343,13 @@ This version number will be logged in reports when you run the pipeline, so that
 
 To further assist in reproducibility, you can use share and reuse [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
-:::tip
-If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
-:::
+> [!TIP]
+> If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
 
 ## Core Nextflow arguments
 
-:::note
-These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen)
-:::
+> [!NOTE]
+> These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen)
 
 ### `-profile`
 
@@ -301,9 +357,8 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
 
-:::warning
-We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
-:::
+> [!WARNING]
+> We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
 
 The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to check if your system is supported, please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
 

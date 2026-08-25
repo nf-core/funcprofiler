@@ -21,7 +21,7 @@
 
 ## Introduction
 
-**nf-core/funcprofiler** is a bioinformatics pipeline for read-based functional profiling of microbiome sequencing data. It accepts short-read (Illumina) and long-read (Oxford Nanopore) FASTQ files and runs one or more functional profilers against user-supplied databases, producing gene family abundances, pathway abundances, pathway coverages, and antimicrobial resistance profiles.
+**nf-core/funcprofiler** is a bioinformatics pipeline for read-based functional profiling of microbiome sequencing data. It accepts already preprocessed short-read FASTQ files and runs one or more functional profilers against user-supplied databases, producing gene family abundances, pathway abundances, pathway coverages, and antimicrobial resistance profiles. Long-read platforms are not supported in this release.
 
 ### Pipeline Summary
 
@@ -52,21 +52,21 @@ First, prepare a samplesheet with your input data:
 ```csv
 sample,run_accession,instrument_platform,fastq_1,fastq_2,fasta
 SAMPLE1,RUN1,ILLUMINA,/path/to/sample1_R1.fastq.gz,/path/to/sample1_R2.fastq.gz,
-SAMPLE2,RUN1,OXFORD_NANOPORE,/path/to/sample2.fastq.gz,,
+SAMPLE2,RUN1,ILLUMINA,/path/to/sample2.fastq.gz,,
 ```
 
-Each row represents a sequencing run. Multiple rows with the same `sample` and different `run_accession` values will be merged before profiling.
+Each row represents a sequencing run. Multiple rows with the same `sample` and different `run_accession` values will be merged before profiling. Reads are expected to arrive already preprocessed: the pipeline performs no read QC, trimming or host decontamination.
 
 Then prepare a databases sheet — see [docs/usage.md](docs/usage.md) for the full format. Here is an abbreviated example for running HUMANn (which requires 4 databases):
 
 `databases.csv`
 
 ```csv
-tool,db_name,db_entity,db_params,db_type,db_path
-humann_v3,uniref90_v3,humann_metaphlan,,,/data/databases/metaphlan_db
-humann_v3,uniref90_v3,humann_nucleotide,,,/data/databases/chocophlan
-humann_v3,uniref90_v3,humann_protein,,,/data/databases/uniref90_diamond
-humann_v3,uniref90_v3,humann_utility,,,/data/databases/utility_mapping
+tool,db_name,db_entity,db_params,db_path
+humann_v3,uniref90_v3,humann_metaphlan,,/data/databases/metaphlan_db
+humann_v3,uniref90_v3,humann_nucleotide,,/data/databases/chocophlan
+humann_v3,uniref90_v3,humann_protein,,/data/databases/uniref90_diamond
+humann_v3,uniref90_v3,humann_utility,,/data/databases/utility_mapping
 ```
 
 Now, you can run the pipeline using:

@@ -20,7 +20,7 @@
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 6 columns ( `sample`, `run_accession`, `instrument_platform`, `fastq_1`, `fastq_2`, `fasta`), and a header row. We utilize the same input style as nf-core/taxprofiler, with 2 main difference: long-read platforms are not supported, nor is `fasta` input. Otherwise, see [usage docs](https://nf-co.re/taxprofiler/usage#samplesheet-input).",
+                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 6 columns (`sample`, `run_accession`, `instrument_platform`, `fastq_1`, `fastq_2`, `fasta`), and a header row. We utilise the same input style as nf-core/taxprofiler, with 2 main differences: long-read platforms are not supported, nor is `fasta` input. See [usage docs](https://nf-co.re/funcprofiler/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "databases": {
@@ -32,7 +32,7 @@
                     "pattern": "^\\S+\\.csv$",
                     "fa_icon": "fas fa-database",
                     "description": "Path to comma-separated file containing information about databases and profiling parameters for each taxonomic profiler",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 5 columns (`tool`, `db_name`, `db_entity`, `db_params`, `db_path`), and a header row. See [usage docs](https://nf-co.re/funcprofiler/dev/usage#full-database-sheet).\n\nProfilers will only be executed if a corresponding  database are supplied. \n\n As with taxprofiler, we recommend storing this database sheet somewhere centrally and accessible by others members of your lab/institutions, as this file will likely be regularly reused."
+                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 5 columns (`tool`, `db_name`, `db_entity`, `db_params`, `db_path`), and a header row. See [usage docs](https://nf-co.re/funcprofiler/dev/usage#full-database-sheet).\n\nProfilers will only be executed if a corresponding database are supplied. \n\n As with taxprofiler, we recommend storing this database sheet somewhere centrally and accessible by others members of your lab/institutions, as this file will likely be regularly reused."
                 },
                 "save_untarred_databases": {
                     "type": "boolean",
@@ -69,35 +69,37 @@
                 "run_fmhfunprofiler": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toggle-on",
-                    "description": "Turn on profiling with fmhfunprofiler; Requires database to be present CSV file passed to --databases"
+                    "description": "Turn on profiling with FMH FunProfiler. Requires a `fmhfunprofiler`-tagged database to be present in the CSV file passed to --databases"
                 },
                 "run_humann_v3": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toggle-on",
-                    "description": "Turn on profiling with HUMAnN3. Requires `humann_v3`-tagged database to be present CSV file passed to --databases"
+                    "description": "Turn on profiling with HUMAnN3. Requires a `humann_v3`-tagged database to be present in the CSV file passed to --databases"
                 },
                 "run_humann_v4": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toggle-on",
-                    "description": "Turn on profiling with HUMAnN4. Requires `humann_v4`-tagged database to be present CSV file passed to --databases"
+                    "description": "Turn on profiling with HUMAnN4. Requires a `humann_v4`-tagged database to be present in the CSV file passed to --databases"
                 },
                 "run_diamond": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toggle-on",
-                    "description": "Turn on translated alignment with DIAMOND blastx. Requires a .dmnd database to be present in the CSV file passed to --databases"
+                    "description": "Turn on translated alignment with DIAMOND blastx. Requires a `diamond`-tagged database to be present in the CSV file passed to --databases"
                 },
                 "run_rgi": {
                     "type": "boolean",
-                    "description": "Turn on profiling with RGI. Requires database to be present CSV file passed to --databases"
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on profiling with RGI. Requires a `rgi`-tagged database to be present in the CSV file passed to --databases"
                 },
                 "run_mifaser": {
                     "type": "boolean",
-                    "description": "Turn on profiling with mi-faser. Requires database to be present CSV file passed to --databases"
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on profiling with mi-faser. Requires a `mifaser`-tagged database to be present in the CSV file passed to --databases"
                 },
                 "run_eggnogmapper": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toggle-on",
-                    "description": "Turn on functional annotation with EggNOG-mapper. Requires `eggnogmapper`-tagged database entries in the CSV file passed to --databases"
+                    "description": "Turn on functional annotation with eggNOG-mapper. Requires `eggnogmapper`-tagged database entries to be present in the CSV file passed to --databases"
                 }
             }
         },
