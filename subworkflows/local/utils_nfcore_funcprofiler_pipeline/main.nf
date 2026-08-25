@@ -68,7 +68,7 @@ workflow PIPELINE_INITIALISATION {
     https://doi.org/10.1038/s41587-020-0439-x
 
 * Software dependencies
-    https://github.com/nf-core/funcprofiler/blob/master/CITATIONS.md
+    https://github.com/nf-core/funcprofiler/blob/main/CITATIONS.md
 """
     command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
     //
@@ -97,20 +97,27 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
-
-    Channel
+    // Rows are validated and turned into their final [ meta, [ reads ] ] form here, so that
+    // a malformed samplesheet aborts the run before any task is submitted.
+    //
+    ch_samplesheet = channel
         .fromList(samplesheetToList(params.input, "assets/schema_input.json"))
-        .set { ch_samplesheet }
+        .map { meta, run_accession, instrument_platform, fastq_1, fastq_2, fasta ->
+            validateInputSamplesheet(meta, run_accession, instrument_platform, fastq_1, fastq_2, fasta)
+        }
 
     //
     // Create channel from databases file provided through params.databases
     //
-    Channel
-        .fromList(samplesheetToList(params.databases, "assets/schema_database.json"))
-        .set { ch_databases }
+    // The list is materialised before it becomes a channel so that the database sheet can be
+    // checked against the enabled profilers up front rather than partway through the run.
+    //
+    def databases_list = samplesheetToList(params.databases, "assets/schema_database.json")
+    validateProfilerDatabases(databases_list)
+    ch_databases = channel.fromList(databases_list)
 
     emit:
-    samplesheet = ch_samplesheet
+    reads = ch_samplesheet
     databases = ch_databases
     versions = ch_versions
 }
@@ -164,18 +171,83 @@ workflow PIPELINE_COMPLETION {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-// Validate channels from input samplesheet
+// Validate one samplesheet row and build the meta map the rest of the pipeline uses.
 //
-def validateInputSamplesheet(input) {
-    def (metas, fastqs, fasta) = input[1..3]
-
-    // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect { meta -> meta.single_end }.unique().size == 1
-    if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
+// The sample name, run accession, instrument platform and FASTQ paths are already checked by
+// `assets/schema_input.json`, which also rejects the long-read platforms the profilers cannot
+// handle. Only the FastA column needs checking here, because JSON schema cannot express
+// "this column exists for nf-core/taxprofiler compatibility but must be left empty".
+//
+def validateInputSamplesheet(meta, run_accession, instrument_platform, fastq_1, fastq_2, fasta) {
+    if (fasta) {
+        error("Please check input samplesheet: FastA input is not supported, supply FastQ reads instead (sample: ${meta.id}).")
     }
 
-    return [metas[0], fastqs, fasta]
+    meta.single_end = !fastq_2
+    meta.run_accession = run_accession
+    meta.instrument_platform = instrument_platform
+
+    return [meta, fastq_2 ? [fastq_1, fastq_2] : [fastq_1]]
+}
+
+//
+// The database components each profiler needs, as `db_entity` names. Tools that take a single
+// database file or directory leave `db_entity` empty, which DBPREP stores as the 'main' entity.
+//
+def profilerDatabaseEntities() {
+    return [
+        'humann_v3': ['humann_metaphlan', 'humann_nucleotide', 'humann_protein', 'humann_utility'],
+        'humann_v4': ['humann_metaphlan', 'humann_nucleotide', 'humann_protein', 'humann_utility'],
+        'eggnogmapper': ['eggnogmapper_db', 'eggnogmapper_data_dir'],
+        'fmhfunprofiler': ['main'],
+        'mifaser': ['main'],
+        'diamond': ['main'],
+        'rgi': ['main'],
+    ]
+}
+
+//
+// Check that every enabled profiler has a complete database in the database sheet.
+//
+// Without this the pipeline starts, runs whatever else is enabled, and only fails once the
+// incomplete database reaches the profiler, so it is done here before any task is submitted.
+//
+def validateProfilerDatabases(databases) {
+    def entities_by_db = [:]
+    databases.each { db_meta, _db_path ->
+        def key = [db_meta.tool, db_meta.db_name]
+        entities_by_db[key] = (entities_by_db[key] ?: [] as Set) + [db_meta.db_entity ?: 'main']
+    }
+
+    profilerDatabaseEntities().each { tool, required_entities ->
+        if (!params["run_${tool}"]) {
+            return
+        }
+
+        def dbs_for_tool = entities_by_db.findAll { key, _entities -> key[0] == tool }
+        if (!dbs_for_tool) {
+            error("--run_${tool} is set but the database sheet '${params.databases}' has no row with tool '${tool}'.")
+        }
+
+        dbs_for_tool.each { key, entities ->
+            def missing = required_entities - entities
+            if (missing) {
+                error("Database '${key[1]}' for --run_${tool} is missing required db_entity row(s): ${missing.join(', ')}.")
+            }
+        }
+    }
+
+    // fmh-funprofiler reads its k-mer size and sketch scale out of db_params at runtime
+    if (params.run_fmhfunprofiler) {
+        databases
+            .findAll { db_meta, _db_path -> db_meta.tool == 'fmhfunprofiler' }
+            .each { db_meta, _db_path ->
+                def db_params = (db_meta.db_params ?: '').trim().split(/\s+/).findAll { arg -> arg }
+                if (db_params.size() != 2) {
+                    error("fmhfunprofiler database '${db_meta.db_name}' must set db_params to two integers (k-mer size and sketch scale), but got '${db_meta.db_params}'.")
+                }
+            }
+    }
 }
 
 //

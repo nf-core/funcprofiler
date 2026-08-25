@@ -49,19 +49,15 @@ workflow PROFILE {
     ch_input_for_mifaser = prepareInputs(reads_concat, databases, 'mifaser', true)
 
     if (params.run_fmhfunprofiler) {
-        // this tool needs the db_params at runtime, so it takes a [[meta], path] tuple instead of just a path
-        getDbPath(ch_input_for_fmhfunprofiler.db, "main", true)
+        // this tool needs the db_params at runtime, so it takes a [[meta], path] tuple instead of just a path.
+        // db_params is checked for its two integers by validateProfilerDatabases() at pipeline initialisation.
+        fmh_db = getDbPath(ch_input_for_fmhfunprofiler.db, "main", true)
             .multiMap { db_meta, db_path ->
                 def args = db_meta.db_params.split(" ")
-
-                if (args.size() != 2) {
-                    throw new IllegalArgumentException("fmh-funcprofiler's db_params must be configured with 2 ints (kmer and sketch db args) , but got ${args.size()}:  ${db_meta.db_params}")
-                }
                 db_path: db_path
                 kmer: args[0]
                 sketch: args[1]
             }
-            .set { fmh_db }
         FMHFUNPROFILER(
             ch_input_for_fmhfunprofiler.reads,
             fmh_db.db_path,
@@ -71,7 +67,6 @@ workflow PROFILE {
         ch_raw_profiles = ch_raw_profiles.mix(FMHFUNPROFILER.out.csv)
     }
     if (params.run_mifaser) {
-        ch_input_for_mifaser = prepareInputs(reads_concat, databases, 'mifaser', true)
         MIFASER(ch_input_for_mifaser.reads, getDbPath(ch_input_for_mifaser.db, 'main'))
         ch_raw_profiles = ch_raw_profiles.mix(MIFASER.out.ec_counts)
     }
@@ -98,7 +93,7 @@ workflow PROFILE {
             .mix(HUMANN3_HUMANN.out.pathabundance)
             .mix(HUMANN3_HUMANN.out.genefamilies)
             .mix(HUMANN3_HUMANN.out.pathcoverage)
-	    .mix(HUMANN3_REGROUP.out.regroup)
+            .mix(HUMANN3_REGROUP.out.regroup)
     }
     if (params.run_humann_v4) {
         MPAHUMANN4(
@@ -106,9 +101,8 @@ workflow PROFILE {
             getDbPath(ch_input_for_humann_v4.db, 'humann_metaphlan'),
             false,
         )
-        ch_humann4_input = ch_input_for_humann_v4.reads.join(MPAHUMANN4.out.profile, by: 0)
         // Join on meta map
-
+        ch_humann4_input = ch_input_for_humann_v4.reads.join(MPAHUMANN4.out.profile, by: 0)
         HUMANN4(
             ch_humann4_input.map { it -> [it[0], it[1]] },
             ch_humann4_input.map { it -> [it[0], it[2]] },
@@ -121,7 +115,7 @@ workflow PROFILE {
             .mix(HUMANN4.out.pathabundance)
             .mix(HUMANN4.out.genefamilies)
             .mix(HUMANN4.out.reactions)
-	    .mix(HUMANN4_REGROUP.out.regroup)
+            .mix(HUMANN4_REGROUP.out.regroup)
     }
 
     if (params.run_diamond) {
@@ -175,16 +169,10 @@ workflow TEST_PREPAREINPUTS_WRAPPER {
 
 // Custom Functions
 
-/**
-* Combine profiles with their original database, then separate into two channels.
-*
-* The channel elements are assumed to be tuples one of [ meta, profile ], and the
-* database to be of [db_key, meta, database_file].
-*
-* @param ch_profile A channel containing a meta and the profiling report of a given profiler
-* @param ch_database A channel containing a key, the database meta, and the database file/folders itself
-* @return A multiMap'ed output channel with two sub channels, one with the profile and the other with the db
-*/
+//
+// Make a string safe to use as a channel element id: underscores and whitespace to hyphens,
+// anything else that is not a word character or a dot dropped, runs of hyphens collapsed.
+//
 def sanitizeId(str) {
     return str
         .toString()
@@ -194,20 +182,18 @@ def sanitizeId(str) {
         .replaceAll(/[^\w\-.]/, '')
         .replaceAll(/-+/, '-')
 }
+
+/**
+* Combine a reads channel with the databases of one tool, and split the result into the two
+* channels a profiler module takes, keeping their element order in sync.
+*
+* @param pairedreads A channel of [ meta, [ reads ] ]
+* @param databases A channel of [ db_meta, [ db_file ] ], as emitted by DBPREP
+* @param tool_name Only databases with this `tool` are used
+* @param singleFqTool True for tools that take a single FASTQ, i.e. that are fed reads_concat
+* @return A multiMap'ed channel with a `.reads` and a `.db` sub-channel
+*/
 def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
-    /*
-        COMBINE READS WITH DATABASES - GROUPED BY TOOL, VERSION, AND PARAMS
-
-        Input:
-        - pairedreads: channel of [meta, [reads]]
-        - databases: channel of [meta_db, file]
-        - tool_name: string - filter databases to only this tool (e.g., 'humann_v3', 'rgi')
-        - singleFqTool: boolean - if true, reads need concatenation for PE samples
-
-        Output:
-        - channel of [meta_sample, reads, meta_db_grouped, db_files_map]
-          where each sample has entries for the specified tool
-    */
     // Step 1: Filter databases to only the requested tool, then group by db_name and db_params
     def ch_dbs_grouped = databases
         .flatMap { meta_db, file_list ->
@@ -280,23 +266,30 @@ def prepareInputs(pairedreads, databases, tool_name, singleFqTool = false) {
     return result
 }
 
+/**
+* Pull one component out of a grouped database.
+*
+* DBPREP hands each tool its database as a Map of `db_entity -> path`, keyed by the `db_entity`
+* column of the database sheet. Tools that take a single database file or directory leave that
+* column empty and DBPREP stores it under 'main'; HUMAnN and eggNOG-mapper need several
+* components and address them by name.
+*
+* Which components each profiler requires is checked by validateProfilerDatabases() at pipeline
+* initialisation. The error below is only a backstop, so that a missing entity fails loudly here
+* rather than reaching the module as a null path.
+*
+* @param groupeddb A channel of [ db_meta, Map[db_entity -> path] ], as emitted by DBPREP
+* @param entity The db_entity to look up
+* @param asTuple Return [ db_meta, path ] instead of just the path, for tools that need db_params
+* @return A channel of the requested database path, or of [ db_meta, path ]
+*/
 def getDbPath(groupeddb, entity = 'main', asTuple = false) {
-    // Extract the relevant database file path by entity key from the files map
-    def dbpath = groupeddb.map { meta_db, files_map ->
-        // files_map is now a Map[entity -> db_path], so direct lookup
+    return groupeddb.map { meta_db, files_map ->
         if (!files_map.containsKey(entity)) {
             error("No entity '${entity}' file found in database ${meta_db.id}")
         }
 
         def db_path = files_map[entity]
-        // Direct access to path
-
-        if (asTuple) {
-            return [meta_db, db_path]
-        }
-        else {
-            return db_path
-        }
+        asTuple ? [meta_db, db_path] : db_path
     }
-    return dbpath
 }

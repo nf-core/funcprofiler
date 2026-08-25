@@ -8,9 +8,9 @@ include { paramsSummaryMap } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_funcprofiler_pipeline'
-
-
-
+include { DATAPREP } from '../subworkflows/local/dataprep/main'
+include { DBPREP } from '../subworkflows/local/dbprep/main'
+include { PROFILE } from '../subworkflows/local/profile/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,34 +18,9 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_func
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-
-
-
-//
-// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT NF-CORE MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// MODULE: Installed directly from nf-core/modules
-//
-include { UNTAR } from '../modules/nf-core/untar/main'
-include { PROFILE } from '../subworkflows/local/profile/main'
-include { DATAPREP } from '../subworkflows/local/dataprep/main'
-include { DBPREP } from '../subworkflows/local/dbprep/main'
-
-
-
-
 workflow FUNCPROFILER {
     take:
-    samplesheet // channel: samplesheet read in from --input
+    reads // channel: validated reads read in from --input
     databases // channel: databases from --databases
     multiqc_config
     multiqc_logo
@@ -58,7 +33,7 @@ workflow FUNCPROFILER {
     ch_multiqc_files = Channel.empty()
 
     DATAPREP(
-        samplesheet
+        reads
     )
 
     DBPREP(

@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/funcprofiler/master/assets/schema_input.json",
+    "$id": "https://raw.githubusercontent.com/nf-core/funcprofiler/main/assets/schema_input.json",
     "title": "nf-core/funcprofiler pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
     "type": "array",
@@ -29,11 +29,9 @@
                     "HELICOS",
                     "ILLUMINA",
                     "ION_TORRENT",
-                    "LS454",
-                    "OXFORD_NANOPORE",
-                    "PACBIO_SMRT"
+                    "LS454"
                 ],
-                "errorMessage": "Sequencing platform must be provided."
+                "errorMessage": "Sequencing platform must be provided. Long-read platforms (OXFORD_NANOPORE, PACBIO_SMRT) are not supported."
             },
             "fastq_1": {
                 "type": "string",
@@ -54,10 +52,10 @@
                 "exists": true,
                 "format": "file-path",
                 "pattern": "^\\S+\\.(fasta|fas|fna|fa)\\.gz?$",
-                "errorMessage": "Gzipped FastA file must be provided, cannot contain spaces and must have extension '.fa.gz', 'fna.gz', 'fas.gz', or '.fasta.gz'. If not applicable, leave it empty."
+                "errorMessage": "FastA input is not supported by nf-core/funcprofiler. The column is accepted for compatibility with nf-core/taxprofiler samplesheets, but must be left empty."
             }
         },
-        "required": ["sample", "run_accession", "instrument_platform"]
+        "required": ["sample", "run_accession", "instrument_platform", "fastq_1"]
     },
     "allOf": [
         { "uniqueEntries": ["fastq_1"] },

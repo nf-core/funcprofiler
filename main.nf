@@ -30,7 +30,7 @@ include { PIPELINE_COMPLETION } from './subworkflows/local/utils_nfcore_funcprof
 //
 workflow NFCORE_FUNCPROFILER {
     take:
-    samplesheet // channel: samplesheet read in from --input
+    reads // channel: validated reads read in from --input
     databases // channel: databases in from --databases
 
     main:
@@ -39,7 +39,7 @@ workflow NFCORE_FUNCPROFILER {
     // WORKFLOW: Run pipeline
     //
     FUNCPROFILER(
-        samplesheet,
+        reads,
         databases,
         params.multiqc_config,
         params.multiqc_logo,
@@ -77,7 +77,7 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCORE_FUNCPROFILER(
-        PIPELINE_INITIALISATION.out.samplesheet,
+        PIPELINE_INITIALISATION.out.reads,
         PIPELINE_INITIALISATION.out.databases,
     )
     //
