@@ -43,6 +43,9 @@ runs:
       if: contains(inputs.profile, 'singularity')
       shell: bash
       run: |
+        # The runner image restricts unprivileged user namespaces, which non-suid
+        # apptainer needs to start a container at all.
+        sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
         mkdir -p $NXF_SINGULARITY_CACHEDIR
         mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 
@@ -53,7 +56,7 @@ runs:
         auto-update-conda: true
         conda-solver: libmamba
         channels: conda-forge
-        channel-priority: strict
+        channel-priority: flexible
         conda-remove-defaults: true
 
     - name: Run nf-test

@@ -44,6 +44,9 @@
                     "@id": "modules/"
                 },
                 {
+                    "@id": "modules/local/"
+                },
+                {
                     "@id": "modules/nf-core/"
                 },
                 {
@@ -121,8 +124,21 @@
         },
         {
             "@id": "main.nf",
-            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
-            "contributor": [
+            "@type": [
+                "File",
+                "SoftwareSourceCode",
+                "ComputationalWorkflow"
+            ],
+            "author": [
+                {
+                    "@id": "#02abcbb1-966b-4c2b-9848-c2ef3c65726e"
+                },
+                {
+                    "@id": "#865c248f-67f4-474a-9f1e-8f4ff51cffab"
+                },
+                {
+                    "@id": "#f74f489b-c4bb-4bb1-8e43-fdde330df31c"
+                },
                 {
                     "@id": "#7afafb31-7939-4b51-8cca-c73ca161e3e7"
                 },
@@ -139,17 +155,43 @@
             "dateCreated": "",
             "dateModified": "2026-09-01T12:58:14Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
-            "keywords": ["nf-core", "nextflow"],
-            "license": ["MIT"],
-            "name": ["nf-core/funcprofiler"],
+            "keywords": [
+                "nf-core",
+                "nextflow"
+            ],
+            "license": [
+                "MIT"
+            ],
+            "maintainer": [
+                {
+                    "@id": "#02abcbb1-966b-4c2b-9848-c2ef3c65726e"
+                },
+                {
+                    "@id": "#865c248f-67f4-474a-9f1e-8f4ff51cffab"
+                },
+                {
+                    "@id": "#f74f489b-c4bb-4bb1-8e43-fdde330df31c"
+                },
+                {
+                    "@id": "#3f3b690c-5064-46b9-82c3-50d9a35a4502"
+                }
+            ],
+            "name": [
+                "nf-core/funcprofiler"
+            ],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
             "sdPublisher": {
                 "@id": "https://nf-co.re/"
             },
-            "url": ["https://github.com/nf-core/funcprofiler", "https://nf-co.re/funcprofiler/1.0.0/"],
-            "version": ["1.0.0"]
+            "url": [
+                "https://github.com/nf-core/funcprofiler",
+                "https://nf-co.re/funcprofiler/1.0.0/"
+            ],
+            "version": [
+                "1.0.0"
+            ]
         },
         {
             "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
@@ -218,6 +260,11 @@
             "@id": "modules/",
             "@type": "Dataset",
             "description": "Modules used by the pipeline"
+        },
+        {
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
         },
         {
             "@id": "modules/nf-core/",
@@ -306,25 +353,36 @@
             "url": "https://nf-co.re/"
         },
         {
-            "@id": "#7afafb31-7939-4b51-8cca-c73ca161e3e7",
+            "@id": "#02abcbb1-966b-4c2b-9848-c2ef3c65726e",
             "@type": "Person",
-            "email": "nickp60@users.noreply.github.com",
-            "name": "Nick Waters"
+            "affiliation": "MSKCC",
+            "email": "nickp60@gmail.com",
+            "name": "Nick Waters",
+            "url": "https://github.com/nickp60"
         },
         {
-            "@id": "#c7756996-91be-4b50-92a0-394343896060",
+            "@id": "#865c248f-67f4-474a-9f1e-8f4ff51cffab",
             "@type": "Person",
-            "name": "Vini Salazar"
+            "affiliation": "University of Melbourne",
+            "email": "17276653+vinisalazar@users.noreply.github.com",
+            "name": "Vini Salazar",
+            "url": "https://github.com/vinisalazar"
         },
         {
-            "@id": "#66641cd0-9bcf-4871-bb16-e25bd870088a",
+            "@id": "#f74f489b-c4bb-4bb1-8e43-fdde330df31c",
             "@type": "Person",
-            "name": "Yixuan Yang"
+            "affiliation": "MSKCC",
+            "email": "miraep8@gmail.com",
+            "name": "Mirae B",
+            "url": "https://github.com/miraep8"
         },
         {
-            "@id": "https://orcid.org/0000-0002-4219-9076",
+            "@id": "#3f3b690c-5064-46b9-82c3-50d9a35a4502",
             "@type": "Person",
-            "name": "Mirae Baichoo"
+            "affiliation": "NC State",
+            "email": "yyang55@ncsu.edu",
+            "name": "Yixuan Yang",
+            "url": "https://github.com/Yixuan39"
         }
     ]
 }

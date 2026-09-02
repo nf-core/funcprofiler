@@ -7,4 +7,12 @@ testing/
 testing*
 *.pyc
 null/
+*~
+.nf-test/
+.nf-test.log
+dontcommit
+tmp/
+.data/
+*.code-workspace
 .lineage/
+conf/tmp.config
