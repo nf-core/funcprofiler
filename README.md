@@ -93,7 +93,7 @@ For more details about the output files and reports, please refer to the
 
 ## Credits
 
-nf-core/funcprofiler was written by Nick Waters, Vini Salazar, Yixuan Yang, Mirae Baichoo.
+nf-core/funcprofiler was originally written by Nick Waters, Vini Salazar, Yixuan Yang, Mirae Baichoo.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 

@@ -24,7 +24,7 @@
                 [
                     "PROFILE:RGI_BWT",
                     "kma",
-                    "KMA-1.6.11"
+                    "1.6.11"
                 ],
                 [
                     "PROFILE:RGI_BWT",
@@ -38,7 +38,7 @@
                 ]
             ]
         ],
-        "timestamp": "2026-08-04T15:13:38.986799",
+        "timestamp": "2026-09-02T16:52:53.96173",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
