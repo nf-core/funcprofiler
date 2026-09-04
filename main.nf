@@ -15,21 +15,9 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { FUNCPROFILER  } from './workflows/funcprofiler'
+include { FUNCPROFILER } from './workflows/funcprofiler'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_funcprofiler_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_funcprofiler_pipeline'
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_funcprofiler_pipeline'
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// TODO nf-core: Remove this line if you don't need a FASTA file
-//   This is an example of how to use getGenomeAttribute() to fetch parameters
-//   from igenomes.config using `--genome`
-params.fasta = getGenomeAttribute('fasta')
+include { PIPELINE_COMPLETION } from './subworkflows/local/utils_nfcore_funcprofiler_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,18 +29,24 @@ params.fasta = getGenomeAttribute('fasta')
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
 workflow NFCORE_FUNCPROFILER {
-
     take:
-    samplesheet // channel: samplesheet read in from --input
+    reads // channel: validated reads read in from --input
+    databases // channel: databases in from --databases
 
     main:
 
     //
     // WORKFLOW: Run pipeline
     //
-    FUNCPROFILER (
-        samplesheet
+    FUNCPROFILER(
+        reads,
+        databases,
+        params.multiqc_config,
+        params.multiqc_logo,
+        params.multiqc_methods_description,
+        params.outdir,
     )
+
     emit:
     multiqc_report = FUNCPROFILER.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
@@ -63,42 +57,39 @@ workflow NFCORE_FUNCPROFILER {
 */
 
 workflow {
-
-    main:
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
-    PIPELINE_INITIALISATION (
+    PIPELINE_INITIALISATION(
         params.version,
         params.validate_params,
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input
+        params.input,
+        params.databases,
+        params.help,
+        params.help_full,
+        params.show_hidden,
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_FUNCPROFILER (
-        PIPELINE_INITIALISATION.out.samplesheet
+    NFCORE_FUNCPROFILER(
+        PIPELINE_INITIALISATION.out.reads,
+        PIPELINE_INITIALISATION.out.databases,
     )
     //
     // SUBWORKFLOW: Run completion tasks
     //
-    PIPELINE_COMPLETION (
+    PIPELINE_COMPLETION(
         params.email,
         params.email_on_fail,
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_FUNCPROFILER.out.multiqc_report
+        NFCORE_FUNCPROFILER.out.multiqc_report,
     )
 }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/

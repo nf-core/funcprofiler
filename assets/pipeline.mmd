@@ -1,0 +1,140 @@
+%%metro title: nf-core/funcprofiler
+%%metro logo: nf-core-funcprofiler_logo_light.png
+%%metro line_spread: bundle
+
+
+%% One line per input type, as on the nf-core/taxprofiler tube map: the tool a
+%% route ends at is already named by the station it stops at. Blue stops at
+%% 'merge & concat' and green carries everything downstream of it, RGI included.
+%% That is a deliberate simplification: RGI is actually fed the unconcatenated
+%% reads (subworkflows/local/profile/main.nf:41 builds its channel from 'reads'
+%% with singleFqTool = false, every other tool from 'reads_concat'), but drawing
+%% that ran a second blue strand through the profiling block for one tool.
+%%metro line: shortread | Short reads | #1B7FC4
+%%metro line: concat | Concatenated reads | #14795A
+%% The reports branch. Orange so the split at the results junction reads as two
+%% different things leaving it, not one bundle drawn twice. It runs from every
+%% profiler, not just from the junction: that is what MultiQC actually collates,
+%% and it is also what lifts the junction onto the top lane, level with Output.
+%% A junction station otherwise centres on the mean row of its inputs, which
+%% with seven profiler lanes is three rows down; giving it a line that reaches a
+%% row-0 station pulls it up.
+%%metro line: report | Summary statistics | #E8871A
+%% Three strands so the databases read as a bundle, as on the taxprofiler map.
+%% Three hues of the same purple, not three different colours: they are one
+%% thing. legend_combo collapses them into one striped legend row.
+%%metro line: db | Databases | #6D3F9E
+%%metro line: db2 | Databases | #A263C9
+%%metro line: db3 | Databases | #C89BE0
+%%metro legend_combo: db, db2, db3 | Databases
+
+%%metro marker_legend: circle, open | Opt-in
+%%metro marker_legend: circle, #333333 | Runs by default
+
+%% Filled markers take the colour of the line they sit on rather than a flat
+%% #333333, so the dot reads as part of its route.
+%%metro marker: prep | circle, #1B7FC4
+%%metro marker: multiqc | circle, #E8871A
+%%metro marker: hub | circle, #14795A
+%%metro marker: results | circle, #14795A
+
+%%metro files: input_reads | fastq | Short reads | banner
+%%metro files: input_dbs | db | Databases | banner
+%%metro file: out_tables | tsv | Abundance tables | banner
+
+%% Three grid rows, with Functional profiling spanning all three. Input is on
+%% row 0 level with the top of profiling and Run merging directly beneath it
+%% on row 1; Summary statistics shares row 1, under Output. The third row
+%% is what puts Run merging where it belongs: a spanning section dumps its
+%% leftover height into the row above the last one it occupies, so with only two
+%% rows the whole slack landed between Input and Run merging and pushed
+%% Run merging to the bottom of the canvas.
+%%metro grid: input | 0,0
+%%metro grid: merging | 0,1
+%%metro grid: profiling | 1,0,3
+%%metro grid: qc | 2,1
+%%metro grid: output | 2,0
+
+graph LR
+    subgraph input[Input]
+        %% TB is what makes the drop into Run merging a single straight line:
+        %% the exit port moves to the bottom of the icon instead of its right
+        %% edge, so the route never has to cross this section's boundary
+        %% sideways. It does put the 'Short reads' caption under the port
+        %% circle, which a post-render pass moves to the icon's top right.
+        %%metro direction: TB
+        %%metro exit: bottom | shortread
+        input_reads([Short reads])
+    end
+
+    subgraph merging[Run merging]
+        %% Entry hint only. Without it blue U-turns around this section. An
+        %% explicit '%%metro exit:' on Input changes nothing: the descent still
+        %% steps 10px sideways where it crosses this section's top edge, because
+        %% the route leaves Input at the section boundary (x=207) and the entry
+        %% port sits at the inset (x=197).
+        %%metro entry: top | shortread
+        prep(merge & concat)
+    end
+
+    subgraph profiling[Functional profiling]
+        input_dbs([Databases])
+        hub(( ))
+        %% RGI first: it is the only station the paired line reaches, and a
+        %% branching line declared later strikes through the labels above it.
+        rgi(RGI)
+        metaphlan3(MetaPhlAn)
+        humann3(HUMAnN v3)
+        metaphlan4(MetaPhlAn)
+        humann4(HUMAnN v4)
+        eggnog(eggNOG-mapper)
+        fmhfunprofiler(FMH FunProfiler)
+        mifaser(mi-faser)
+        diamond(DIAMOND)
+        %% Unnamed junction: the seven profiler outputs join here, and the split
+        %% to the tables and to MultiQC happens once instead of seven times.
+        results(( ))
+    end
+
+    subgraph qc[Summary statistics]
+        multiqc(MultiQC)
+    end
+
+    subgraph output[Output]
+        out_tables([Abundance tables])
+    end
+
+    %% Runs of one sample are merged first, and the map then treats every
+    %% profiler as reading the concatenated FASTQ. See the note on the lines.
+    input_reads -->|shortread| prep
+    prep -->|concat| hub
+    hub -->|concat| rgi
+
+    hub -->|concat| metaphlan3
+    hub -->|concat| metaphlan4
+    hub -->|concat| eggnog
+    hub -->|concat| fmhfunprofiler
+    hub -->|concat| mifaser
+    hub -->|concat| diamond
+
+    metaphlan3 -->|concat| humann3
+    metaphlan4 -->|concat| humann4
+
+    %% The database bundle terminates at the hub. It does not continue into the
+    %% profiler lanes: the hub is where the databases are handed over.
+    input_dbs -->|db,db2,db3| hub
+
+    %% Results leave the profilers as one bundle and split at the section edge.
+    rgi -->|concat,report| results
+    humann3 -->|concat,report| results
+    humann4 -->|concat,report| results
+    eggnog -->|concat,report| results
+    fmhfunprofiler -->|concat,report| results
+    mifaser -->|concat,report| results
+    diamond -->|concat,report| results
+
+    %% Two branches off the junction: tables on green, run statistics on orange.
+    %% Orange reaches the junction from each profiler above, so the junction is
+    %% a real interchange rather than the point where the reports appear.
+    results -->|concat| out_tables
+    results -->|report| multiqc
