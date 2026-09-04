@@ -125,7 +125,7 @@
 </g>
 </g>
 <g class="nf-metro-station-group" data-node-id="hub" data-node-cx="586.0" data-node-cy="124.8" data-node-r="6.0" data-node-groups="concat,db,db2,db3" data-node-region="profiling" data-node-w="12.0" data-node-h="28.0" data-node-rx="6.0">
-<rect x="580.0" y="126.8" width="12.0" height="28" rx="6.0" ry="6.0" fill="#ffffff" stroke="#333333" stroke-width="2.0" class="nf-metro-station" data-station-id="hub" data-station-lines="concat,db,db2,db3" data-station-label="hub" data-section-id="profiling" data-section-name="Functional profiling" />
+<rect x="580.0" y="126.8" width="12.0" height="28" rx="6.0" ry="6.0" fill="#14795A" stroke="#333333" stroke-width="2.0" class="nf-metro-station nf-metro-marker-stroke" data-station-id="hub" data-station-lines="concat,db,db2,db3" data-station-label="hub" data-section-id="profiling" data-section-name="Functional profiling" />
 </g>
 <g class="nf-metro-station-group" data-node-id="rgi" data-node-cx="762.0" data-node-cy="130.8" data-node-r="6.0" data-node-groups="concat,report" data-node-region="profiling" data-node-w="12.0" data-node-h="16.0" data-node-rx="6.0">
 <rect x="756.0" y="126.8" width="12.0" height="16.0" rx="6.0" ry="6.0" fill="#ffffff" stroke="#333333" stroke-width="2.0" class="nf-metro-station" data-station-id="rgi" data-station-lines="concat,report" data-station-label="RGI" data-section-id="profiling" data-section-name="Functional profiling" />
@@ -155,7 +155,7 @@
 <rect x="756.0" y="360.4" width="12.0" height="16.0" rx="6.0" ry="6.0" fill="#ffffff" stroke="#333333" stroke-width="2.0" class="nf-metro-station" data-station-id="diamond" data-station-lines="concat,report" data-station-label="DIAMOND" data-section-id="profiling" data-section-name="Functional profiling" />
 </g>
 <g class="nf-metro-station-group" data-node-id="results" data-node-cx="1048.0" data-node-cy="130.8" data-node-r="6.0" data-node-groups="concat,report" data-node-region="profiling" data-node-w="12.0" data-node-h="16.0" data-node-rx="6.0">
-<rect x="1042.0" y="126.8" width="12.0" height="16.0" rx="6.0" ry="6.0" fill="#ffffff" stroke="#333333" stroke-width="2.0" class="nf-metro-station" data-station-id="results" data-station-lines="concat,report" data-station-label="results" data-section-id="profiling" data-section-name="Functional profiling" />
+<rect x="1042.0" y="122.80000000000001" width="12.0" height="16.0" rx="6.0" ry="6.0" fill="#14795A" stroke="#333333" stroke-width="2.0" class="nf-metro-station nf-metro-marker-stroke" data-station-id="results" data-station-lines="concat,report" data-station-label="results" data-section-id="profiling" data-section-name="Functional profiling" />
 </g>
 <g class="nf-metro-station-group" data-node-id="multiqc" data-node-cx="1253.0" data-node-cy="294.8" data-node-r="6.0" data-node-groups="report" data-node-region="qc" data-node-w="12.0" data-node-h="12.0" data-node-rx="6.0">
 <rect x="1247.0" y="288.8" width="12.0" height="12.0" rx="6.0" ry="6.0" fill="#E8871A" stroke="#333333" stroke-width="2.0" class="nf-metro-station nf-metro-marker-stroke" data-station-id="multiqc" data-station-lines="report" data-station-label="MultiQC" data-section-id="qc" data-section-name="Summary statistics" />
