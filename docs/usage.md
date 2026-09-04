@@ -105,7 +105,7 @@ These combinations were exercised on a human gut metagenome cohort during develo
 | HUMAnN v3       | 3.6.1        | ChocoPhlAn full `v201901_v31`, UniRef90 `201901b` full, `utility_mapping` full                                    |
 | MetaPhlAn       | 4.0.6        | `mpa_vJan21_CHOCOPhlAnSGB_202103`                                                                                 |
 | FMH FunProfiler | 1.1.1        | KO sketches from [Zenodo record 10045253](https://zenodo.org/records/10045253), scaled 1000 / k=11 and scaled 500 |
-| mi-faser        | 1.64         | `GS-24-all`, shipped inside the mi-faser biocontainer rather than downloaded separately                           |
+| mi-faser        | 1.64         | `GS-24-all`, downloaded from the mi-faser website                                                                 |
 | eggNOG-mapper   | 2.1.13       | eggNOG 5.0.2 data directory                                                                                       |
 
 ### HUMAnN
