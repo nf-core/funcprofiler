@@ -67,6 +67,10 @@ The pipeline will only run the profilers you explicitly turn on, and for which a
 > [!NOTE]
 > Each `--run_` flag requires a matching database entry in the `--databases` CSV. Database rows for tools that are not enabled will be ignored.
 
+> [!WARNING]
+> Beta means the profiler runs and produces output, but database handling and output behaviour have not been validated end to end, and neither is covered by the full-size test.
+> Interpret the results with caution and check them independently before using them in an analysis.
+
 ## Databases input
 
 ```bash
