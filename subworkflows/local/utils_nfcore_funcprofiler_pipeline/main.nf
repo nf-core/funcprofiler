@@ -100,11 +100,12 @@ workflow PIPELINE_INITIALISATION {
     // Rows are validated and turned into their final [ meta, [ reads ] ] form here, so that
     // a malformed samplesheet aborts the run before any task is submitted.
     //
-    ch_samplesheet = channel
-        .fromList(samplesheetToList(params.input, "assets/schema_input.json"))
-        .map { meta, run_accession, instrument_platform, fastq_1, fastq_2, fasta ->
+    def samplesheet_list = samplesheetToList(params.input, "assets/schema_input.json")
+        .collect { meta, run_accession, instrument_platform, fastq_1, fastq_2, fasta ->
             validateInputSamplesheet(meta, run_accession, instrument_platform, fastq_1, fastq_2, fasta)
         }
+    validateRunEndedness(samplesheet_list)
+    ch_samplesheet = channel.fromList(samplesheet_list)
 
     //
     // Create channel from databases file provided through params.databases
@@ -188,6 +189,19 @@ def validateInputSamplesheet(meta, run_accession, instrument_platform, fastq_1, 
     meta.instrument_platform = instrument_platform
 
     return [meta, fastq_2 ? [fastq_1, fastq_2] : [fastq_1]]
+}
+
+// Runs of the same sample must all be single-end or all paired-end, otherwise DATAPREP cannot
+// interpret the read list it merges them into.
+//
+def validateRunEndedness(samplesheet_list) {
+    samplesheet_list
+        .groupBy { meta, _reads -> meta.id }
+        .each { id, rows ->
+            if (rows.collect { meta, _reads -> meta.single_end }.unique().size() != 1) {
+                error("Please check input samplesheet: multiple runs of a sample must all be single-end or all paired-end (sample: ${id}).")
+            }
+        }
 }
 
 //

@@ -26,12 +26,6 @@ workflow DATAPREP {
         }
         .groupTuple(by: 0)
         .map { _group_key, meta_list, reads_list ->
-            // Runs of the same sample must all be single-end or all paired-end, otherwise the
-            // merged read list below cannot be interpreted
-            if (meta_list.collect { run_meta -> run_meta.single_end }.unique().size() != 1) {
-                error("Please check input samplesheet: multiple runs of a sample must all be single-end or all paired-end (sample: ${meta_list[0].id}).")
-            }
-
             // Take the first meta as template (they should all have same id)
             def meta = meta_list[0]
             // Remove run_accession since we're merging runs
