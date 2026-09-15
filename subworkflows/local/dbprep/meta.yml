@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "dbprep"
+description: |
+  Prepare the databases declared in the database sheet. Archives are decompressed
+  once per file and only for tools the user has enabled, then all entities
+  belonging to the same database are grouped so that each profiler receives a
+  single entry per database name and parameter combination.
+keywords:
+  - database
+  - untar
+  - decompression
+  - metagenome
+components:
+  - untar
+input:
+  - databases:
+      type: file
+      description: |
+        Channel of database entries from the database sheet. `meta.tool` selects
+        which profiler the database belongs to, `meta.db_entity` names the part
+        of a multi-file database, and `meta.db_params` carries tool-specific
+        arguments. Entries ending in `.tar`, `.tar.gz`, `.tar.bz2` or `.tar.xz`
+        are decompressed, the rest are passed through untouched.
+        Structure: [ val(meta), path(database) ]
+      pattern: "*.{tar,tar.gz,tar.bz2,tar.xz}"
+output:
+  - dbs:
+      type: file
+      description: |
+        Channel of databases grouped by tool, name and parameters. The second
+        element is a list of maps, each holding the entity name and its path.
+        Structure: [ val(meta), [ [ db_entity: val(entity), db_path: path(db) ] ] ]
+authors:
+  - "@nickp60"
+maintainers:
+  - "@nickp60"
