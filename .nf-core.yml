@@ -7,6 +7,7 @@ lint:
     - .gitignore
 nf_core_version: 4.1.0
 repository_type: pipeline
+
 template:
   author: Nick Waters, Vini Salazar, Yixuan Yang, Mirae Baichoo
   description: Read-based functional profiling of microbiome sequencing data

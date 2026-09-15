@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": ["input", "databases", "outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -20,8 +20,25 @@
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/funcprofiler/usage#samplesheet-input).",
+                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 6 columns (`sample`, `run_accession`, `instrument_platform`, `fastq_1`, `fastq_2`, `fasta`), and a header row. We utilise the same input style as nf-core/taxprofiler, with 2 main differences: long-read platforms are not supported, nor is `fasta` input. See [usage docs](https://nf-co.re/funcprofiler/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv"
+                },
+                "databases": {
+                    "type": "string",
+                    "mimetype": "text/csv",
+                    "format": "file-path",
+                    "exists": true,
+                    "schema": "assets/schema_database.json",
+                    "pattern": "^\\S+\\.csv$",
+                    "fa_icon": "fas fa-database",
+                    "description": "Path to comma-separated file containing information about databases and profiling parameters for each taxonomic profiler",
+                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 5 columns (`tool`, `db_name`, `db_entity`, `db_params`, `db_path`), and a header row. See [usage docs](https://nf-co.re/funcprofiler/dev/usage#full-database-sheet).\n\nProfilers will only be executed if a corresponding database are supplied. \n\n As with taxprofiler, we recommend storing this database sheet somewhere centrally and accessible by others members of your lab/institutions, as this file will likely be regularly reused."
+                },
+                "save_untarred_databases": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Specify to save decompressed user-supplied TAR archives of databases",
+                    "help_text": "If input databases are supplied as gzipped TAR archives, in some cases you may want to move and re-use these for future runs. Specifying this parameter will save these to `--outdir results/` under a directory called `untar`."
                 },
                 "outdir": {
                     "type": "string",
@@ -43,41 +60,46 @@
                 }
             }
         },
-        "reference_genome_options": {
-            "title": "Reference genome options",
+        "profiling_options": {
+            "title": "Profiling options",
             "type": "object",
-            "fa_icon": "fas fa-dna",
-            "description": "Reference genome related files and options required for the workflow.",
+            "description": "",
+            "default": "",
             "properties": {
-                "genome": {
-                    "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
-                    "fa_icon": "far fa-file-code"
-                },
-                "igenomes_ignore": {
+                "run_fmhfunprofiler": {
                     "type": "boolean",
-                    "description": "Do not load the iGenomes reference config.",
-                    "fa_icon": "fas fa-ban",
-                    "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on profiling with FMH FunProfiler. Requires a `fmhfunprofiler`-tagged database to be present in the CSV file passed to --databases"
                 },
-                "igenomes_base": {
-                    "type": "string",
-                    "description": "The base path to the igenomes reference files",
-                    "fa_icon": "fas fa-ban",
-                    "hidden": true,
-                    "default": "s3://ngi-igenomes/igenomes/"
+                "run_humann_v3": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on profiling with HUMAnN3. Requires a `humann_v3`-tagged database to be present in the CSV file passed to --databases"
+                },
+                "run_humann_v4": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on profiling with HUMAnN4. Requires a `humann_v4`-tagged database to be present in the CSV file passed to --databases"
+                },
+                "run_diamond": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on translated alignment with DIAMOND blastx. Requires a `diamond`-tagged database to be present in the CSV file passed to --databases"
+                },
+                "run_rgi": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on profiling with RGI. Requires a `rgi`-tagged database to be present in the CSV file passed to --databases"
+                },
+                "run_mifaser": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on profiling with mi-faser. Requires a `mifaser`-tagged database to be present in the CSV file passed to --databases"
+                },
+                "run_eggnogmapper": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toggle-on",
+                    "description": "Turn on functional annotation with eggNOG-mapper. Requires `eggnogmapper`-tagged database entries to be present in the CSV file passed to --databases"
                 }
             }
         },
@@ -237,7 +259,7 @@
             "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/$defs/reference_genome_options"
+            "$ref": "#/$defs/profiling_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
