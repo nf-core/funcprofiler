@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "dataprep"
+description: |
+  Validate the input samplesheet and prepare read channels for profiling. Sets
+  `single_end`, `run_accession` and `instrument_platform` on the meta map, merges
+  multiple runs belonging to the same sample, and produces an additional channel
+  in which read pairs are concatenated into a single file for tools that cannot
+  take paired input.
+keywords:
+  - samplesheet
+  - fastq
+  - merging
+  - concatenation
+  - metagenome
+components:
+  - cat/fastq
+input:
+  - samplesheet:
+      type: file
+      description: |
+        Channel of validated samplesheet rows. Long-read (`OXFORD_NANOPORE`)
+        platforms and FASTA input are rejected, and `fastq_1` is required.
+        Structure: [ val(meta), val(run_accession), val(instrument_platform), path(fastq_1), path(fastq_2), path(fasta) ]
+      pattern: "*.{fq,fastq}{,.gz}"
+output:
+  - reads:
+      type: file
+      description: |
+        Channel of reads per sample, with runs merged where a sample has more
+        than one. Paired-end samples carry two files, single-end samples one.
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
+  - reads_concat:
+      type: file
+      description: |
+        Channel of the same reads concatenated into a single file per sample,
+        with `single_end` forced to `true`, for tools that accept only one FASTQ.
+        Structure: [ val(meta), [ path(reads) ] ]
+      pattern: "*.{fq,fastq}{,.gz}"
+authors:
+  - "@nickp60"
+maintainers:
+  - "@nickp60"

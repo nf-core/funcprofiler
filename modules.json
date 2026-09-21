@@ -5,14 +5,79 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
-                    "fastqc": {
+                    "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "diamond/blastx": {
+                        "branch": "master",
+                        "git_sha": "83ce9b314157a24d9a92f17a07ed5d55f30b78f9",
+                        "installed_by": ["modules"]
+                    },
+                    "eggnogmapper": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "fmhfunprofiler": {
+                        "branch": "master",
+                        "git_sha": "da290c59a571dbc2fddcd9b87b69b7517cad6a94",
+                        "installed_by": ["modules"]
+                    },
+                    "gunzip": {
+                        "branch": "master",
+                        "git_sha": "0902eac3012baaf4f9ab6513c8c55acc9353c96c",
+                        "installed_by": ["modules"]
+                    },
+                    "humann3/humann": {
+                        "branch": "master",
+                        "git_sha": "7a2d8f7e1861c9c62472f1cd168d33cef918b108",
+                        "installed_by": ["modules"]
+                    },
+                    "humann3/regroup": {
+                        "branch": "master",
+                        "git_sha": "7a2d8f7e1861c9c62472f1cd168d33cef918b108",
+                        "installed_by": ["modules"]
+                    },
+                    "humann3/renorm": {
+                        "branch": "master",
+                        "git_sha": "7a2d8f7e1861c9c62472f1cd168d33cef918b108",
+                        "installed_by": ["modules"]
+                    },
+                    "metaphlan/metaphlan": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "mifaser": {
+                        "branch": "master",
+                        "git_sha": "522d0a5709833aaa28c58d4464b4348d03316a62",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "98403d15b0e50edae1f3fec5eae5e24982f1fade",
+                        "installed_by": ["modules"]
+                    },
+                    "rgi/bwt": {
+                        "branch": "master",
+                        "git_sha": "0a93f68a28f5e07bb7ae82aeb005720faf8a3b35",
+                        "installed_by": ["modules"]
+                    },
+                    "rgi/cardannotation": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "seqkit/fq2fa": {
+                        "branch": "master",
+                        "git_sha": "d07a945f421a4a91ce4e5a22db63e0e7f8741607",
+                        "installed_by": ["modules"]
+                    },
+                    "untar": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     }
                 }
@@ -21,17 +86,17 @@
                 "nf-core": {
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "c2b22d85f30a706a3073387f30380704fcae013b",
+                        "git_sha": "1a545fcbd762911c21a64ced3dbef99b2b51ac75",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "51ae5406a030d4da1e49e4dab49756844fdd6c7a",
+                        "git_sha": "a3fb7351b1fdb2b1de282b765816bbea190e86a8",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "2fd2cd6d0e7b273747f32e465fdc6bcc3ae0814e",
+                        "git_sha": "a7b27fd25bfa8dcc07d299e88bd790585901a436",
                         "installed_by": ["subworkflows"]
                     }
                 }
