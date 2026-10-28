@@ -1,0 +1,7 @@
+#vOct22_CHOCOPhlAnSGB_202403
+#/opt/venv/bin/metaphlan --nproc 6 --input_type fastq test_1.fastq.gz -t rel_ab_w_read_stats --bowtie2out test.bowtie2out.txt --bowtie2db metaphlan4_database --index vOct22_CHOCOPhlAnSGB_202403 --biom test.biom --output_file test_profile.txt
+#100 reads processed
+#SampleID	Metaphlan_Analysis
+#estimated_reads_mapped_to_known_clades:0
+#clade_name	clade_taxid	relative_abundance	coverage	estimated_number_of_reads_from_the_clade
+unclassified	-1	100.0	0	0
