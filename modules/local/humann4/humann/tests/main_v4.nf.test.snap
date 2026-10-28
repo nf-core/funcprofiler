@@ -1,0 +1,62 @@
+{
+    "humann_v4 sarscov2 - fastq": {
+        "content": [
+            4,
+            [
+                "humann4",
+                "humann4/test_2_genefamilies.tsv.gz",
+                "humann4/test_3_reactions.tsv.gz",
+                "humann4/test_4_pathabundance.tsv.gz",
+                "pipeline_info"
+            ],
+            [
+                
+            ]
+        ],
+        "timestamp": "2026-08-04T11:59:37.715128",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "humann_v4 sarscov2 - fastq - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "run_accession": "abc"
+                    },
+                    "test_genefamilies.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "run_accession": "abc"
+                    },
+                    "test_pathabundance.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
+                ]
+            ],
+            null,
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false,
+                        "run_accession": "abc"
+                    },
+                    "test_reactions.tsv.gz:md5,f50b84b1db4b83ba62ec1deacc69c260"
+                ]
+            ]
+        ],
+        "timestamp": "2026-06-11T09:26:56.574951",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
+    }
+}
