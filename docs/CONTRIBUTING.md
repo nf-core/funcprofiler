@@ -182,4 +182,9 @@ If you update images or graphics, follow the nf-core [style guidelines](https://
 
 ## Pipeline specific contribution guidelines
 
-<!-- TODO nf-core: Add any pipeline specific contribution guidelines here, such as coding styles, procedures, checklists etc. -->
+When adding a new profiler:
+
+- Add it to [nf-core/modules](https://github.com/nf-core/modules) rather than to `modules/local`. A local module is only a stopgap for tools that are not yet packaged on Bioconda.
+- Gate it behind a `run_<tool>` parameter, and take its database from the database sheet so it is grouped by `dbprep` like every other tool.
+- Add it to the `profile` subworkflow, to `docs/output.md`, and to `CITATIONS.md`.
+- Cover it with an nf-test, and regenerate snapshots with `nf-test test --update-snapshot`.
