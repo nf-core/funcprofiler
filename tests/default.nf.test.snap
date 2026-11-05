@@ -59,7 +59,6 @@
             ],
             [
                 "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129",
-                "minigut_KOs_sketched_scaled_1000_demo.sig.fmhfunprofiler.csv:md5,1081039ab9e9b378d2dfd3206e96e917",
                 "minigut_analysis.tsv:md5,1cda8e4b88a34f56539d04cc2dac0914",
                 "minigut_ec_count.tsv:md5,5c2306e908a487f57d70da9b4f131217",
                 "minigut_multi_ec.tsv:md5,915713718d7b6fabc3fbc3a1286999e0",

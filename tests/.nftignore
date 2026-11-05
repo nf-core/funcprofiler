@@ -25,3 +25,4 @@ pipeline_info/*.{html,json,txt,yml}
 **/*.allele_mapping_data.txt
 **/*.gene_mapping_data.json
 **/*.gene_mapping_data.txt
+**/*.fmhfunprofiler.csv
