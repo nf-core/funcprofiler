@@ -85,8 +85,7 @@
     "run fmh": {
         "content": [
             [
-                "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129",
-                "minigut_KOs_sketched_scaled_1000_demo.sig.fmhfunprofiler.csv:md5,1081039ab9e9b378d2dfd3206e96e917"
+                "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129"
             ]
         ],
         "timestamp": "2026-07-29T16:20:47.621463",
@@ -98,8 +97,7 @@
     "run multisampleinputs - grouped databases (humann_v3)": {
         "content": [
             [
-                "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129",
-                "minigut_KOs_sketched_scaled_1000_demo.sig.fmhfunprofiler.csv:md5,1081039ab9e9b378d2dfd3206e96e917"
+                "minigut.merged.fastq.gz:md5,1fbae8f5fe6fdfa6552cfca32d9c3129"
             ]
         ],
         "timestamp": "2026-07-29T16:20:29.367839",
