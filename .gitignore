@@ -15,4 +15,6 @@ tmp/
 .data/
 *.code-workspace
 .lineage/
+.nf-test/
+.nf-test.log
 conf/tmp.config
